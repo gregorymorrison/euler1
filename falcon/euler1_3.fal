@@ -1,0 +1,19 @@
+class Euler1(size)
+    size = size
+    result = nil
+    init
+        // do setup operations here
+    end
+    function solve()
+        self.result = 0
+        for i in [1 : self.size]
+            if i%3 == 0 or i%5 == 0
+                self.result += i
+            end
+        end
+    end
+end
+
+euler1 = Euler1(1000)
+euler1.solve()
+> euler1.result
