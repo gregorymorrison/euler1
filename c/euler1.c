@@ -1,18 +1,16 @@
-#!/usr/bin/pl -q -t euler -f
+// Euler1 in C
+#include<stdio.h>
 
-solve(Start, End, Total) :-
-  write('Entering solve')
-	(Start mod 3 =:= 0; Start mod 5 =:= 0),
-	Start < End,
-	Next is Start + 1,
-	solve(Next, End, SemiTotal),
-	Total is SemiTotal + Start.
-solve(Start, End, Total) :-
-	Start < End,
-	Next is Start + 1,
-	solve(Next, End, Total).
-solve(N, N, N).
+int euler(int n) {
+    int retval = 0;
+    for (int i=0; i<n; i++) {
+        if ((i % 3 == 0) || (i % 5 == 0)) {
+            retval += i;
+        }
+    }
+    return retval;
+}
 
-euler :-
-	solve(1, 999, MyAnswer),
-	format('~w~n', [MyAnswer]).
+main() {
+    printf("%i\n", euler(1000));
+}
