@@ -13,3 +13,11 @@ BEGIN
 
    RETURN retval;
 END EULER1;
+
+
+DECLARE
+  v_Return NUMBER;
+BEGIN
+  v_Return := EULER1(999);
+  DBMS_OUTPUT.PUT_LINE('v_Return = ' || v_Return);
+END;
