@@ -1,0 +1,13 @@
+// Euler1 in Nemerle
+using System.Console;
+
+def Euler1(x: int, acc=0: int): int {
+    match (x) {
+      | 1             => acc
+      | x when x%3==0 => Euler1(x-1, acc+x)
+      | x when x%5==0 => Euler1(x-1, acc+x)
+      | _             => Euler1(x-1, acc)
+    }
+};
+
+WriteLine( Euler1(999) );
