@@ -1,0 +1,11 @@
+myMap = {x => x}
+myFilter = {x => x%3==0 or x%5==0}
+mySum = {x,y => x+y}
+
+function Euler1(n)
+    mapped = [].comp( [1:n], myMap )
+    filtered = filter( myFilter, mapped )
+    return reduce( mySum, filtered )
+end
+
+> Euler1(1000)
