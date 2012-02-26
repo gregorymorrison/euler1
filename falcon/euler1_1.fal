@@ -1,0 +1,16 @@
+#!/usr/bin/falcon
+// Euler1 in Falcon
+
+function Euler1(n)
+    retval = 0
+
+    for i in [1 : n]
+        if i%3 == 0 or i%5 == 0
+            retval += i
+        end
+    end    
+
+    return retval
+end
+
+printl( Euler1(1000) )
