@@ -1,0 +1,37 @@
+class Request (size)
+    value = size
+    callback = {=> nil}
+end
+
+class Euler1()
+    result = nil
+
+    init
+        subscribe( "process", self.subMe )
+    end
+
+    function solve(size)
+        self.result = 0
+        for i in [1 : size]
+            if i%3 == 0 or i%5 == 0
+                self.result += i
+            end
+        end
+    end
+
+    function subMe(request)
+        self.solve(request.value)
+        request.callback = self.callMe
+    end
+
+    function callMe()
+        > @"$self.result"
+    end
+end
+
+euler1 = Euler1()
+
+request = Request(1000)
+broadcast( "process", request )
+
+request.callback()
