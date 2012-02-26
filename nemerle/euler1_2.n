@@ -1,0 +1,26 @@
+// Euler1 in Nemerle
+using System.Console;
+
+class Euler1 {
+    mutable size : int;
+    mutable result : int;
+
+    public this(size : int) {
+        this.size = size;
+    }
+
+    public solve() : void {
+        this.result = 0;
+        foreach (i in [1 .. size]) {
+            when (i%3==0 || i%5==0) {
+                this.result = this.result + i;
+            }
+        }
+    }
+
+    static Main() : void {
+        def euler1 = Euler1(999);
+        euler1.solve();
+        WriteLine(euler1.result);
+    }
+}
