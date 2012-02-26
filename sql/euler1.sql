@@ -1,16 +1,9 @@
-// Euler1 in C
-#include<stdio.h>
+-- Euler1 in SQL
 
-int euler(int n) {
-    int retval = 0;
-    for (int i=0; i<n; i++) {
-        if ((i % 3 == 0) || (i % 5 == 0)) {
-            retval += i;
-        }
-    }
-    return retval;
-}
+WITH euler1 AS (
+    select SUM(lvl) from (
+    select LEVEL lvl from dual
+	where MOD(LEVEL,3)=0 or MOD(LEVEL,5)=0
+	connect by LEVEL < 1000))
 
-main() {
-    printf("%i\n", euler(1000));
-}
+select * from euler1;
