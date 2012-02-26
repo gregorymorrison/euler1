@@ -1,0 +1,5 @@
+// Euler1 in Groovy
+
+def euler1(n) { (0..n).findAll{x -> x%3==0 || x%5==0}.sum() }
+
+print euler1(999) + '\n'
