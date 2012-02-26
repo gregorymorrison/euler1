@@ -1,0 +1,13 @@
+; Euler1 in Logo
+
+to euler :size
+    localmake "result 0
+    for [i 1 :size-1] [
+        if or [equal? 0 modulo :i 3][equal? 0 modulo :i 5] [
+            make "result :result + :i]]
+    output :result
+end
+
+print euler 1000
+
+bye
