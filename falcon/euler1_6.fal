@@ -1,0 +1,24 @@
+function euler1()
+    result = 0
+    for i in [1 : self.size]
+        if i%3 == 0 or i%5 == 0
+            self.result += i
+        end
+    end
+    return result
+end
+
+function foo()
+   self.result = self.size * 2
+end
+
+funcs = Table (
+    .['name', 'func', 'size', 'result'],
+    .['euler1', euler1, 0, 0],
+    .['foo', foo, 0, 0] )
+
+row = funcs.find('name', 'euler1')
+row.size = 1000
+row.func()
+
+> row.result
