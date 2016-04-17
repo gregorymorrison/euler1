@@ -1,3 +1,4 @@
+#!/usr/bin/sq
 // Fizzbuzz in Squirrel
 
 function Fizzbuzz(n) {

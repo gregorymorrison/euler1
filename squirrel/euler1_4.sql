@@ -1,3 +1,4 @@
+#!/usr/bin/sq
 // Euler1 in Squirrel
 
 // calculate solution based on Quicksort problem decomposition

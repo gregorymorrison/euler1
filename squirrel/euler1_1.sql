@@ -1,3 +1,4 @@
+#!/usr/bin/sq
 // Euler1 in Squirrel
 // Generic recursive Map, Filter, Reduce using Tail Call Optimization
 
