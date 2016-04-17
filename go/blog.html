@@ -1,0 +1,18 @@
+I took an initial look at one of Google's newest technologies today - <a title="Go" href="http://golang.org/">Go</a>, introduced in 2009 - and I liked what I saw. I plan on spending time in the future with this language. It literally took me less than five minutes from the time I first looked at Go to write this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<pre style="color:#000000;margin-bottom:20px;background:#f1f0f0;">package <span style="color:#800000;font-weight:bold;">main</span>
+
+func euler<span style="color:#806030;">(</span>size <span style="color:#400000;font-weight:bold;">int</span><span style="color:#806030;">)</span> <span style="color:#400000;font-weight:bold;">int</span> <span style="color:#806030;">{</span>
+    retval <span style="color:#806030;">:</span><span style="color:#806030;">=</span> <span style="color:#c00000;">0</span>
+    <span style="color:#400000;font-weight:bold;">for</span> i <span style="color:#806030;">:</span><span style="color:#806030;">=</span> <span style="color:#c00000;">1</span><span style="color:#806030;">;</span> i <span style="color:#806030;">&lt;</span> size<span style="color:#806030;">;</span> i<span style="color:#806030;">+</span><span style="color:#806030;">+</span> <span style="color:#806030;">{</span>
+        <span style="color:#400000;font-weight:bold;">if</span> i<span style="color:#806030;">%</span><span style="color:#c00000;">3</span><span style="color:#806030;">=</span><span style="color:#806030;">=</span><span style="color:#c00000;">0</span> <span style="color:#806030;">|</span><span style="color:#806030;">|</span> i<span style="color:#806030;">%</span><span style="color:#c00000;">5</span><span style="color:#806030;">=</span><span style="color:#806030;">=</span><span style="color:#c00000;">0</span> <span style="color:#806030;">{</span>
+            retval <span style="color:#806030;">+</span><span style="color:#806030;">=</span> i
+        <span style="color:#806030;">}</span>
+    <span style="color:#806030;">}</span>
+    <span style="color:#400000;font-weight:bold;">return</span> retval
+<span style="color:#806030;">}</span>
+
+func <span style="color:#800000;font-weight:bold;">main</span><span style="color:#806030;">(</span><span style="color:#806030;">)</span> <span style="color:#806030;">{</span>
+    println<span style="color:#806030;">(</span>euler<span style="color:#806030;">(</span><span style="color:#c00000;">1000</span><span style="color:#806030;">)</span><span style="color:#806030;">)</span>
+<span style="color:#806030;">}</span></pre>
+Go's home page opens up to an interactive code editor, complete with samples, which lets you immediately play with the language. Nothing to install - brilliant! To run, just put your code in the online editor and click <em>Compile and Run</em>:
+<pre style="color:#000000;margin-bottom:20px;background:#f1f0f0;"><span style="color:#c00000;">233168</span></pre>

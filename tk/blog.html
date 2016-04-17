@@ -1,0 +1,27 @@
+<a href="http://en.wikipedia.org/wiki/Tk_(framework)">Tk</a> is a platform-independent GUI library introduced in the mid '90s, originally for <a href="http://en.wikipedia.org/wiki/Tcl">Tcl</a> although bindings for it have been written for many other languages. Here I've extended my version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Tcl, adding the simplest possible Tk GUI - a button that displays the solution. When you click the button, the program exits:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/wish</span>
+<span style="color:#0099ff;font-style:italic;"># Euler1 in Tcl/Tk</span>
+
+<span style="color:#006699;font-weight:bold;">proc</span> euler1 <span style="color:#006699;font-weight:bold;">{</span><span style="color:#003333;">n</span><span style="color:#006699;font-weight:bold;">}</span> <span style="color:#006699;font-weight:bold;">{</span>
+    <span style="color:#006699;font-weight:bold;">set</span> sum <span style="color:#ff6600;">0</span><span style="color:#006699;font-weight:bold;">;</span> <span style="color:#006699;font-weight:bold;">set</span> i <span style="color:#ff6600;">0</span>
+
+    while <span style="color:#006699;font-weight:bold;">{</span><span style="color:#003333;">$i</span> <span style="color:#555555;">&lt;</span> <span style="color:#003333;">$n</span><span style="color:#006699;font-weight:bold;">}</span> <span style="color:#006699;font-weight:bold;">{</span>
+        <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#006699;font-weight:bold;">{</span><span style="color:#003333;">$i</span><span style="color:#555555;">%</span><span style="color:#003333;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> <span style="color:#003333;">$i</span><span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#006699;font-weight:bold;">}</span> <span style="color:#006699;font-weight:bold;">{</span>
+            <span style="color:#006699;font-weight:bold;">set</span> sum <span style="color:#006699;font-weight:bold;">[expr</span> <span style="color:#003333;">$sum</span><span style="color:#555555;">+</span><span style="color:#003333;">$i</span><span style="color:#006699;font-weight:bold;">]</span>
+        <span style="color:#006699;font-weight:bold;">}</span>
+        <span style="color:#336666;">incr</span> i
+    <span style="color:#006699;font-weight:bold;">}</span>
+
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#003333;">$sum</span>
+<span style="color:#006699;font-weight:bold;">}</span>
+
+<span style="color:#003333;">button</span> .btnEuler <span style="color:#555555;">-</span>text <span style="color:#006699;font-weight:bold;">[</span><span style="color:#003333;">euler1</span> <span style="color:#ff6600;">1000</span><span style="color:#006699;font-weight:bold;">]</span> <span style="color:#555555;">-</span>command <span style="color:#006699;font-weight:bold;">{</span> <span style="color:#336666;">exit</span> <span style="color:#006699;font-weight:bold;">}</span>
+<span style="color:#003333;">pack</span> .btnEuler</pre>
+</div>
+To run, simply call your script:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">euler1.tk</span></pre>
+</div>
+And here is the result:
+<a href="http://gdm9000.files.wordpress.com/2011/10/untitled1.png"><img class="alignnone size-full wp-image-291" title="untitled" src="http://gdm9000.files.wordpress.com/2011/10/untitled1.png" alt="" width="123" height="57" /></a>

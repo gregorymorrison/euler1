@@ -1,0 +1,209 @@
+<!-- HTML generated using hilite.me --><a title="racket" href="http://racket-lang.org/">Racket</a>, introduced in 1994, is a variant of <a title="scheme" href="http://gdm9000.wordpress.com/tag/scheme/">Scheme</a>, which itself is a minimal version of <a title="lisp" href="http://gdm9000.wordpress.com/2012/07/05/lisp/">lisp</a>. Racket is a <a title="functional" href="http://en.wikipedia.org/wiki/Functional_programming">Functional</a> language, in which the basic language construct is the list, and the basic computational operation is the function. It uses a completely different computational model than the standard <a title="Von Neumann architecture" href="http://en.wikipedia.org/wiki/Von_Neumann_architecture">Von Neumann</a> model used by <a title="imperative" href="http://en.wikipedia.org/wiki/Imperative_programming">imperative</a> and <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented</a> languages, in which you write your program as a list of discrete steps for the machine to follow. Instead, functional languages use <a title="Alonzo Church" href="http://en.wikipedia.org/wiki/Alonzo_Church">Church</a>‘s <a title="Lambda calculus" href="http://en.wikipedia.org/wiki/Lambda_calculus">Lambda calculus</a>, in which programs are constructed as a collection of functions which are applied to other things (primitives and other functions) to produce results.
+
+The lambda calculus allows you to perform any computation using only three functions - <a title="map" href="http://en.wikipedia.org/wiki/Map_(higher-order_function)">map</a>, <a title="filter" href="http://en.wikipedia.org/wiki/Filter_(higher-order_function)">filter</a>, and <a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)">fold</a>. It takes only these three operations to make a language <a title="turing-complete" href="http://en.wikipedia.org/wiki/Turing_completeness">Turing-Complete</a>. Now, the fact that a language has only three operations means that it takes very little time to understand, but it's also a red flag for being overly low-level (see <a title="Turing tarpit" href="http://en.wikipedia.org/wiki/Turing_tarpit">Turing Tarpit</a>). The imperative language <a title="Brainfuck" href="http://en.wikipedia.org/wiki/Brainfuck">Brainfuck</a> is considered unusable despite having a relative abundance of eight instructions.
+
+However, there is an important difference. You see, the lambda calculus operations are <a title="higher order function" href="http://en.wikipedia.org/wiki/Higher-order_function">higher-order functions</a>, which mean that they take in functions as input and return functions as output. Imperative languages like Brainfuck build programs from the bottom up - one Brainfuck operation can only increment a pointer or output a byte. Functional languages like Racket build up from the top down - one Racket instruction can literally do <em>anything, including redefining the language itself</em>. This simplicity-plus-power is part of what gives functional languages their appeal.
+
+A fourth function, <a title="lambda" href="http://en.wikipedia.org/wiki/Anonymous_function">lambda</a>, is also included, which allows for creation of anonymous functions. In the early days of lisp it was needed for the creation of local variables; it's mainly syntactic sugar now.
+
+Scheme is largely an academic language, with the goal of minimalism for pedagogical illustration. Racket is a "batteries included" version of Scheme, including an IDE, GUI tools, web server, package manager, etc., Still, it doesn't veer too far ideologically from its older brother, and omits many of the base functional operations you'd expect to find in a language, such as a range function, list slice, and bizarrely even map, filter, and fold. Scheme expects you to roll your own. Um, okay, let's write our own library with functions we'll use later. The last function, mod-3-5, is specific to our problem,  <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+
+(<span style="color: #cc00ff;">provide</span> <span style="color: #003333;">map</span>)
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #336666;">map </span><span style="color: #003333;">f</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">empty?</span> <span style="color: #003333;">lst</span>)
+        <span style="color: #003333;">empty</span>
+        (<span style="color: #336666;">cons </span>(<span style="color: #cc00ff;">f</span> (<span style="color: #cc00ff;">first</span> <span style="color: #003333;">lst</span>)) (<span style="color: #336666;">map </span><span style="color: #003333;">f</span> (<span style="color: #cc00ff;">rest</span> <span style="color: #003333;">lst</span>)))))
+
+(<span style="color: #cc00ff;">provide</span> <span style="color: #003333;">filter</span>)
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">filter</span> <span style="color: #003333;">pred</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">empty?</span> <span style="color: #003333;">lst</span>)
+        <span style="color: #003333;">empty</span>
+        (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">pred</span> (<span style="color: #cc00ff;">first</span> <span style="color: #003333;">lst</span>))
+            (<span style="color: #336666;">cons </span>(<span style="color: #cc00ff;">first</span> <span style="color: #003333;">lst</span>) (<span style="color: #cc00ff;">filter</span> <span style="color: #003333;">pred</span> (<span style="color: #cc00ff;">rest</span> <span style="color: #003333;">lst</span>)))
+            (<span style="color: #cc00ff;">filter</span> <span style="color: #003333;">pred</span> (<span style="color: #cc00ff;">rest</span> <span style="color: #003333;">lst</span>)))))
+
+(<span style="color: #cc00ff;">provide</span> <span style="color: #003333;">fold</span>)
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">fold</span> <span style="color: #003333;">f</span> <span style="color: #003333;">accum</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">empty?</span> <span style="color: #003333;">lst</span>)
+        <span style="color: #003333;">accum</span>
+        (<span style="color: #cc00ff;">fold</span> <span style="color: #003333;">f</span> (<span style="color: #cc00ff;">f</span> <span style="color: #003333;">accum</span> (<span style="color: #cc00ff;">first</span> <span style="color: #003333;">lst</span>)) (<span style="color: #cc00ff;">rest</span> <span style="color: #003333;">lst</span>))))
+
+(<span style="color: #cc00ff;">provide</span> <span style="color: #003333;">range</span>)
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">range</span> <span style="color: #003333;">low</span> <span style="color: #003333;">high</span>)
+    (<span style="color: #cc00ff;">cond</span>
+        ((<span style="color: #336666;">&gt; </span><span style="color: #003333;">low</span> <span style="color: #003333;">high</span>) <span style="color: #003333;">empty</span>)
+        (<span style="color: #006699; font-weight: bold;">else </span>(<span style="color: #336666;">cons </span><span style="color: #003333;">low</span> (<span style="color: #cc00ff;">range</span> (<span style="color: #336666;">+ </span><span style="color: #003333;">low</span> <span style="color: #ff6600;">1</span>) <span style="color: #003333;">high</span>)))))
+
+(<span style="color: #cc00ff;">provide</span> <span style="color: #003333;">slice</span>)
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">slice</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">start</span> <span style="color: #003333;">end</span>)
+    (<span style="color: #cc00ff;">drop</span> (<span style="color: #cc00ff;">take</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">end</span>) <span style="color: #003333;">start</span>))
+
+(<span style="color: #cc00ff;">provide</span> <span style="color: #003333;">mod-3-5</span>)
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #006699; font-weight: bold;">or </span>(<span style="color: #336666;">= </span>(<span style="color: #336666;">modulo </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">3</span>) <span style="color: #ff6600;">0</span>) (<span style="color: #336666;">= </span>(<span style="color: #336666;">modulo </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">5</span>) <span style="color: #ff6600;">0</span>)) <span style="color: #336600;">#t</span> <span style="color: #336600;">#f</span>))</pre>
+</div>
+Now, let's get to work. Here's our first example of Euler1. It's a straight application of map, then filter, then fold. Map here is admittedly stupid - it takes a number and returns itself; it's included only for illustration:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+<span style="color: #0099ff; font-style: italic;">;; Euler1 in Racket</span>
+(<span style="color: #cc00ff;">require</span> <span style="color: #cc3300;">"util.rkt"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">x</span>)
+    (<span style="color: #cc00ff;">fold</span><span style="color: #336666;">+</span> <span style="color: #ff6600;">0</span>
+        (<span style="color: #cc00ff;">filter</span><span style="color: #cc00ff;">mod-3-5</span>
+            (<span style="color: #336666;">map </span>(<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">x</span>) <span style="color: #003333;">x</span>)
+            	(<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">x</span>)))))
+
+(<span style="color: #cc00ff;">printf</span> <span style="color: #cc3300;">"~a\n"</span> (<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))</pre>
+</div>
+Notice that we are not maintaining any state to solve our problem. No loops, no variables, no mutable state. We simply call map, filter, and fold, and get the solution. This is an important part of the solution of the concurrency problem - how do you keep threads from stepping on each other's states? By eliminating mutable state!
+
+Here’s a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler()</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation – there are instead only functions which return values. The other main point is that this recursion uses tail call optimization – it’s written in such a way that an intelligent compiler can optimize its stack usage to be <em>O(n)</em> instead of<em> O(n!)</em>. In English, this means that your program will probably not crash even for hugely recursive calls.
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+<span style="color: #0099ff; font-style: italic;">;; Euler1 in Racket</span>
+(<span style="color: #cc00ff;">require</span> <span style="color: #cc3300;">"util.rkt"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">n</span> <span style="color: #003333;">acc</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">= </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">0</span>)
+        <span style="color: #003333;">acc</span>
+        (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">n</span>)
+            (<span style="color: #cc00ff;">euler</span> (<span style="color: #336666;">- </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">1</span>) (<span style="color: #336666;">+ </span><span style="color: #003333;">acc</span> <span style="color: #003333;">n</span>))
+            (<span style="color: #cc00ff;">euler</span> (<span style="color: #336666;">- </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">1</span>) <span style="color: #003333;">acc</span>))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">x</span>)
+    (<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">x</span> <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #cc00ff;">printf</span> <span style="color: #cc3300;">"~a\n"</span> (<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))</pre>
+</div>
+Although Racket is a functional language, and that last version is idiomatic of functional languages like <a title="StandardML" href="http://gdm9000.wordpress.com/2011/11/23/standard-ml/">Standard ML</a> – no mutability, it’s not really idiomatic of Lisp. Lisp is all about lists. Here’s a more idiomatic version in which we pass around a list generated up front, peeling off and using the first value in each recursive call:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+<span style="color: #0099ff; font-style: italic;">;; Euler1 in Racket</span>
+(<span style="color: #cc00ff;">require</span> <span style="color: #cc3300;">"util.rkt"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mod-3-5-n</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">n</span>) <span style="color: #003333;">n</span> <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">acc</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">not </span>(<span style="color: #cc00ff;">empty?</span> <span style="color: #003333;">lst</span>))
+        (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">rest</span> <span style="color: #003333;">lst</span>) (<span style="color: #336666;">+ </span><span style="color: #003333;">acc</span> (<span style="color: #cc00ff;">mod-3-5-n</span> (<span style="color: #cc00ff;">first</span> <span style="color: #003333;">lst</span>))))
+        <span style="color: #003333;">acc</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">n</span>) <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #cc00ff;">printf</span> <span style="color: #cc3300;">"~a\n"</span> (<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here,<em>Euler1() </em>returns <em>Euler1</em><em>()</em> calculated on the half of the list before the pivot element, <em>Euler1</em><em>()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+<span style="color: #0099ff; font-style: italic;">;; Euler1 in Racket</span>
+(<span style="color: #cc00ff;">require</span> <span style="color: #cc3300;">"util.rkt"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mod-3-5-n</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">n</span>) <span style="color: #003333;">n</span> <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">not </span>(<span style="color: #cc00ff;">empty?</span> <span style="color: #003333;">lst</span>))
+        <span style="color: #0099ff; font-style: italic;">; find the midpoint of the list</span>
+        (<span style="color: #006699; font-weight: bold;">let </span>((<span style="color: #cc00ff;">pivot</span> (<span style="color: #336666;">ceiling </span>(<span style="color: #336666;">/ </span>(<span style="color: #336666;">length </span><span style="color: #003333;">lst</span>) <span style="color: #ff6600;">2</span>))))
+            (<span style="color: #cc00ff;">+</span>
+                <span style="color: #0099ff; font-style: italic;">; return a value for the middle element</span>
+                (<span style="color: #cc00ff;">mod-3-5-n</span> (<span style="color: #336666;">list-ref </span><span style="color: #003333;">lst</span> (<span style="color: #336666;">- </span><span style="color: #003333;">pivot</span> <span style="color: #ff6600;">1</span>)))
+                <span style="color: #0099ff; font-style: italic;">; plus euler on the first half of the list</span>
+                (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">slice</span> <span style="color: #003333;">lst</span> <span style="color: #ff6600;">0</span> (<span style="color: #336666;">- </span><span style="color: #003333;">pivot</span> <span style="color: #ff6600;">1</span>)))
+                <span style="color: #0099ff; font-style: italic;">; plus euler on the last half of the list</span>
+                (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">slice</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">pivot</span> (<span style="color: #336666;">length </span><span style="color: #003333;">lst</span>)))))
+        <span style="color: #ff6600;">0</span> <span style="color: #0099ff; font-style: italic;">; else return 0</span>
+    )
+)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">n</span>)))
+
+(<span style="color: #cc00ff;">printf</span> <span style="color: #cc3300;">"~a\n"</span> (<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))</pre>
+</div>
+Here’s a version in which I define my own <em>map/filter/reduce</em> functions using lambdas, and then simply apply them using Racket's built-in <a title="function composition" href="http://en.wikipedia.org/wiki/Function_composition">function composition</a>. Map’s only purpose here obviously is for illustration, since it returns itself:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+<span style="color: #0099ff; font-style: italic;">;; Euler1 in Racket</span>
+(<span style="color: #cc00ff;">require</span> <span style="color: #cc3300;">"util.rkt"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">myMap</span> <span style="color: #003333;">lst</span>)
+	(<span style="color: #336666;">map </span>(<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">x</span>) <span style="color: #003333;">x</span>) <span style="color: #003333;">lst</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">myFilter</span> <span style="color: #003333;">lst</span>)
+	(<span style="color: #cc00ff;">filter</span> <span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">lst</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">myFold</span> <span style="color: #003333;">lst</span>)
+	(<span style="color: #cc00ff;">fold</span> <span style="color: #336666;">+</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">lst</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">x</span>)
+	((<span style="color: #cc00ff;">compose</span> <span style="color: #003333;">myFold</span> <span style="color: #003333;">myFilter</span> <span style="color: #003333;">myMap</span>) (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">x</span>)))
+
+(<span style="color: #cc00ff;">printf</span> <span style="color: #cc3300;">"~a\n"</span> (<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))</pre>
+</div>
+One of Lisp’s greatest claims to fame is its regular syntax. It may appear illegible at first, but Lisp is not designed for <em>human-readability</em> – it’s designed for <em>machine-readability</em>. Unlike other languages where your code is written as a bunch of text, Lisp is written as collection of syntax symbols having a regular grammar. Lisp also has a precompilation stage called <a title="Macros" href="http://www.apl.jhu.edu/~hall/Lisp-Notes/Macros.html">macros</a> which generate and substitute code using user-defined routines, allowing you to extend the language arbitrarily. What does all this mean? Since I’m a macro novice myself, I’ll borrow some material from <a title="LispMacros" href="http://stackoverflow.com/a/4621882/105101">this StackOverflow answer</a>. Let’s say you’re fond of the <a title="PythonListComprehension" href="http://en.wikipedia.org/wiki/List_comprehension#Python">Python lisp comprehension</a> syntax:
+<pre>    S = [x for x in range(1000) if x%3==0 or x%5==0]</pre>
+Well, Racket doesn’t have anything like that, but don’t despair – Racket lets you roll your own! The macro stage takes source tokens as input, transforms it, and then returns syntax that replaces the original tokens. Here I've defined two different versions of <em>lcomp</em> - one that takes a filter and one that does not. I'm only using the second one but am including both to illustrate overloading of a macro definition by wildcard. I’ve colored the function parameters and arguments passed in for ease of illustration. Notice we do nothing with the tokens <em>for,</em> <em>in, </em>and<em> conditional </em>- they exist merely as part of our list comprehension’s grammar:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+<span style="color: #0099ff; font-style: italic;">;; Euler1 in Racket</span>
+(<span style="color: #cc00ff;">require</span> <span style="color: #cc3300;">"util.rkt"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define-syntax </span><span style="color: #003333;">lcomp</span>
+    (<span style="color: #006699; font-weight: bold;">syntax-rules </span>()
+        [(<span style="color: #cc00ff;">lcomp</span> <span style="color: #ff0000;">expression</span> <span style="color: #339966;">for</span> <span style="color: #33cccc;">var</span> <span style="color: #3366ff;">in</span> <span style="color: #339966;">mylist</span>)
+            (<span style="color: #cc00ff;">for/list</span> ([<span style="color: #33cccc;">var</span> <span style="color: #339966;">mylist</span>]) <span style="color: #ff0000;">expression</span>)]
+
+        [(<span style="color: #cc00ff;">lcomp</span> <span style="color: #ff0000;">expression</span> <span style="color: #339966;">for</span> <span style="color: #33cccc;">var</span> <span style="color: #3366ff;">in</span> <span style="color: #339966;">mylist</span> <span style="color: #ff6600;">conditional </span><span style="color: #339966;">test</span>)
+            (<span style="color: #cc00ff;">for/list</span> ([<span style="color: #33cccc;">var</span> <span style="color: #339966;">mylist</span>] <span style="color: #555555;">#</span><span style="color: #003333;">:when</span> <span style="color: #339966;">test</span>) <span style="color: #ff0000;">expression</span>)]))
+
+(<span style="color: #cc00ff;">printf</span> <span style="color: #cc3300;">"~a\n"</span>
+    (<span style="color: #cc00ff;">fold</span> <span style="color: #003333;">+</span> <span style="color: #ff6600;">0</span>
+        (<span style="color: #cc00ff;">lcomp</span> <span style="color: #003333;">x</span> <span style="color: #003333;">for</span> <span style="color: #003333;">x</span> <span style="color: #003333;">in</span> (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #ff6600;">999</span>) <span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">x</span>))))</pre>
+</div>
+It actually took me much longer than I'd like to admit to get this code to work. Basically, you're going to have to read the documentation and get friendly with the admittedly nice debugging IDE. Racket has a tool to let you step through the macro expansion, which produced the following result from my source (including Racket's highlighting): <!-- HTML generated using hilite.me -->
+<div style="margin-bottom: 20px; background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">(module euler1 racket
+    (#%module-begin
+        (require <span style="font-style: italic;">"util.rkt"</span>)
+        (define-syntax lcomp
+            (syntax-rules ()
+                [(lcomp expression for var in mylist) (for/list ([var mylist]) expression)]
+                [(lcomp expression for var in mylist conditional test)
+                    (for/list ([var mylist]) #:when test) expression)]))
+        (printf
+            <span style="font-style: italic;">"~a\n"</span>
+            (fold + 0 <strong><span style="color: #ff0000;">(for/list ([</span></strong>x (range 0 999)<strong><span style="color: #ff0000;">] #:when</span></strong> (mod-3-5 x)<strong><span style="color: #ff0000;">)</span></strong> x<strong><span style="color: #ff0000;">)</span></strong>))))</pre>
+</div>
+Finally, here’s an elegant algorithm based on an observation by little <a title="Gauss" href="http://en.wikipedia.org/wiki/Carl_Friedrich_Gauss">Carl Friedrich Gauss</a> – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation. Racket sucks at making long math expressions legible outside of an IDE, so I’ve attempted to clarify it with indentation:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">#</span><span style="color: #003333;">lang</span> <span style="color: #003333;">racket</span>
+<span style="color: #0099ff; font-style: italic;">;; Euler1 in Racket</span>
+(<span style="color: #cc00ff;">require</span> <span style="color: #cc3300;">"util.rkt"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mySum</span> <span style="color: #003333;">n</span> <span style="color: #003333;">size</span>)
+    (<span style="color: #336666;">* </span><span style="color: #003333;">n</span>
+        (<span style="color: #cc00ff;">floor</span>
+            (<span style="color: #cc00ff;">/</span>
+                (<span style="color: #cc00ff;">+</span>
+                    (<span style="color: #336666;">expt </span>(<span style="color: #336666;">floor </span>(<span style="color: #336666;">/ </span><span style="color: #003333;">size</span> <span style="color: #003333;">n</span>)) <span style="color: #ff6600;">2</span>)
+                    (<span style="color: #336666;">floor </span>(<span style="color: #336666;">/ </span><span style="color: #003333;">size</span> <span style="color: #003333;">n</span>)))
+                <span style="color: #ff6600;">2</span>))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">size</span>)
+    (<span style="color: #336666;">- </span>(<span style="color: #336666;">+ </span>(<span style="color: #cc00ff;">mySum</span> <span style="color: #ff6600;">3</span> <span style="color: #003333;">size</span>) (<span style="color: #cc00ff;">mySum</span> <span style="color: #ff6600;">5</span> <span style="color: #003333;">size</span>)) (<span style="color: #cc00ff;">mySum</span> <span style="color: #ff6600;">15</span> <span style="color: #003333;">size</span>)))
+
+(<span style="color: #cc00ff;">printf</span> <span style="color: #cc3300;">"~a\n"</span> (<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))</pre>
+</div>
+To execute all this code, install Racket. There is no version for the yum package manager, so download and install from <a href="http://racket-lang.org/">http://racket-lang.org/</a>. Then, simply add <em>racket</em> to your path and execute:
+<!-- HTML generated using hilite.me -->
+<div style="margin-bottom: 20px; background: #111111; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">racket</span> <span style="color: #ffffff;">euler1.rkt</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span>
+<span style="color: #ffffff;">$</span></pre>
+</div>

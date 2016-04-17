@@ -1,0 +1,21 @@
+<a href="http://www.scala-lang.org/">Scala</a>, introduced in 2003, is an object-oriented, functional language for the <a title="JVM" href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>. Scala looks like it will be useful and fun to learn, but it seems to have a steep learning curve for me. It took me a whole day to figure out the constructs for even this simple version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Scala</span>
+
+<span style="color:#006699;font-weight:bold;">object</span> <span style="color:#00aa88;font-weight:bold;">euler1</span> <span style="color:#555555;">{</span>
+<span style="color:#006699;font-weight:bold;">    def</span> calc<span style="color:#555555;">(</span>x<span style="color:#006699;font-weight:bold;">:</span> <span style="color:#007788;font-weight:bold;">Int</span><span style="color:#555555;">)</span><span style="color:#006699;font-weight:bold;">:</span> <span style="color:#007788;font-weight:bold;">Int</span> <span style="color:#555555;">=</span> <span style="color:#555555;">{</span>
+<span style="color:#006699;font-weight:bold;">        val</span> ints <span style="color:#006699;font-weight:bold;">=</span> <span style="color:#555555;">(</span><span style="color:#ff6600;">1</span> to x<span style="color:#555555;">).</span>filter<span style="color:#555555;">(</span>i <span style="color:#006699;font-weight:bold;">=&gt;</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#555555;">)</span>
+<span style="color:#006699;font-weight:bold;">        return</span> ints<span style="color:#555555;">.</span>foldLeft<span style="color:#555555;">(</span><span style="color:#ff6600;">0</span><span style="color:#555555;">)</span> <span style="color:#555555;">{</span> <span style="color:#555555;">(</span>total<span style="color:#555555;">,</span>n<span style="color:#555555;">)</span> <span style="color:#006699;font-weight:bold;">=&gt;</span> total<span style="color:#555555;">+</span>n <span style="color:#555555;">}</span>
+<span style="color:#555555;">    }</span>
+
+<span style="color:#006699;font-weight:bold;">    def</span> main<span style="color:#555555;">(</span>args<span style="color:#006699;font-weight:bold;">:</span> <span style="color:#007788;font-weight:bold;">Array</span><span style="color:#555555;">[</span><span style="color:#007788;font-weight:bold;">String</span><span style="color:#555555;">])</span> <span style="color:#006699;font-weight:bold;">=</span> <span style="color:#555555;">{</span>
+<span style="color:#00aa88;font-weight:bold;">        Console</span><span style="color:#555555;">.</span>println<span style="color:#555555;">(</span> calc<span style="color:#555555;">(</span><span style="color:#ff6600;">999</span><span style="color:#555555;">)</span> <span style="color:#555555;">)</span>
+<span style="color:#555555;">    }</span>
+<span style="color:#555555;">}</span></pre>
+</div>
+To install Scala on Fedora, simply <em>yum install scala</em>. Scala programs are executed like Java. First compile using the compiler, then run using the runtime:<!-- HTML generated using hilite.me -->
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">scalac</span> <span style="color:#ffffff;">euler1.scl</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">scala</span> <span style="color:#ffffff;">-cp</span> <span style="color:#ffffff;">.</span> <span style="color:#ffffff;">euler1</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

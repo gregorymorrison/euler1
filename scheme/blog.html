@@ -1,0 +1,195 @@
+<a href="http://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a> is a variant of <a title="Lisp" href="http://gdm9000.wordpress.com/2011/10/15/lisp/">lisp</a> designed for academic purity which debuted in 1975. Whereas Lisps usually include all sorts of libraries to make them more generally useful, Scheme is stripped down for elegance. At first upon exploring this language, I was horrified that it was missing so much basic functionality. I thought that I would hate this language. Instead though, I found myself fascinated by a language so simple that you could learn the basics in one sitting.
+
+What users of Scheme do is build up their own libraries functions and utilities to get things done - it's a Lego language. I found the exercise of having to write operations like sum and filter to be not tedious, but academically interesting, since they're not just magic routines that you call. Rather, writing them imparts a deep understanding of how the language functions.  And you can find most operations that you'd want already written on the 'net.
+
+For this exercise, I've chosen Gnu's implementation of Scheme, <a title="guile" href="http://www.gnu.org/software/guile/">Guile</a>. To write <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Scheme, here is the set of utility functions I started off with. The last function, <em>mod-3-5</em>, is specific to our problem,  <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; util.scm</span>
+(<span style="color: #cc00ff;">use-modules</span> (<span style="color: #cc00ff;">srfi</span> <span style="color: #003333;">srfi-1</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">id</span> <span style="color: #003333;">obj</span>)          <span style="color: #003333;">obj</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">flip</span> <span style="color: #003333;">func</span>)       (<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">x</span> <span style="color: #003333;">y</span>) (<span style="color: #cc00ff;">func</span> <span style="color: #003333;">y</span> <span style="color: #003333;">x</span>)))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">curry</span> <span style="color: #003333;">func</span> <span style="color: #003333;">x</span>)    (<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">y</span>) (<span style="color: #cc00ff;">func</span> <span style="color: #003333;">x</span> <span style="color: #003333;">y</span>)))
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">compose</span> <span style="color: #003333;">f</span> <span style="color: #003333;">g</span>)     (<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">arg</span>) (<span style="color: #cc00ff;">f</span> (<span style="color: #cc00ff;">g</span> <span style="color: #003333;">arg</span>))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">foldr</span> <span style="color: #003333;">func</span> <span style="color: #003333;">end</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">null? </span><span style="color: #003333;">lst</span>)
+        <span style="color: #003333;">end</span>
+        (<span style="color: #cc00ff;">func</span> (<span style="color: #336666;">car </span><span style="color: #003333;">lst</span>) (<span style="color: #cc00ff;">foldr</span> <span style="color: #003333;">func</span> <span style="color: #003333;">end</span> (<span style="color: #336666;">cdr </span><span style="color: #003333;">lst</span>)))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">foldl</span> <span style="color: #003333;">func</span> <span style="color: #003333;">accum</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">null? </span><span style="color: #003333;">lst</span>)
+        <span style="color: #003333;">accum</span>
+        (<span style="color: #cc00ff;">foldl</span> <span style="color: #003333;">func</span> (<span style="color: #cc00ff;">func</span> <span style="color: #003333;">accum</span> (<span style="color: #336666;">car </span><span style="color: #003333;">lst</span>)) (<span style="color: #336666;">cdr </span><span style="color: #003333;">lst</span>))))
+
+(<span style="color: #006699; font-weight: bold;">define </span><span style="color: #003333;">fold</span> <span style="color: #003333;">foldl</span>)
+(<span style="color: #006699; font-weight: bold;">define </span><span style="color: #003333;">reduce</span> <span style="color: #003333;">fold</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">unfold</span> <span style="color: #003333;">func</span> <span style="color: #003333;">init</span> <span style="color: #003333;">pred</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">pred</span> <span style="color: #003333;">init</span>)
+        (<span style="color: #336666;">list </span><span style="color: #003333;">init</span>)
+        (<span style="color: #336666;">cons </span><span style="color: #003333;">init</span> (<span style="color: #cc00ff;">unfold</span> <span style="color: #003333;">func</span> (<span style="color: #cc00ff;">func</span> <span style="color: #003333;">init</span>) <span style="color: #003333;">pred</span>))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">sum</span> <span style="color: #555555;">.</span> <span style="color: #003333;">lst</span>)        (<span style="color: #cc00ff;">fold</span> <span style="color: #003333;">+</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">lst</span>))
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">product</span> <span style="color: #555555;">.</span> <span style="color: #003333;">lst</span>)    (<span style="color: #cc00ff;">fold</span> <span style="color: #003333;">*</span> <span style="color: #ff6600;">1</span> <span style="color: #003333;">lst</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">range</span> <span style="color: #003333;">low</span> <span style="color: #003333;">high</span>)
+    (<span style="color: #cc00ff;">cond</span>
+        ((<span style="color: #336666;">&gt; </span><span style="color: #003333;">low</span> <span style="color: #003333;">high</span>) <span style="color: #555555;">'</span>())
+        (<span style="color: #006699; font-weight: bold;">else </span>(<span style="color: #336666;">cons </span><span style="color: #003333;">low</span> (<span style="color: #cc00ff;">range</span> (<span style="color: #336666;">+ </span><span style="color: #003333;">low</span> <span style="color: #ff6600;">1</span>) <span style="color: #003333;">high</span>)))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">slice</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">start</span> <span style="color: #003333;">end</span>)
+    (<span style="color: #cc00ff;">drop</span> (<span style="color: #cc00ff;">take</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">end</span>) <span style="color: #003333;">start</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">x</span>)
+	(<span style="color: #006699; font-weight: bold;">or </span>(<span style="color: #336666;">= </span>(<span style="color: #336666;">modulo </span><span style="color: #003333;">x</span> <span style="color: #ff6600;">3</span>) <span style="color: #ff6600;">0</span>) (<span style="color: #336666;">= </span>(<span style="color: #336666;">modulo </span><span style="color: #003333;">x</span> <span style="color: #ff6600;">5</span>) <span style="color: #ff6600;">0</span>)))</pre>
+</div>
+Now, let's get to work. Here's our first example of Euler1. It's a straight application of map, then filter, then fold. Map here is admittedly stupid - it takes a number and returns itself; it's included only for illustration. My code blew out the stack - I thought Scheme was supposed to be optimized to prevent that? Luckily, Guile lets you increase the stack size:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; Euler1 in Scheme</span>
+(<span style="color: #336666;">load </span><span style="color: #cc3300;">"util.scm"</span>)
+(<span style="color: #cc00ff;">debug-set!</span> <span style="color: #003333;">stack</span> <span style="color: #ff6600;">100000</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">x</span>)
+    (<span style="color: #cc00ff;">reduce</span> <span style="color: #003333;">+</span> <span style="color: #ff6600;">0</span>
+        (<span style="color: #cc00ff;">filter</span> <span style="color: #003333;">mod-3-5</span>
+            (<span style="color: #336666;">map </span>(<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">x</span>) <span style="color: #003333;">x</span>)
+                (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">x</span>)))))
+
+(<span style="color: #336666;">display </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))(<span style="color: #cc00ff;">newline</span>)</pre>
+</div>
+Notice that we are not maintaining any state to solve our problem. No loops, no variables, no mutable state. We simply call map, filter, and fold, and get the solution. This is an important part of the solution of the concurrency problem - how do you keep threads from stepping on each other's states? By eliminating mutable state!
+
+Here’s a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler()</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation – there are instead only functions which return values. The other main point is that this recursion uses tail call optimization – it’s written in such a way that an intelligent compiler can optimize its stack usage to be <em>O(n)</em> instead of<em> O(n!)</em>. In English, this means that your program will probably not crash even for hugely recursive calls.
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; Euler1 in Scheme</span>
+(<span style="color: #336666;">load </span><span style="color: #cc3300;">"util.scm"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">n</span> <span style="color: #003333;">acc</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">= </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">0</span>)
+        <span style="color: #003333;">acc</span>
+        (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">n</span>)
+            (<span style="color: #cc00ff;">euler</span> (<span style="color: #336666;">- </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">1</span>) (<span style="color: #336666;">+ </span><span style="color: #003333;">acc</span> <span style="color: #003333;">n</span>))
+            (<span style="color: #cc00ff;">euler</span> (<span style="color: #336666;">- </span><span style="color: #003333;">n</span> <span style="color: #ff6600;">1</span>) <span style="color: #003333;">acc</span>))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">x</span>)
+    (<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">x</span> <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #336666;">display </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))(<span style="color: #cc00ff;">newline</span>)</pre>
+</div>
+Although Scheme is a functional language, and that last version is idiomatic of functional languages like <a title="StandardML" href="http://gdm9000.wordpress.com/2011/11/23/standard-ml/">Standard ML</a> – no mutability, it’s not really idiomatic of a Lisp. Lisp is all about lists. Here’s a more idiomatic version in which we pass around a list generated up front, peeling off and using the first value in each recursive call:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; Euler1 in Scheme</span>
+(<span style="color: #336666;">load </span><span style="color: #cc3300;">"util.scm"</span>)
+(<span style="color: #cc00ff;">debug-set!</span> <span style="color: #003333;">stack</span> <span style="color: #ff6600;">100000</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mod-3-5-n</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">n</span>) <span style="color: #003333;">n</span> <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">acc</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">null? </span><span style="color: #003333;">lst</span>)
+        <span style="color: #003333;">acc</span>
+        (<span style="color: #cc00ff;">euler</span> (<span style="color: #336666;">cdr </span><span style="color: #003333;">lst</span>) (<span style="color: #336666;">+ </span><span style="color: #003333;">acc</span> (<span style="color: #cc00ff;">mod-3-5-n</span> (<span style="color: #336666;">car </span><span style="color: #003333;">lst</span>))))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">n</span>) <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #336666;">display </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))(<span style="color: #cc00ff;">newline</span>)</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, e<em>uler1() </em>returns e<em>uler1</em><em>()</em> calculated on the half of the list before the pivot element, e<em>uler1</em><em>()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; Euler1 in Scheme</span>
+(<span style="color: #336666;">load </span><span style="color: #cc3300;">"util.scm"</span>)
+(<span style="color: #cc00ff;">debug-set!</span> <span style="color: #003333;">stack</span> <span style="color: #ff6600;">100000</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mod-3-5-n</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">n</span>) <span style="color: #003333;">n</span> <span style="color: #ff6600;">0</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #336666;">null? </span><span style="color: #003333;">lst</span>)
+        <span style="color: #ff6600;">0</span> <span style="color: #0099ff; font-style: italic;">; return 0</span>
+        <span style="color: #0099ff; font-style: italic;">; else find the midpoint of the list</span>
+        (<span style="color: #006699; font-weight: bold;">let </span>((<span style="color: #cc00ff;">pivot</span> (<span style="color: #336666;">ceiling </span>(<span style="color: #336666;">/ </span>(<span style="color: #336666;">length </span><span style="color: #003333;">lst</span>) <span style="color: #ff6600;">2</span>))))
+            (<span style="color: #cc00ff;">+</span>
+                <span style="color: #0099ff; font-style: italic;">; return a value for the middle element</span>
+                (<span style="color: #cc00ff;">mod-3-5-n</span> (<span style="color: #336666;">list-ref </span><span style="color: #003333;">lst</span> (<span style="color: #336666;">- </span><span style="color: #003333;">pivot</span> <span style="color: #ff6600;">1</span>)))
+                <span style="color: #0099ff; font-style: italic;">; plus euler on the first half of the list</span>
+                (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">slice</span> <span style="color: #003333;">lst</span> <span style="color: #ff6600;">0</span> (<span style="color: #336666;">- </span><span style="color: #003333;">pivot</span> <span style="color: #ff6600;">1</span>)))
+                <span style="color: #0099ff; font-style: italic;">; plus euler on the last half of the list</span>
+                (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">slice</span> <span style="color: #003333;">lst</span> <span style="color: #003333;">pivot</span> (<span style="color: #336666;">length </span><span style="color: #003333;">lst</span>)))))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">n</span>)
+    (<span style="color: #cc00ff;">euler</span> (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">n</span>)))
+
+(<span style="color: #336666;">display </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))(<span style="color: #cc00ff;">newline</span>)</pre>
+</div>
+Here’s a version in which I define my own <em>map/filter/reduce</em> functions using lambdas, and then simply apply them using Scheme's built-in <a title="function composition" href="http://en.wikipedia.org/wiki/Function_composition">function composition</a>. Map’s only purpose here obviously is for illustration, since it returns itself:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; Euler1 in Scheme</span>
+(<span style="color: #336666;">load </span><span style="color: #cc3300;">"util.scm"</span>)
+(<span style="color: #cc00ff;">debug-set!</span> <span style="color: #003333;">stack</span> <span style="color: #ff6600;">100000</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">myMap</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #336666;">map </span>(<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">x</span>) <span style="color: #003333;">x</span>) <span style="color: #003333;">lst</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">myFilter</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #cc00ff;">filter</span> <span style="color: #003333;">mod-3-5</span> <span style="color: #003333;">lst</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">myFold</span> <span style="color: #003333;">lst</span>)
+    (<span style="color: #cc00ff;">fold</span> <span style="color: #003333;">+</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">lst</span>))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">x</span>)
+    ((<span style="color: #cc00ff;">compose</span> <span style="color: #003333;">myFold</span> (<span style="color: #cc00ff;">compose</span> <span style="color: #003333;">myFilter</span> <span style="color: #003333;">myMap</span>)) (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #003333;">x</span>)))
+
+(<span style="color: #336666;">display </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))(<span style="color: #cc00ff;">newline</span>)</pre>
+</div>
+One of Lisp’s greatest claims to fame is its regular syntax. It may appear illegible at first, but Lisp is not designed for <em>human-readability</em> – it’s designed for <em>machine-readability</em>. Unlike other languages where your code is written as a bunch of text, Lisp is written as collection of syntax symbols having a regular grammar. Lisp also has a precompilation stage called <a title="Macros" href="http://www.apl.jhu.edu/~hall/Lisp-Notes/Macros.html">macros</a> which generate and substitute code using user-defined routines, allowing you to extend the language arbitrarily. What does all this mean? Since I’m a macro novice myself, I’ll borrow some material from <a title="LispMacros" href="http://stackoverflow.com/a/4621882/105101">this StackOverflow answer</a>. Let’s say you’re fond of the <a title="PythonListComprehension" href="http://en.wikipedia.org/wiki/List_comprehension#Python">Python lisp comprehension</a> syntax:
+<pre>    S = [x for x in range(1000) if x%3==0 or x%5==0]</pre>
+Well, Scheme doesn’t have anything like that, but don’t despair – Scheme lets you roll your own! The macro stage takes source tokens as input, transforms it, and then returns syntax that replaces the original tokens. Here I've defined two different versions of <em>lcomp</em> - one that takes a filter and one that does not. I'm only using the second one but am including both to illustrate overloading of a macro definition by wildcard. I’ve colored the function parameters and arguments passed in for ease of illustration. Notice we do nothing with the tokens <em>for,</em> <em>in, </em>and<em> conditional </em>- they exist merely as part of our list comprehension’s grammar:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; Euler1 in Scheme</span>
+(<span style="color: #336666;">load </span><span style="color: #cc3300;">"util.scm"</span>)
+(<span style="color: #cc00ff;">use-syntax</span> (<span style="color: #cc00ff;">ice-9</span> <span style="color: #003333;">syncase</span>))
+(<span style="color: #cc00ff;">debug-set!</span> <span style="color: #003333;">stack</span> <span style="color: #ff6600;">100000</span>)
+
+(<span style="color: #006699; font-weight: bold;">define-syntax </span><span style="color: #003333;">lcomp</span>
+    (<span style="color: #006699; font-weight: bold;">syntax-rules </span>()
+        ((<span style="color: #cc00ff;">lcomp</span> <span style="color: #003333;">expression</span> <span style="color: #003333;">for</span> <span style="color: #003333;">var</span> <span style="color: #003333;">in</span> <span style="color: #003333;">mylist</span>)
+            (<span style="color: #336666;">map </span>(<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">var</span>) <span style="color: #003333;">expression</span>) <span style="color: #003333;">mylist</span>))
+
+        ((<span style="color: #cc00ff;">lcomp</span> <span style="color: #003333;">expression</span> <span style="color: #003333;">for</span> <span style="color: #003333;">var</span> <span style="color: #003333;">in</span> <span style="color: #003333;">mylist</span> <span style="color: #003333;">conditional</span> <span style="color: #003333;">test</span>)
+             (<span style="color: #336666;">map </span>(<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">var</span>) <span style="color: #003333;">expression</span>)
+                (<span style="color: #cc00ff;">filter</span> (<span style="color: #006699; font-weight: bold;">lambda </span>(<span style="color: #cc00ff;">expression</span>) <span style="color: #003333;">test</span>) <span style="color: #003333;">mylist</span>)))))
+
+(<span style="color: #cc00ff;">display</span>
+    (<span style="color: #cc00ff;">fold</span> <span style="color: #003333;">+</span> <span style="color: #ff6600;">0</span>
+        (<span style="color: #cc00ff;">lcomp</span> <span style="color: #003333;">x</span> <span style="color: #003333;">for</span> <span style="color: #003333;">x</span> <span style="color: #003333;">in</span> (<span style="color: #cc00ff;">range</span> <span style="color: #ff6600;">0</span> <span style="color: #ff6600;">999</span>) <span style="color: #006699; font-weight: bold;">if </span>(<span style="color: #cc00ff;">mod-3-5</span> <span style="color: #003333;">x</span>))))
+    (<span style="color: #cc00ff;">newline</span>)</pre>
+</div>
+Finally, here’s an elegant algorithm based on an observation by little <a title="Gauss" href="http://en.wikipedia.org/wiki/Carl_Friedrich_Gauss">Carl Friedrich Gauss</a> – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation. Scheme sucks at making long math expressions legible outside of an IDE, so I’ve attempted to clarify it with indentation:
+<div style="margin-bottom: 20px; background: #f0f3f3; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">; Euler1 in Scheme</span>
+(<span style="color: #336666;">load </span><span style="color: #cc3300;">"util.scm"</span>)
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">mySum</span> <span style="color: #003333;">n</span> <span style="color: #003333;">size</span>)
+    (<span style="color: #336666;">* </span><span style="color: #003333;">n</span>
+        (<span style="color: #336666;">floor </span>
+            (<span style="color: #336666;">/ </span>
+                (<span style="color: #cc00ff;">+</span>
+                    (<span style="color: #336666;">expt </span>(<span style="color: #336666;">floor </span>(<span style="color: #336666;">/ </span><span style="color: #003333;">size</span> <span style="color: #003333;">n</span>)) <span style="color: #ff6600;">2</span>)
+                    (<span style="color: #336666;">floor </span>(<span style="color: #336666;">/ </span><span style="color: #003333;">size</span> <span style="color: #003333;">n</span>)))
+                <span style="color: #ff6600;">2</span>))))
+
+(<span style="color: #006699; font-weight: bold;">define </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #003333;">size</span>)
+    (<span style="color: #336666;">- </span>(<span style="color: #336666;">+ </span>(<span style="color: #cc00ff;">mySum</span> <span style="color: #ff6600;">3</span> <span style="color: #003333;">size</span>) (<span style="color: #cc00ff;">mySum</span> <span style="color: #ff6600;">5</span> <span style="color: #003333;">size</span>)) (<span style="color: #cc00ff;">mySum</span> <span style="color: #ff6600;">15</span> <span style="color: #003333;">size</span>)))
+
+(<span style="color: #336666;">display </span>(<span style="color: #cc00ff;">euler1</span> <span style="color: #ff6600;">999</span>))(<span style="color: #cc00ff;">newline</span>)</pre>
+</div>
+To install on Fedora, use <em>yum</em> to install <i>guile</i>. Then, to execute, just pass your program as an argument to Guile:
+<div style="margin-bottom: 20px; background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;">$guile euler1.scm
+<span style="color: #0086f7; font-weight: bold;">233168</span>
+$</pre>
+</div>

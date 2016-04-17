@@ -1,23 +1,20 @@
-create or replace FUNCTION euler1 (n IN NUMBER)
-   RETURN NUMBER
-IS
-    retval NUMBER(10);
-BEGIN
-    retval := 0;
+-- Euler1 in PL/SQL
 
-   FOR i IN 1 .. n LOOP
-     IF MOD(i,3)=0 or MOD(i,5)=0 THEN
-            retval := retval + i;
-     END IF;
-   END LOOP;
+declare
 
-   RETURN retval;
-END EULER1;
+    function Euler1 (n in number) return number is
+        result number(10);
+    begin
+        result := 0;
 
+        for i in 1 .. n loop
+            if mod(i,3)=0 or mod(i,5)=0 then
+                result := result + i;
+            end if;
+        end loop;
+        return result;
+    end Euler1;
 
-DECLARE
-  v_Return NUMBER;
-BEGIN
-  v_Return := EULER1(999);
-  DBMS_OUTPUT.PUT_LINE('v_Return = ' || v_Return);
-END;
+begin
+    dbms_output.put_line(Euler1(999));
+end;

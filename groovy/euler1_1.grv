@@ -1,11 +1,5 @@
 // Euler1 in Groovy
 
-BigInteger euler1 (Integer n) {
-    retval = 0
-    for (i=0; i<n; i++)
-        if (i%3==0 || i%5==0)
-            retval += i
-    return retval
-}
+def euler1(n) { (0..n).findAll{x -> x%3==0 || x%5==0}.sum() }
 
-println "${ euler1(1000) }"
+print euler1(999) + '\n'

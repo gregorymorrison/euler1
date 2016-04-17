@@ -1,0 +1,24 @@
+<a href="http://www.lua.org/">Lua</a>, introduced in 1993, is renowned for its accessibility and simplicity; it's used primarily as an embedded scripting language. It's supposed to be highly optimized for speed.
+
+My version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> here is straight out of the imperative school - it looks just like <a title="JavaScript" href="http://gdm9000.wordpress.com/2011/10/15/javascript/">JavaScript</a>, <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a>, <a title="VBScript" href="http://en.wikipedia.org/wiki/VBScript">VBScript</a>... It's so familiar that it literally took me only 15 minutes to bang this out with no prior knowledge of this language. It's actually disappointingly verbose for what it is, but I can't complain about the development time:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#009999;">#!/usr/bin/lua</span>
+<span style="color:#0099ff;font-style:italic;">-- Euler1 in Lua</span>
+
+<span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">euler</span>(n)
+    <span style="color:#006699;font-weight:bold;">local</span> retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>, n <span style="color:#006699;font-weight:bold;">do</span>
+        <span style="color:#006699;font-weight:bold;">if</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">then</span>
+            retval <span style="color:#555555;">= </span><span class="Apple-style-span" style="line-height:18px;">retval + </span>i</pre>
+<pre style="line-height:125%;margin:0;">        <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">return</span> retval
+<span style="color:#006699;font-weight:bold;">end</span>
+
+<span style="color:#336666;">print</span> (euler(<span style="color:#ff6600;">999</span>))</pre>
+</div>
+I look forward to investigating this language further. To install on Fedora, <em>yum install lua</em>. Then to execute, simply call your script:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1.lua</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

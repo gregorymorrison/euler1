@@ -3,7 +3,12 @@
 importPackage(java.io);
 importPackage(java.lang);
 
-function euler1(x) {
+// new object instance
+var euler1 = {};
+
+// dynamically add new properties and behaviors to object
+euler1.range = 1000;
+euler1.solver = function(x){
     var i, result;
     result = 0;
 
@@ -14,5 +19,6 @@ function euler1(x) {
     }
     return result;
 }
+euler1.result = euler1.solver(euler1.range);
 
-System.out.println (euler1 (1000));
+System.out.println(euler1.result);

@@ -1,0 +1,25 @@
+I really haven't spent much time with <a href="http://www.tcl.tk/">Tcl</a>. This language, which debuted in 1988, strikes me as being quite accessible - it took me only about an hour to get the following version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> working.  I'm interested in exploring this language further.
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/tclsh</span>
+<span style="color:#0099ff;font-style:italic;"># Euler1 in Tcl</span>
+
+<span style="color:#006699;font-weight:bold;">proc</span> euler1 <span style="color:#006699;font-weight:bold;">{</span><span style="color:#003333;">n</span><span style="color:#006699;font-weight:bold;">}</span> <span style="color:#006699;font-weight:bold;">{</span>
+    <span style="color:#006699;font-weight:bold;">set</span> sum <span style="color:#ff6600;">0</span><span style="color:#006699;font-weight:bold;">;</span> <span style="color:#006699;font-weight:bold;">set</span> i <span style="color:#ff6600;">0</span>
+
+    while <span style="color:#006699;font-weight:bold;">{</span><span style="color:#003333;">$i</span> <span style="color:#555555;">&lt;</span> <span style="color:#003333;">$n</span><span style="color:#006699;font-weight:bold;">}</span> <span style="color:#006699;font-weight:bold;">{</span>
+        <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#006699;font-weight:bold;">{</span><span style="color:#003333;">$i</span><span style="color:#555555;">%</span><span style="color:#003333;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> <span style="color:#003333;">$i</span><span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#006699;font-weight:bold;">}</span> <span style="color:#006699;font-weight:bold;">{</span>
+            <span style="color:#006699;font-weight:bold;">set</span> sum <span style="color:#006699;font-weight:bold;">[expr</span> <span style="color:#003333;">$sum</span><span style="color:#555555;">+</span><span style="color:#003333;">$i</span><span style="color:#006699;font-weight:bold;">]</span>
+        <span style="color:#006699;font-weight:bold;">}</span>
+        <span style="color:#336666;">incr</span> i
+    <span style="color:#006699;font-weight:bold;">}</span>
+
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#003333;">$sum</span>
+<span style="color:#006699;font-weight:bold;">}</span>
+
+<span style="color:#336666;">puts</span> <span style="color:#006699;font-weight:bold;">[</span><span style="color:#003333;">euler1</span> <span style="color:#ff6600;">1000</span><span style="color:#006699;font-weight:bold;">]</span></pre>
+</div>
+Tcl is easy to run - just call your script:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">euler1.tcl</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

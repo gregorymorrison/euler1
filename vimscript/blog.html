@@ -1,0 +1,62 @@
+<a title="Vim" href="http://www.vim.org/">Vim</a>, everybody's favorite text editor, has a scripting component that lets you bend it to your will. Oddly, this language seems not to have a formal name - Vim's official documentation refers to it as merely as "<a title="VimScript" href="http://vimdoc.sourceforge.net/htmldoc/usr_41.html#script">vim script</a>", while others have dubbed it <a title="VimL" href="http://stackoverflow.com/questions/4398312/vimscript-or-viml">VimL</a>. Vim script is not a large, complex language, since it's merely meant to extend Vim. And much of it is simple, Basic-like Procedural declarations. Here is a simple version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#009999;">#!/usr/local/bin/vimsh</span>
+<span style="color:#cc3300;">" Euler1 in VimL</span>
+
+function<span style="color:#555555;">!</span> <span style="color:#0000ff;">g:Euler1</span>(<span style="color:#008000;">size</span>)
+    let <span style="color:#008000;">s:result</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">for</span> <span style="color:#008000;">i</span> in range(<span style="color:#ff6600;">1</span>, <span style="color:#008000;">a:size</span>)
+        <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#008000;">i</span> <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> <span style="color:#008000;">i</span> <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+            let <span style="color:#008000;">s:result</span> <span style="color:#555555;">+=</span> <span style="color:#008000;">i</span>
+        endif
+    endfor
+
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#008000;">s:result</span>
+endfunc
+
+<span style="color:#555555;">:</span>echo <span style="color:#0000ff;">g:Euler1</span>(<span style="color:#ff6600;">999</span>)</pre>
+</div>
+This should be pretty easy to read even for the uninitiated - it's simple Procedural code. One interesting twist visible here is its optional, built-in scoping operators - <em>g:</em> denotes global, <em>s:</em> denotes local to this script, and <em>a:</em> denotes arguments, among others.
+
+Vim script is worth exploring because it's actually a fully-<a title="TuringComplete" href="http://en.wikipedia.org/wiki/Turing_completeness">Turing-complete</a> language. It has exception handling, list and dictionary data structures, and <a title="Prototype" href="http://en.wikipedia.org/wiki/Prototype-based_programming">prototype-based object orientation</a>. Vim exposes an elaborate collection of functions and properties to Vim script concerning documents, the editor, history, file system, OS environment, etc. Here's another annoyingly contrived version of Euler1 using an object prototype:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#009999;">#!/usr/local/bin/vimsh</span>
+<span style="color:#cc3300;">" Euler1 in VimL</span>
+
+<span style="color:#cc3300;">" an object prototype (just a dictionary)</span>
+let Euler1 <span style="color:#555555;">=</span> {}
+
+<span style="color:#cc3300;">" the constructor</span>
+function<span style="color:#555555;">!</span> Euler1.New(size)
+    let newObj <span style="color:#555555;">=</span> copy(self)
+    let newObj.size <span style="color:#555555;">=</span> a<span style="color:#555555;">:</span>size
+    <span style="color:#006699;font-weight:bold;">return</span> newObj
+endfunc
+
+<span style="color:#cc3300;">" an instance method</span>
+function<span style="color:#555555;">!</span> Euler1.solve()
+    let result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> i in range(<span style="color:#ff6600;">1</span>, self.size)
+        <span style="color:#006699;font-weight:bold;">if</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+            let result <span style="color:#555555;">+=</span> i
+        endif
+    endfor
+    let self.result <span style="color:#555555;">=</span> result
+endfunc
+
+<span style="color:#cc3300;">" create an instance</span>
+let euler <span style="color:#555555;">=</span> Euler1.New(<span style="color:#ff6600;">999</span>)
+
+<span style="color:#555555;">:</span>call euler.solve()
+
+<span style="color:#555555;">:</span>echo euler.result</pre>
+</div>
+To run a Vim script, you first load your script as a file into Vim and execute it using the command '<em>:so %</em>'. Output gets displayed in Vim's command line. But what if you want to simply run it as a command-line script? I found a shell script, <a title="Vimsh" href="http://www.vim.org/scripts/script.php?script_id=1069"><em>vimsh</em></a>, that does just that - it feeds your file into Vim and outputs the results to the command line. There's even a Windows batch file version. It's a kind of hacky process involving temp files, but it works. It choked on the scoping operators from my first example, but when I removed them, all was copacetic. Simply add the shebang at the top of your file and execute it.
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1.vimsh</span>
+
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+
+<span style="color:#ffffff;">$</span></pre>
+</div>

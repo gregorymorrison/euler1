@@ -1,0 +1,47 @@
+<a title="C++" href="http://en.wikipedia.org/wiki/C%2B%2B">C++</a> is one of the most popular <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented</a> languages. It debuted in 1983 and is a superset of the C language, with the addition of OOP. I wanted to write a representative version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in C++, but I failed. It turns out that this is a stupid idea - <a href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a> is just overkill for what is essentially a simple function. There is no benefit to construing a simple function in terms of classes. This is the problem with languages like <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a> and <a title="Haskell" href="http://gdm9000.wordpress.com/2011/10/15/haskell/">Haskell</a> that rigidly enforce purity - there will always be edge cases that require you to subvert the paradigm.
+
+Anyway, here is my attempt - a class with members, a constructor, and a method. Obviously overkill, but it is cleanly defined. I haven't done C++ in years although I know it well, so it took me maybe 10 minutes to write the following:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in C++</span>
+<span style="color:#009999;">#include &lt;iostream&gt;</span>
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span> {
+    <span style="color:#006699;font-weight:bold;">private</span><span style="color:#555555;">:</span>
+        <span style="color:#007788;font-weight:bold;">int</span> size;
+        <span style="color:#007788;font-weight:bold;">int</span> result;
+
+    <span style="color:#006699;font-weight:bold;">public</span><span style="color:#555555;">:</span>
+        Euler1(<span style="color:#007788;font-weight:bold;">int</span> _size) {
+            size <span style="color:#555555;">=</span> _size;
+            result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+        }
+
+        <span style="color:#007788;font-weight:bold;">int</span> solve() {
+            <span style="color:#006699;font-weight:bold;">for</span> (<span style="color:#007788;font-weight:bold;">int</span> i<span style="color:#555555;">=</span><span style="color:#ff6600;">0</span>; i<span style="color:#555555;">&lt;</span>size; i<span style="color:#555555;">++</span>) {
+                <span style="color:#006699;font-weight:bold;">if</span> (i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>) {
+                    result <span style="color:#555555;">+=</span> i;
+                }
+            }
+        }
+
+        <span style="color:#007788;font-weight:bold;">int</span> getResult() {
+            <span style="color:#006699;font-weight:bold;">return</span> result;
+        }
+};
+
+<span style="color:#007788;font-weight:bold;">int</span> main () {
+    Euler1 euler1(<span style="color:#ff6600;">1000</span>);
+
+    euler1.solve();
+
+    std<span style="color:#555555;">::</span>cout <span style="color:#555555;">&lt;&lt;</span> euler1.getResult();
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#ff6600;">0</span>;
+}</pre>
+</div>
+To run this, I used the venerable <a href="http://gcc.gnu.org/">GCC</a> compiler. Compile to object code, enable execute permissions on the resultant object file, then execute:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">g++</span> <span style="color:#ffffff;">euler1.cpp</span> <span style="color:#ffffff;">-o</span> <span style="color:#ffffff;">euler1 </span></pre>
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$ chmod 777 euler1</span>
+<span style="color:#ffffff;">$</span> ./<span style="color:#ffffff;">euler1.exe</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

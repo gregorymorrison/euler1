@@ -1,0 +1,103 @@
+<a title="Nickle" href="http://nickle.org/">Nickle</a>, introduced in 2001, is an evolution of the Linux calculator utility, <a title="bc" href="http://gdm9000.wordpress.com/2012/07/29/bc/">bc</a>. As such, it is a general-purpose language designed for numeric processing - a desk calculator on steroids. It includes just enough functionality to get math done - namespaces, arrays, file I/O, threads, etc; while dispensing with unnecessary baggage - regular expressions, OOP, GUIs, etc. This is straight <a title="C" href="http://gdm9000.wordpress.com/2011/10/18/c/">C</a>-style procedural territory, folks. Its basic use case is as an interactive session, with <a title="REPL" href="http://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a>-like functionality such as history and a debugger.
+
+Here's a variant of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Nickle. There's nothing unfamiliar here - it's straight procedural C/<a title="JavaScript" href="http://gdm9000.wordpress.com/2011/12/29/javascript/">JavaScript</a>-style code, complete with C's string formatting. It took me maybe 10 minutes to write this, my first attempt with Nickle:
+<div style="background: white; overflow: auto; width: auto; margin-bottom: 20px; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">/* Euler1 in Nickle */</span>
+
+<span style="color: #007788; font-weight: bold;">int</span> function <span style="color: #cc00ff;">Euler</span>(size) {
+    <span style="color: #007788; font-weight: bold;">int</span> retval <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+    <span style="color: #006699; font-weight: bold;">for</span> (<span style="color: #007788; font-weight: bold;">int</span> i <span style="color: #555555;">=</span> <span style="color: #ff6600;">1</span>; i <span style="color: #555555;">&lt;</span> size; i<span style="color: #555555;">++</span>) {
+        <span style="color: #006699; font-weight: bold;">if</span> (i <span style="color: #555555;">%</span> <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i <span style="color: #555555;">%</span> <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) { retval <span style="color: #555555;">+=</span> i; }
+    }
+    <span style="color: #006699; font-weight: bold;">return</span> (retval);
+}
+
+printf(<span style="color: #cc3300;">"%i</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>, Euler(<span style="color: #ff6600;">1000</span>));
+quit;</pre>
+</div>
+Here's a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler()</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> - it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation - there are instead only functions which return values. The other main point is that this recursion uses tail call optimization - it's written in such a way that an intelligent compiler can optimize its stack usage to be O(n) instead of O(n!). In English, this means that your program will probably not crash even for hugely recursive calls.
+<div style="background: white; overflow: auto; margin-bottom: 20px; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">/* Euler1 in Nickle */</span>
+
+<span style="color: #007788; font-weight: bold;">int</span> function <span style="color: #cc00ff;">euler</span>(n, acc) {
+    <span style="color: #006699; font-weight: bold;">if</span> (n <span style="color: #555555;">==</span> <span style="color: #ff6600;">1</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> acc;
+    } <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #006699; font-weight: bold;">if</span> (n <span style="color: #555555;">%</span> <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n <span style="color: #555555;">%</span> <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> euler(n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc<span style="color: #555555;">+</span>n);
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> euler(n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc);
+    }
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> function <span style="color: #cc00ff;">Euler1</span>(size) { <span style="color: #006699; font-weight: bold;">return</span> euler(size,<span style="color: #ff6600;">0</span>); }
+
+printf(<span style="color: #cc3300;">"%i</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>, Euler1(<span style="color: #ff6600;">999</span>));
+quit;</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, <em>euler1() </em>returns <em>euler1</em><em>()</em> calculated on the half of the list before the pivot element, <em>euler1</em><em>() </em>calculated on the half of the list after the pivot element, and the pivot element or 0, all added together. Nickle does have arrays, but it doesn't seem to have array operations such as generating an array or slicing them, so I've rolled my own:
+<div style="background: white; overflow: auto; width: auto; color: black; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">/* Euler1 in Nickle */</span>
+
+<span style="color: #0099ff; font-style: italic;">/* generates a list of integers from 1 to size */</span>
+<span style="color: #007788; font-weight: bold;">int</span>[] function range(size) {
+    <span style="color: #007788; font-weight: bold;">int</span>[size] retval <span style="color: #555555;">=</span> {};
+
+    <span style="color: #006699; font-weight: bold;">for</span> (<span style="color: #007788; font-weight: bold;">int</span> i <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>; i <span style="color: #555555;">&lt;</span> size; i<span style="color: #555555;">++</span>) {
+        retval[i] <span style="color: #555555;">=</span> i<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span>;
+    }
+
+    <span style="color: #006699; font-weight: bold;">return</span> retval;
+}
+
+<span style="color: #0099ff; font-style: italic;">/* returns an array slice of ints from start to end (not inclusive) */</span>
+<span style="color: #007788; font-weight: bold;">int</span>[] function slice(ints, start, end) {
+    <span style="color: #007788; font-weight: bold;">int</span>[end<span style="color: #555555;">-</span>start] retval <span style="color: #555555;">=</span> {};
+
+    <span style="color: #006699; font-weight: bold;">for</span> (<span style="color: #007788; font-weight: bold;">int</span> i <span style="color: #555555;">=</span> start; i <span style="color: #555555;">&lt;</span> end; i<span style="color: #555555;">++</span>) {
+        retval[i<span style="color: #555555;">-</span>start] <span style="color: #555555;">=</span> ints[i];
+    }
+
+    <span style="color: #006699; font-weight: bold;">return</span> retval;
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> function euler1(ints) {
+    <span style="color: #006699; font-weight: bold;">if</span> (dim(ints) <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #ff6600;">0</span>;
+    }
+
+    <span style="color: #007788; font-weight: bold;">int</span> len <span style="color: #555555;">=</span> dim(ints);
+    <span style="color: #007788; font-weight: bold;">int</span> pivot <span style="color: #555555;">=</span> ceil( len<span style="color: #555555;">/</span><span style="color: #ff6600;">2</span> );
+    <span style="color: #007788; font-weight: bold;">int</span> pre <span style="color: #555555;">=</span> euler1( slice(ints, <span style="color: #ff6600;">0</span>, pivot<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>) );
+    <span style="color: #007788; font-weight: bold;">int</span> post <span style="color: #555555;">=</span> euler1( slice(ints, pivot, len) );
+    <span style="color: #007788; font-weight: bold;">int</span> i <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+    <span style="color: #006699; font-weight: bold;">if</span> (ints[pivot<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>] <span style="color: #555555;">%</span> <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> ints[pivot<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>] <span style="color: #555555;">%</span> <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        i <span style="color: #555555;">=</span> ints[pivot<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>];
+    }
+
+    <span style="color: #006699; font-weight: bold;">return</span> pre <span style="color: #555555;">+</span> i <span style="color: #555555;">+</span> post;
+}
+
+printf(<span style="color: #cc3300;">"%i</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>, euler1( range(<span style="color: #ff6600;">999</span>) ));
+quit;</pre>
+</div>
+Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.
+<div style="background: white; overflow: auto; margin-bottom: 20px; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">/* Euler1 in Nickle */</span>
+
+<span style="color: #007788; font-weight: bold;">int</span> function <span style="color: #cc00ff;">mySum</span>(n, size) {
+    <span style="color: #006699; font-weight: bold;">return</span> n <span style="color: #555555;">*</span> (floor(size<span style="color: #555555;">/</span>n)<span style="color: #555555;">**</span><span style="color: #ff6600;">2</span> <span style="color: #555555;">+</span> floor(size<span style="color: #555555;">/</span>n)) <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>;
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> function <span style="color: #cc00ff;">Euler1</span>(size) {
+    <span style="color: #006699; font-weight: bold;">return</span> (mySum(<span style="color: #ff6600;">3</span>,size) <span style="color: #555555;">+</span> mySum(<span style="color: #ff6600;">5</span>,size) <span style="color: #555555;">-</span> mySum(<span style="color: #ff6600;">15</span>,size));
+}
+
+printf(<span style="color: #cc3300;">"%i</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>, Euler1(<span style="color: #ff6600;">999</span>));
+quit;</pre>
+</div>
+To execute, simply <a title="yum" href="http://webcache.googleusercontent.com/search?q=cache:http://joysofprogramming.com/install-xslt-fedora-rhel/&amp;hl=en&amp;strip=1">yum-install</a> <em>nickle</em>, then execute your code by passing it in to the runtime as an argument:
+<div style="background: black; overflow: auto; width: auto; color: white; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">nickle</span> <span style="color: #ffffff;">euler1.n</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span>
+<span style="color: #ffffff;">$</span></pre>
+</div>

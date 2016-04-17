@@ -1,0 +1,138 @@
+Windows PowerShell, introduced in 2006, is Microsoft's attempt at a useful shell. It borrows <em><a title="UNIX" href="http://en.wikipedia.org/wiki/Unix">Unix's</a> </em>function chaining using pipes (<em>:)</em>) and Unix's <a title="sigil" href="http://en.wikipedia.org/wiki/Sigil_(computer_programming)">sigils</a> and comparison operators (<em>:(</em>). It's <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented</a>, and comes with drivers that let you interact directly with things like the file system, the registry, databases, etc.
+
+So, what does it look like? Here is <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in an idiomatic PowerShell style. Here, the <em>(..)</em> range operator creates an array. This is piped to a filter that uses an <a title="lambda" href="http://en.wikipedia.org/wiki/Anonymous_function">anonymous function</a> - each element of the collection is applied with the <em>$</em> argument. This filtered collection is piped to <em>sum, </em>one of the half-dozen built-in aggregation functions, whose result is an object that includes an integer sum property. Finally, that integer property is returned by the <em>select</em> function:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in PowerShell</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler1 <span style="color: #555555;">(</span><span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #555555;">(</span>1..<span style="color: #003333;">$size</span><span style="color: #555555;">)</span> | where <span style="color: #555555;">{</span><span style="color: #003333;">$_</span>%3 -eq 0 -or <span style="color: #003333;">$_</span>%5 -eq 0<span style="color: #555555;">}</span> | measure -sum | select -expand sum
+<span style="color: #555555;">}</span>
+
+euler1 999</pre>
+</div>
+Here is a simple imperative solution, demonstrating the use of a function and a for loop:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in Powershell</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler1 <span style="color: #555555;">(</span><span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #003333;">$ret</span> <span style="color: #555555;">=</span> 0
+    <span style="color: #006699; font-weight: bold;">for</span> <span style="color: #555555;">(</span><span style="color: #003333;">$i</span><span style="color: #555555;">=</span>1; <span style="color: #003333;">$i</span> -le <span style="color: #003333;">$size</span>; <span style="color: #003333;">$i</span>++<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #003333;">$i</span>%3 -eq 0 -or <span style="color: #003333;">$i</span>%5 -eq 0<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+            <span style="color: #003333;">$ret</span> +<span style="color: #555555;">=</span> <span style="color: #003333;">$i</span>
+        <span style="color: #555555;">}</span>
+    <span style="color: #555555;">}</span>
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #003333;">$ret</span>
+<span style="color: #555555;">}</span>
+
+euler1 <span style="color: #555555;">(</span>999<span style="color: #555555;">)</span></pre>
+</div>
+Next is a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation – there are instead only functions which return values. The other main point is that this recursion uses tail call optimization – it’s written in such a way that an intelligent compiler can optimize its stack usage to be <a title="big o notation" href="http://en.wikipedia.org/wiki/Big_O_notation"><em>O(n)</em> instead of<em> O(n!)</em></a>. In English, this means that your program will probably not crash even for hugely recursive calls.
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in Powershell</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler <span style="color: #555555;">(</span><span style="color: #003333;">$n</span>, <span style="color: #003333;">$acc</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #003333;">$n</span> -eq 0<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        <span style="color: #003333;">$acc</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">elseif</span> <span style="color: #555555;">(</span><span style="color: #003333;">$n </span>% 3 -eq 0 -or <span style="color: #003333;">$n </span>% 5 -eq 0<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        euler <span style="color: #555555;">(</span><span style="color: #003333;">$n</span>-1<span style="color: #555555;">)</span> <span style="color: #555555;">(</span><span style="color: #003333;">$acc</span>+<span style="color: #003333;">$n</span><span style="color: #555555;">)</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+        euler <span style="color: #555555;">(</span><span style="color: #003333;">$n</span>-1<span style="color: #555555;">)</span> <span style="color: #003333;">$acc</span>
+    <span style="color: #555555;">}</span>
+<span style="color: #555555;">}</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler1 <span style="color: #555555;">(</span><span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    euler <span style="color: #003333;">$size</span> 0
+<span style="color: #555555;">}</span>
+
+euler1 999</pre>
+</div>
+<span style="line-height: 1.5em;">PowerShell doesn't have the canonical <a title="Functional" href="http://en.wikipedia.org/wiki/Functional_programming">Functional programming</a> functions <em>map/filter/reduce</em> built in, but it is easy enough to roll our own. It does have <a title="List comprehension" href="http://en.wikipedia.org/wiki/List_comprehension#PowerShell">list comprehensions</a>, so we will repurpose them for our <em>map</em> and <em>filter</em>. There is an existing function named <em>filter</em>, so we'll name ours <em>filt</em>. PowerShell does have some built-in aggregation functions such as <em>sum</em>, but let's implement a real general-purpose aggregation whose function is passed in. A real Functional style requires <a title="Immutability" href="http://en.wikipedia.org/wiki/Immutability">immutability</a>, which we can accomplish through the use of <a title="recursion" href="http://en.wikipedia.org/wiki/Recursion_(computer_science)">recursion</a>. And as you can see at the bottom with the calls made to <em>map/filt/reduce</em>, lambdas are defined as a code block surrounded by curly braces:</span>
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in Powershell</span>
+
+<span style="color: #006699; font-weight: bold;">function </span><span style="color: #008000;">map</span>  <span style="color: #555555;">(</span><span style="color: #003333;">$f</span>, <span style="color: #003333;">$l</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span><span style="color: #003333;">$l</span> | ? <span style="color: #555555;">{</span><span style="color: #003333;">$_</span><span style="color: #555555;">}</span> | %  <span style="color: #003333;">$f</span> <span style="color: #555555;">}
+</span>
+<span style="color: #006699; font-weight: bold;">function </span><span style="color: #008000;">filt</span> <span style="color: #555555;">(</span><span style="color: #003333;">$f</span>, <span style="color: #003333;">$l</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span><span style="color: #003333;">$l</span> | ?  <span style="color: #003333;">$f</span>  | % <span style="color: #555555;">{</span><span style="color: #003333;">$_</span><span style="color: #555555;">}}</span>
+
+<span style="color: #006699; font-weight: bold;">function </span><span style="color: #008000;">reduce</span> <span style="color: #555555;">(</span><span style="color: #003333;">$f</span>, <span style="color: #003333;">$acc</span>, <span style="color: #003333;">$l</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #003333;">$l</span> -eq <span style="color: #003333;">$null</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        <span style="color: #003333;">$acc</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">elseif</span> <span style="color: #555555;">(</span><span style="color: #003333;">$l.length</span> -eq <span style="color: #003333;">1</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        reduce <span style="color: #003333;">$f</span> <span style="color: #555555;">(</span>&amp; <span style="color: #003333;">$f</span> <span style="color: #003333;">$acc</span> <span style="color: #003333;">$l</span><span style="color: #555555;">[</span>0<span style="color: #555555;">])</span> <span style="color: #003333;">$null</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+        reduce <span style="color: #003333;">$f</span> <span style="color: #555555;">(</span>&amp; <span style="color: #003333;">$f</span> <span style="color: #003333;">$acc</span> <span style="color: #003333;">$l</span><span style="color: #555555;">[</span>0<span style="color: #555555;">])</span> <span style="color: #003333;">$l</span><span style="color: #555555;">[</span>1..<span style="color: #555555;">(</span><span style="color: #003333;">$l</span>.length-1<span style="color: #555555;">)]</span>
+    <span style="color: #555555;">}</span>
+<span style="color: #555555;">}</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler1 <span style="color: #555555;">(</span><span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #008000;">reduce</span> <span style="color: #555555;">{</span><span style="color: #003333;">$args</span><span style="color: #555555;">[</span>0<span style="color: #555555;">]</span> + <span style="color: #003333;">$args</span><span style="color: #555555;">[</span>1<span style="color: #555555;">]}</span> 0 <span style="color: #555555;">(</span>
+        <span style="color: #008000;">filt</span> <span style="color: #555555;">{</span><span style="color: #003333;">$_</span>%3 -eq 0 -or <span style="color: #003333;">$_</span>%5 -eq 0<span style="color: #555555;">}</span> <span style="color: #555555;">(</span>
+            <span style="color: #008000;">map</span> <span style="color: #555555;">{</span><span style="color: #003333;">$_</span><span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">$(</span>1..<span style="color: #003333;">$size</span><span style="color: #006699; font-weight: bold;">)</span>
+        <span style="color: #555555;">)</span>
+    <span style="color: #555555;">)</span>
+<span style="color: #555555;">}</span>
+
+euler1 999</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, <em>euler() </em>returns <em>euler()</em> calculated on the half of the list before the pivot element, <em>euler()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together. Note here <a title="array slicing" href="http://en.wikipedia.org/wiki/Array_slicing">array slicing</a>, which is welcome but verbose.
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in PowerShell</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler<span style="color: #555555;">(</span><span style="color: #003333;">$l</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #0099ff; font-style: italic;"># if the list is empty, return 0</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #003333;">$l</span> -eq <span style="color: #003333;">$null</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        <span style="color: #006699; font-weight: bold;">return </span>0
+
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+        <span style="color: #003333;">$pivot</span> <span style="color: #555555;">=</span> <span style="color: #555555;">[</span>Math<span style="color: #555555;">]</span>::Floor<span style="color: #555555;">(</span><span style="color: #003333;">$l</span>.length/2<span style="color: #555555;">)</span>
+
+        <span style="color: #0099ff; font-style: italic;">#calculate a value for the pivot element</span>
+        <span style="color: #003333;">$i</span> <span style="color: #555555;">=</span> 0
+        <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #003333;">$l</span><span style="color: #555555;">[</span><span style="color: #003333;">$pivot</span><span style="color: #555555;">]</span>%3 -eq 0 -or <span style="color: #003333;">$l</span><span style="color: #555555;">[</span><span style="color: #003333;">$pivot</span><span style="color: #555555;">]</span>%5 -eq 0<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+            <span style="color: #003333;">$i</span> <span style="color: #555555;">=</span> <span style="color: #003333;">$l</span><span style="color: #555555;">[</span><span style="color: #003333;">$pivot</span><span style="color: #555555;">]</span>
+        <span style="color: #555555;">}</span>
+
+        <span style="color: #0099ff; font-style: italic;">#recursively process the half of the list below the middle element</span>
+        <span style="color: #003333;">$pre</span> <span style="color: #555555;">=</span> 0
+        <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>0 -le <span style="color: #003333;">$pivot</span>-1<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+            <span style="color: #003333;">$pre</span> <span style="color: #555555;">=</span> euler <span style="color: #003333;">$l</span><span style="color: #555555;">[</span>0..<span style="color: #555555;">(</span><span style="color: #003333;">$pivot</span>-1<span style="color: #555555;">)]</span>
+        <span style="color: #555555;">}</span>
+
+        <span style="color: #0099ff; font-style: italic;">#recursively process the half of the list above the middle element</span>
+        <span style="color: #003333;">$post</span> <span style="color: #555555;">=</span> 0
+        <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #003333;">$pivot</span>+1 -le <span style="color: #003333;">$l</span>.length-1<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+            <span style="color: #003333;">$post</span> <span style="color: #555555;">=</span> euler <span style="color: #003333;">$l</span><span style="color: #555555;">[(</span><span style="color: #003333;">$pivot</span>+1<span style="color: #555555;">)</span>..<span style="color: #555555;">(</span><span style="color: #003333;">$l</span>.length-1<span style="color: #555555;">)]</span>
+        <span style="color: #555555;">}</span>
+
+        <span style="color: #0099ff; font-style: italic;">#return thisVal + the results from the first and last halves</span>
+        <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #555555;">(</span><span style="color: #003333;">$pre</span> + <span style="color: #003333;">$i</span> + <span style="color: #003333;">$post</span><span style="color: #555555;">)</span>
+    <span style="color: #555555;">}</span>
+<span style="color: #555555;">}</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler1<span style="color: #555555;">(</span><span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    euler <span style="color: #555555;">(</span>1..<span style="color: #003333;">$size</span><span style="color: #555555;">)</span>
+<span style="color: #555555;">}</span>
+
+euler1 999</pre>
+</div>
+Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in PowerShell</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>mysum <span style="color: #555555;">(</span><span style="color: #003333;">$n</span>, <span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #555555;">([</span>Math<span style="color: #555555;">]</span>::Pow<span style="color: #555555;">(</span> <span style="color: #555555;">[</span>Math<span style="color: #555555;">]</span>::Floor<span style="color: #555555;">(</span><span style="color: #003333;">$size</span>/<span style="color: #003333;">$n</span><span style="color: #555555;">)</span>,2 <span style="color: #555555;">)</span> + <span style="color: #555555;">[</span>Math<span style="color: #555555;">]</span>::Floor<span style="color: #555555;">(</span><span style="color: #003333;">$size</span>/<span style="color: #003333;">$n</span><span style="color: #555555;">))</span> * <span style="color: #003333;">$n</span> / 2
+<span style="color: #555555;">}</span>
+
+<span style="color: #006699; font-weight: bold;">function </span>euler1 <span style="color: #555555;">(</span><span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #555555;">[</span>Math<span style="color: #555555;">]</span>::Floor<span style="color: #555555;">(</span> <span style="color: #555555;">(</span>mysum 3 <span style="color: #003333;">$size</span><span style="color: #555555;">)</span> + <span style="color: #555555;">(</span>mysum 5 <span style="color: #003333;">$size</span><span style="color: #555555;">)</span> - <span style="color: #555555;">(</span>mysum 15 <span style="color: #003333;">$size</span><span style="color: #555555;">)</span> <span style="color: #555555;">)</span>
+<span style="color: #555555;">}</span>
+
+euler1 999</pre>
+</div>
+<span style="line-height: 1.5em;">PowerShell comes built into Windows since Win8. For security purposes, it requires you to approve its execution or it will throw an error. You can add the following arguments to your script to avoid this:</span>
+<div style="background: #111111; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #ffffff;">C:\&gt;</span> <span style="color: #ffffff;">powershell.exe</span> <span style="color: #ffffff;">-ExecutionPolicy</span> <span style="color: #ffffff;">Bypass</span> <span style="color: #ffffff;">-NoLogo</span> <span style="color: #ffffff;">-NonInteractive</span> <span style="color: #ffffff;">-NoProfile</span> <span style="color: #ffffff;">-WindowStyle</span> <span style="color: #ffffff;">Hidden</span> <span style="color: #ffffff;">-File</span> <span style="color: #ffffff;">C:\temp\test.ps1</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span>
+
+<span style="color: #ffffff;">C:\&gt;</span></pre>
+</div>

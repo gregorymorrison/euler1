@@ -1,0 +1,13 @@
+(* File cdnum.mli: *)
+
+val fact: Big_int.big_int -> Big_int.big_int
+
+
+(* File cdnum.cd: *)
+
+let aux ((Int,Int) -> Int)
+ | (x, 0 | 1) -> x
+ | (x, n) -> aux (x * n, n - 1)
+
+let fact (x : Int) : Int = aux (Big_int.unit_big_int, x) 
+  (* Could write 1 instead of Big_int.unit_big_int. Just for fun. *)

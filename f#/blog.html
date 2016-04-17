@@ -1,0 +1,44 @@
+<!-- HTML generated using hilite.me --><a title="F#" href="http://msdn.microsoft.com/en-us/vstudio/hh388569.aspx">F#</a>, introduced in 2005, is Microsoft's version of <a title="OCaml" href="http://gdm9000.wordpress.com/2011/10/15/ocaml/">OCaml</a> for <a title=".NET" href="http://msdn.microsoft.com/en-us/netframework">.NET</a>. Which means that it's a <a title="Functional programming" href="http://msdn.microsoft.com/en-us/netframework">functional</a> language that supports <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a> and the .NET framework, among other things. So, without learning anything about F#, let's see how compatible F# is with OCaml. Let's see if it execute this OCaml version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> a commenter sent me:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">(* Euler1 in F# *)</span>
+
+<span style="color:#006699;font-weight:bold;">let</span> euler x <span style="color:#555555;">=</span>
+    <span style="color:#006699;font-weight:bold;">let</span> <span style="color:#006699;font-weight:bold;">rec</span> aux i n <span style="color:#555555;">=</span>
+        <span style="color:#006699;font-weight:bold;">if</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">then</span> n <span style="color:#006699;font-weight:bold;">else</span>
+            aux <span style="color:#555555;">(</span>i<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span><span style="color:#555555;">)</span>  <span style="color:#555555;">(</span><span style="color:#006699;font-weight:bold;">if</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">then</span> n <span style="color:#555555;">+</span> i <span style="color:#006699;font-weight:bold;">else</span> n<span style="color:#555555;">)</span>
+    <span style="color:#006699;font-weight:bold;">in</span> aux x <span style="color:#ff6600;">0</span>
+
+printfn <span style="color:#cc3300;">"%i"</span> <span style="color:#555555;">(</span>euler <span style="color:#ff6600;">999</span><span style="color:#555555;">)</span></pre>
+</div>
+Well, the F# team has a handy-dandy <a title="Try F#" href="http://www.tryfsharp.org/Tutorials.aspx#">web client</a> that will let you try F# without installing anything - let's try that. Crossing my fingers, I pasted my code into the window and clicked <em>Run</em>. Wouldn't you know it - it worked! I got the following output:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0000ff;"><strong>233168</strong></span>
+val euler : int -&gt; int</pre>
+</div>
+That was too easy! How about the OCaml version that I wrote - the one based on my <a title="Haskell" href="http://gdm9000.wordpress.com/2011/10/15/haskell/">Haskell</a> code with the weird 998 iterator size? Can anyone <em>please</em> tell me why this version needs to operate on 998?
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">(* Euler1 in F# *)</span>
+
+<span style="color:#006699;font-weight:bold;">let</span> <span style="color:#006699;font-weight:bold;">rec</span> range i j <span style="color:#555555;">=</span> i <span style="color:#555555;">::</span> <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">&gt;</span>j <span style="color:#006699;font-weight:bold;">then</span> <span style="color:#336666;">[]</span> <span style="color:#006699;font-weight:bold;">else</span> <span style="color:#555555;">(</span>range <span style="color:#555555;">(</span>i<span style="color:#555555;">+</span><span style="color:#ff6600;">1</span><span style="color:#555555;">)</span> j<span style="color:#555555;">);;</span>
+<span style="color:#006699;font-weight:bold;">let</span> sum xs <span style="color:#555555;">=</span> <span style="color:#00ccff;font-weight:bold;">List</span>.fold <span style="color:#555555;">(+)</span> <span style="color:#ff6600;">0</span> xs<span style="color:#555555;">;;</span>
+
+<span style="color:#006699;font-weight:bold;">let</span> myTest <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">fun</span> x <span style="color:#555555;">-&gt;</span> <span style="color:#006699;font-weight:bold;">if</span> x <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> x <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">then</span> <span style="color:#336666;">true</span> <span style="color:#006699;font-weight:bold;">else</span> <span style="color:#336666;">false</span><span style="color:#555555;">;;</span>
+
+<span style="color:#006699;font-weight:bold;">let</span> euler n <span style="color:#555555;">=</span> sum <span style="color:#555555;">(</span><span style="color:#00ccff;font-weight:bold;">List</span>.filter myTest <span style="color:#555555;">(</span>range <span style="color:#ff6600;">0</span> n<span style="color:#555555;">));;</span>
+
+<span style="color:#00ccff;font-weight:bold;">Printf</span>.printf <span style="color:#cc3300;">"%d</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span> <span style="color:#555555;">(</span>euler <span style="color:#ff6600;">998</span><span style="color:#555555;">);;</span></pre>
+</div>
+Well, at first it threw errors, but after changing the names of the fold and mod functions, it worked! It produces a lot of gibberish along with the solution:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;">val range : int -&gt; int -&gt; int list
+&gt;
+val sum : int list -&gt; int
+&gt;
+val myTest : int -&gt; bool
+&gt;
+val euler : int -&gt; int
+&gt; 233168
+val it : <span style="color:#003333;">unit</span> <span style="color:#555555;">=</span> <span style="color:#555555;">()</span>
+&gt; &gt;</pre>
+</div>
+So it appears that F# really <em>is</em> OCaml on .NET.

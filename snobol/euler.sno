@@ -1,0 +1,16 @@
+* Euler1 in Snobol
+
+        DEFINE('Euler(size)')   :(Exit)
+
+Euler   i = 1
+Loop    EQ(REMDR(i, 3), 0)      :F(Try_5)
+        Euler = Euler + i       :(Next)
+Try_5   EQ(REMDR(i, 5), 0)      :F(Next)
+        Euler = Euler + i
+Next    i = i + 1
+        LE(i, size)             :S(Loop)
+Done                            :(RETURN)
+Exit
+
+        OUTPUT = Euler(999)
+END

@@ -1,9 +1,9 @@
 -- Euler1 in Ada
 with Ada.Integer_Text_IO;
 
-procedure Euler is
+procedure Euler1 is
 
-    function Euler1(size : in Integer) return Integer is
+    function Euler(size : in Integer) return Integer is
         result: Integer;
     begin
         result := 0;
@@ -13,8 +13,8 @@ procedure Euler is
             end if;
         end loop;
         return result;
-    end Euler1;
+    end Euler;
 
 begin
-    Ada.Integer_Text_IO.Put (Integer( Euler1(1000) ));
-end Euler;
+    Ada.Integer_Text_IO.Put (Integer( Euler(1000) ));
+end Euler1;

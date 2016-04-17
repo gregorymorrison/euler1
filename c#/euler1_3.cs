@@ -1,8 +1,7 @@
-// Euler1 in C #
 using System;
 using System.Linq;
 
-class Euler1 {
+class Euler1_3 {
     public static void Main() {
         var range = Enumerable.Range(1, 999);
 

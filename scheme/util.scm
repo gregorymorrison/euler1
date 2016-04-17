@@ -1,21 +1,12 @@
 ; util.scm
+(use-modules (srfi srfi-1))
 
-; (define (not x) (if x #f #t))
-; (define (null? obj) (if (eqv? obj '()) #t #f))
-
-; (define (list . objs) objs)
 (define (id obj)          obj)
 
-(define (flip func)       (lambda (arg1 arg2) (func arg2 arg1)))
+(define (flip func)       (lambda (x y) (func y x)))
 
-(define (curry func arg1) (lambda (arg) (apply func (cons arg1 arg))))
-(define (compose f g)     (lambda (arg) (f (apply g arg))))
-
-; (define zero? (curry = 0))
-; (define positive? (curry < 0))
-; (define negative? (curry > 0))
-; (define (odd? num) (= (mod num 2) 1))
-; (define (even? num) (= (mod num 2) 0))
+(define (curry func x)    (lambda (y) (func x y)))
+(define (compose f g)     (lambda (arg) (f (g arg))))
 
 (define (foldr func end lst)
     (if (null? lst)
@@ -32,25 +23,20 @@
 
 (define (unfold func init pred)
     (if (pred init)
-        (cons init '())
+        (list init)
         (cons init (unfold func (func init) pred))))
 
 (define (sum . lst)        (fold + 0 lst))
 (define (product . lst)    (fold * 1 lst))
-; (define (and . lst) (fold && #t lst))
-; (define (or . lst) (fold || #f lst))
-
-; (define (max first . num-list) (fold (lambda (old new) (if (> old new) old new)) first num-list))
-; (define (min first . num-list) (fold (lambda (old new) (if (< old new) old new)) first num-list))
-
-; (define (length lst) (fold (lambda (x y) (+ x 1)) 0 lst))
-; (define (reverse lst) (fold (flip cons) '() lst))
-
-; (define (map func lst) (foldr (lambda (x y) (cons (func x) y)) '() lst))
-
-(define (filter pred lst)  (foldr (lambda (x y) (if (pred x) (cons x y) y)) '() lst))
 
 (define (range low high)
     (cond
-        ((> low high) ())
+        ((> low high) '())
         (else (cons low (range (+ low 1) high)))))
+
+(define (slice lst start end)
+    (drop (take lst end) start))
+
+
+(define (mod-3-5 x)
+	(or (= (modulo x 3) 0) (= (modulo x 5) 0)))

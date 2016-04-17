@@ -1,0 +1,21 @@
+<a href="http://en.wikipedia.org/wiki/Logo_(programming_language)">Logo</a> was designed as a teaching language way back in 1967, and has been hailed as one of the easiest languages - a good teaching language for children. Really? It took me around three hours to write Euler1 in Logo, and that's with the massive help of <a href="http://rosettacode.org/wiki/Rosetta_Code">RosettaCode</a>, reverse-engineering their examples to try to figure out what would shut the compiler up. Maybe this language was great in 1970, but time has passed it by. The only good thing I see here is the built-in graphics, which may attract your child, but is out of scope for our purposes. There's so much suckage here - the baroque syntax, the lack of documentation, the cryptic compiler errors. What do you think your child would think of this admittedly simple version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>?
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#008000;">; Euler1 in Logo</span>
+
+to <span style="color:#ff0000;">euler</span> <span style="color:#9999ff;">:size</span>
+    localmake <span style="color:#0000ff;">"result</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> [<span style="color:#0000ff;">i</span> <span style="color:#ff6600;">1</span> <span style="color:#0000ff;">:size</span><span style="color:#ff6600;">-1</span>] [
+        <span style="color:#006699;font-weight:bold;">if</span> or [equal? <span style="color:#ff6600;">0</span> modulo <span style="color:#0000ff;">:i</span> <span style="color:#ff6600;">3</span>][equal? <span style="color:#ff6600;">0</span> modulo <span style="color:#0000ff;">:i</span> <span style="color:#ff6600;">5</span>] [
+            make <span style="color:#0000ff;">"result</span> <span style="color:#0000ff;">:result</span> + <span style="color:#0000ff;">:i</span>]]
+    output <span style="color:#0000ff;">:result</span>
+end
+
+print <span style="color:#ff0000;">euler</span> <span style="color:#ff6600;">1000</span>
+
+bye</pre>
+</div>
+At least it didn't take me that long to figure out how to execute the code - maybe 15 minutes. The runtime is a shell; you pass it your code that includes 'bye' as a final statement to terminate:
+<div style="background:black;margin-bottom:20px;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">logo</span> <span style="color:#ffffff;">euler1.logo</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

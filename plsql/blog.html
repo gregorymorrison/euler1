@@ -1,0 +1,61 @@
+PL/SQL is <a title="Oracle" href="http://www.oracle.com/us/products/database/index.html">Oracle</a>'s procedural language. It originated in the early 90's, and closely resembles <a title="Ada" href="en.wikipedia.org/wiki/Ada_(programming_language)">Ada</a> - no surprise, since it evolved from a government contract. As such it has a somewhat dated feel to it, though Oracle has been keeping it up to date, adding such things as object-orientation and regular expressions. It also has a nice package system that I might rewrite this example to illustrate in the future.
+
+Its compiler is very picky about syntax and context - the compiler in one environment might refuse to compile until you end your code with a slash, while <em>the same compiler in the same editor in a different context</em> will refuse to work unless you remove the slash, and will only help with cryptic error messages. Sigh... It's not exactly a fun language to work in, but it's not complicated and it does pay the bills... Even though I know this logic and know Oracle well, it took me around 20 minutes to get the following version of Euler1 to make Oracle's compiler happy.
+
+To compile and execute this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>, I used <a title="SQLDeveloper" href="http://www.oracle.com/technetwork/developer-tools/sql-developer/overview/index.html">SQLDeveloper</a>, Oracle's free and not-bad-but-dirt-slow environment. In the Connections pane under your database Functions, right-click on <em>New Function</em>.  Click OK in the popup, and replace the generated stub in the new editor pane with the following:
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">-- Euler1 in PL/SQL</span>
+
+create <span style="color: #006699; font-weight: bold;">or</span> replace <span style="color: #006699; font-weight: bold;">FUNCTION</span> <span style="color: #cc00ff;">EULER1</span> (n <span style="color: #006699; font-weight: bold;">IN</span> NUMBER)
+   <span style="color: #006699; font-weight: bold;">RETURN</span> NUMBER
+<span style="color: #006699; font-weight: bold;">IS</span>
+    retval NUMBER(<span style="color: #ff6600;">10</span>);
+<span style="color: #006699; font-weight: bold;">BEGIN</span>
+    retval := <span style="color: #ff6600;">0</span>;
+
+   <span style="color: #006699; font-weight: bold;">FOR</span> i <span style="color: #000000; font-weight: bold;">IN</span> <span style="color: #ff6600;">1</span> .. n <span style="color: #006699; font-weight: bold;">LOOP</span>
+     <span style="color: #006699; font-weight: bold;">IF</span> <span style="color: #000000; font-weight: bold;">MOD</span>(i,<span style="color: #ff6600;">3</span>)<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span> <span style="color: #006699; font-weight: bold;">or</span> <span style="color: #000000; font-weight: bold;">MOD</span>(i,<span style="color: #ff6600;">5</span>)<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span> <span style="color: #006699; font-weight: bold;">THEN</span>
+            retval := retval <span style="color: #555555;">+</span> i;
+     <span style="color: #006699; font-weight: bold;">END</span> <span style="color: #006699; font-weight: bold;">IF</span>;
+   <span style="color: #006699; font-weight: bold;">END</span> <span style="color: #006699; font-weight: bold;">LOOP</span>;
+
+   <span style="color: #006699; font-weight: bold;">RETURN</span> retval;
+<span style="color: #006699; font-weight: bold;">END</span> <span style="color: #cc00ff;">EULER1</span>;</pre>
+</div>
+Click the green <em>Compile</em> arrow in the toolbar to compile, then in the Connections tree, <em>right-click/Refresh </em>on Functions to see your shiny new function. <em>Right-click/Run</em> on it, and replace the generated stub with this driver:<!-- HTML generated using hilite.me -->
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #006699; font-weight: bold;">DECLARE</span>
+  v_Return <span style="color: #336666;">NUMBER</span>;
+<span style="color: #006699; font-weight: bold;">BEGIN</span>
+  v_Return :<span style="color: #555555;">=</span> <span style="color: #ff00ff;">EULER1</span>(<span style="color: #ff6600;">999</span>);
+  DBMS_OUTPUT.PUT_LINE(<span style="color: #cc3300;">'v_Return = '</span> <span style="color: #555555;">||</span> v_Return);
+<span style="color: #006699; font-weight: bold;">END</span>;</pre>
+</div>
+Click OK, and you'll see the following appear in the <em>Running</em> pane:
+<pre style="color: #000000; margin-bottom: 20px; background: #f1f0f0;">Connecting to the database XE<span style="color: #806030;">.</span>
+v_Return <span style="color: #806030;">=</span> <span style="color: #c00000;">233168</span>
+Process exited<span style="color: #806030;">.</span>
+Disconnecting from the database XE<span style="color: #806030;">.</span></pre>
+If you want to execute your code from a SQL worksheet, you can run it as a script (F5); just make sure you enable DBMS Output first so that your output gets sent to the console. Here, I've wrapped my PL/SQL function with a SQL declaration and call statement, which resembles my <a title="Ada" href="http://gdm9000.wordpress.com/2011/11/12/ada/">Ada version</a> almost verbatim:
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">-- Euler1 in PL/SQL</span>
+
+<span style="color: #006699; font-weight: bold;">declare</span>
+
+    <span style="color: #006699; font-weight: bold;">function</span> <span style="color: #cc00ff;">Euler1</span> (n <span style="color: #006699; font-weight: bold;">in</span> number) <span style="color: #006699; font-weight: bold;">return</span> number <span style="color: #006699; font-weight: bold;">is</span>
+        result number(<span style="color: #ff6600;">10</span>);
+    <span style="color: #006699; font-weight: bold;">begin</span>
+        result := <span style="color: #ff6600;">0</span>;
+
+        <span style="color: #006699; font-weight: bold;">for</span> i <span style="color: #000000; font-weight: bold;">in</span> <span style="color: #ff6600;">1</span> .. n <span style="color: #006699; font-weight: bold;">loop</span>
+            <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #000000; font-weight: bold;">mod</span>(i,<span style="color: #ff6600;">3</span>)<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span> <span style="color: #006699; font-weight: bold;">or</span> <span style="color: #000000; font-weight: bold;">mod</span>(i,<span style="color: #ff6600;">5</span>)<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span> <span style="color: #006699; font-weight: bold;">then</span>
+                result := result <span style="color: #555555;">+</span> i;
+            <span style="color: #006699; font-weight: bold;">end</span> <span style="color: #006699; font-weight: bold;">if</span>;
+        <span style="color: #006699; font-weight: bold;">end</span> <span style="color: #006699; font-weight: bold;">loop</span>;
+        <span style="color: #006699; font-weight: bold;">return</span> result;
+    <span style="color: #006699; font-weight: bold;">end</span> <span style="color: #cc00ff;">Euler1</span>;
+
+<span style="color: #006699; font-weight: bold;">begin</span>
+    dbms_output.put_line(<span style="color: #ff00ff;">Euler1</span>(<span style="color: #ff6600;">999</span>));
+<span style="color: #006699; font-weight: bold;">end</span>;</pre>
+</div>

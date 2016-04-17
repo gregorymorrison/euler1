@@ -1,0 +1,122 @@
+<a>JavaScript</a>, the Little Language That Could, is no longer just for the browser, as there are general-purpose runtimes available for it. I chose to try out <a href="http://www.mozilla.org/rhino/">Rhino</a>, a version that runs on the <a title="JVM" href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>. Notice here that my script uses the JVM's generic IO functionality to perform functions that would normally be outside of the scope of a simple DOM-scripting tool. It took me almost no time to write this <a title="Imperative programming" href="http://en.wikipedia.org/wiki/Imperative_programming">Imperative</a> version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> because the code is lifted almost verbatim from <a title="C" href="http://gdm9000.wordpress.com/2011/10/18/c/">C</a> and <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a>:
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; margin-bottom: 20px; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">// Euler1 in JavaScript</span>
+
+importPackage(java.io);
+importPackage(java.lang);
+
+<span style="color: #006699; font-weight: bold;">function</span> euler1(x) {
+    <span style="color: #006699; font-weight: bold;">var</span> i, result;
+    result <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+
+    <span style="color: #006699; font-weight: bold;">for</span> (i<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span>; i<span style="color: #555555;">&lt;</span>x; i<span style="color: #555555;">++</span>) {
+        <span style="color: #006699; font-weight: bold;">if</span> (i<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>) {
+            result <span style="color: #555555;">+=</span> i;
+        }
+    }
+    <span style="color: #006699; font-weight: bold;">return</span> result;
+}
+
+System.out.println (euler1 (<span style="color: #ff6600;">1000</span>));</pre>
+</div>
+JavaScript, introduced in 1995, is a <a title="Prototype-based programming" href="http://en.wikipedia.org/wiki/Prototype-based_programming#Languages">Prototype</a> language, a style of <a title="Object-oriented programming" href="http://en.wikipedia.org/wiki/Object-oriented_programming">Object-Oriented Programming</a> in which new objects are not instantiated from classes. Instead, they are cloned and modified copies of existing instances, typically of a type Object. At its heart, an object in JavaScript is nothing more than a key-value dictionary, which makes them trivial to modify at runtime. Let's rewrite the previous example using an object:
+<div style="background: white; overflow: auto; width: auto; color: black; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">// Euler1 in JavaScript</span>
+
+importPackage(java.io);
+importPackage(java.lang);
+
+<span style="color: #0099ff; font-style: italic;">// new object instance</span>
+<span style="color: #006699; font-weight: bold;">var</span> euler1 <span style="color: #555555;">=</span> {};
+
+<span style="color: #0099ff; font-style: italic;">// dynamically add new properties and behaviors to object</span>
+euler1.range <span style="color: #555555;">=</span> <span style="color: #ff6600;">1000</span>;
+euler1.solver <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(x){
+    <span style="color: #006699; font-weight: bold;">var</span> i, result;
+    result <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+
+    <span style="color: #006699; font-weight: bold;">for</span> (i<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span>; i<span style="color: #555555;">&lt;</span>x; i<span style="color: #555555;">++</span>) {
+        <span style="color: #006699; font-weight: bold;">if</span> (i<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>) {
+            result <span style="color: #555555;">+=</span> i;
+        }
+    }
+    <span style="color: #006699; font-weight: bold;">return</span> result;
+}
+euler1.result <span style="color: #555555;">=</span> euler1.solver(euler1.range);
+
+System.out.println(euler1.result);</pre>
+</div>
+JavaScript also lets you write in a <a title="Functional programming" href="http://en.wikipedia.org/wiki/Functional_programming">Functional </a>style. Functions <em>are</em> first-class members, and you <em>can</em> write your code in Map/Filter/Reduce/Lambda, etc, but it's a bit like putting <a title="Lipstick on a pig" href="http://www.google.com/search?q=Lipstick+on+a+pig&amp;hl=en&amp;prmd=imvns&amp;tbm=isch&amp;tbo=u&amp;source=univ&amp;sa=X">lipstick on a pig</a>. Let's try anyway. In the following example, I define Map/Filter/Reduce and then apply them to an array of ints. There is now no mutable state - only declarations and function calls. State is managed through the careful use of recursion with accumulators and <a title="Tail Call Optimization" href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">tail-call optimization</a>:
+<div style="background: white; overflow: auto; width: auto; color: black; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">// Euler1 in JavaScript</span>
+
+importPackage(java.io);
+importPackage(java.lang);
+
+<span style="color: #0099ff; font-style: italic;">// Generic recursive Map, Filter, Reduce using Tail Call Optimization</span>
+<span style="color: #0099ff; font-style: italic;">// Accumulator parameter is optional and only used by recursive calls</span>
+
+<span style="color: #0099ff; font-style: italic;">// Map - transform each item to something else</span>
+<span style="color: #006699; font-weight: bold;">var</span> map <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(ls, f, acc) {
+    <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">typeof</span> acc <span style="color: #555555;">===</span> <span style="color: #cc3300;">"undefined"</span>) acc <span style="color: #555555;">=</span> [];
+    <span style="color: #006699; font-weight: bold;">if</span> (ls.length <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> acc;
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> map(ls.slice(<span style="color: #ff6600;">1</span>,ls.length), f, [].concat(f(ls[<span style="color: #ff6600;">0</span>]), acc));
+    }
+};
+
+<span style="color: #0099ff; font-style: italic;">// Filter - remove selected items</span>
+<span style="color: #006699; font-weight: bold;">var</span> filter <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(ls, f, acc) {
+    <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">typeof</span> acc <span style="color: #555555;">===</span> <span style="color: #cc3300;">"undefined"</span>) acc <span style="color: #555555;">=</span> [];
+    <span style="color: #006699; font-weight: bold;">if</span> (ls.length <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> acc;
+    } <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #006699; font-weight: bold;">if</span> (f(ls[<span style="color: #ff6600;">0</span>]) <span style="color: #555555;">==</span> <span style="color: #006699; font-weight: bold;">true</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> filter(ls.slice(<span style="color: #ff6600;">1</span>,ls.length), f, [].concat(ls[<span style="color: #ff6600;">0</span>], acc));
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> filter(ls.slice(<span style="color: #ff6600;">1</span>,ls.length), f, acc);
+    }
+};
+
+<span style="color: #0099ff; font-style: italic;">// Reduce - calculate a value based on all items</span>
+<span style="color: #006699; font-weight: bold;">var</span> reduce <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(ls, f, acc) {
+    <span style="color: #006699; font-weight: bold;">if</span> (ls.length <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> acc;
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> reduce(ls.slice(<span style="color: #ff6600;">1</span>,ls.length), f, f(ls[<span style="color: #ff6600;">0</span>], acc));
+    }
+};
+
+<span style="color: #0099ff; font-style: italic;">// generate a list of ints</span>
+<span style="color: #006699; font-weight: bold;">var</span> range <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(i, acc) {
+    <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">typeof</span> acc <span style="color: #555555;">===</span> <span style="color: #cc3300;">"undefined"</span>) acc <span style="color: #555555;">=</span> [];
+    <span style="color: #006699; font-weight: bold;">if</span> (i <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> acc;
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> range(i<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, [].concat(acc, [i]));
+    }
+};
+
+<span style="color: #0099ff; font-style: italic;">// Now let's define specific versions of mapping/filtering/reducing functions</span>
+<span style="color: #006699; font-weight: bold;">var</span> myMap <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(ints) {
+    <span style="color: #006699; font-weight: bold;">return</span> map(ints, <span style="color: #006699; font-weight: bold;">function</span>(val) { <span style="color: #006699; font-weight: bold;">return</span> val; });
+};
+<span style="color: #006699; font-weight: bold;">var</span> myFilter <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(ints) {
+    <span style="color: #006699; font-weight: bold;">return</span> filter(ints,
+        <span style="color: #006699; font-weight: bold;">function</span>(val) { <span style="color: #006699; font-weight: bold;">if</span> (val<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> val<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>) <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #006699; font-weight: bold;">true</span>;
+                        <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #006699; font-weight: bold;">false</span>; });
+};
+<span style="color: #006699; font-weight: bold;">var</span> myReduce <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">function</span>(ints) {
+    <span style="color: #006699; font-weight: bold;">return</span> reduce(ints,
+        <span style="color: #006699; font-weight: bold;">function</span>(x, acc) { <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">typeof</span> acc <span style="color: #555555;">===</span> <span style="color: #cc3300;">"undefined"</span>) <span style="color: #006699; font-weight: bold;">return</span> x;
+                           <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #006699; font-weight: bold;">return</span> acc<span style="color: #555555;">+</span>x; });
+};
+
+<span style="color: #0099ff; font-style: italic;">// Now apply everything</span>
+System.out.println( myReduce(myFilter(myMap( range(<span style="color: #ff6600;">999</span>) ))) );</pre>
+</div>
+To execute your script, simply pass it as an argument to Rhino:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">rhino</span> <span style="color: #ffffff;">euler1.js</span>
+<span style="color: #0086f7; font-weight: bold;">233168.0</span></pre>
+</div>

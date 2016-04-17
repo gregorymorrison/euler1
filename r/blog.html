@@ -1,0 +1,97 @@
+The R language, (<a title="R" href="http://www.r-project.org/">http://www.r-project.org/</a>), introduced in 1993, is one of the premiere languages for statistics and data analysis. It's an open source version of the earlier S language, and it features built-in functions like stats libraries and graphing tools. What does it looks like? Here's an imperative version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>, which took me around 15 minutes of blundering around to write:
+<div style="background: white; overflow: auto; margin-bottom: 20px; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in R</span>
+
+euler1 <span style="color: #555555;">&lt;-</span> function(size) {
+    result <span style="color: #555555;">&lt;-</span> <span style="color: #ff6600;">0</span>
+    <span style="color: #006699; font-weight: bold;">for</span> (x <span style="color: #000000; font-weight: bold;">in</span> <span style="color: #ff6600;">1</span>:size) {
+        <span style="color: #006699; font-weight: bold;">if</span> (x <span style="color: #555555;">%%</span> <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> x <span style="color: #555555;">%%</span> <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>)
+            result <span style="color: #555555;">&lt;-</span> result <span style="color: #555555;">+</span> x
+    }
+    result
+}
+
+euler1(<span style="color: #ff6600;">999</span>)</pre>
+</div>
+Here's a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler </em>is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> - it will always return the same output for a given input. This is accomplished in part by the absence of any variable assignment - there are instead only functions which return values. The other main point is that this recursion uses tail call optimization - it's written in such a way that an intelligent compiler can optimize its stack usage to be O(n) instead of O(n!). R's default recursion limit is set pretty low, so I had to increase it here.
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; margin-bottom: 20px; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in R</span>
+
+<span style="color: #0099ff; font-style: italic;">#Increase recursion limit</span>
+options(expressions <span style="color: #555555;">=</span> <span style="color: #ff6600;">10000</span>)
+
+myInt <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span>(n) ifelse (n<span style="color: #555555;">%%</span><span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n<span style="color: #555555;">%%</span><span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>, n, <span style="color: #ff6600;">0</span>)
+
+euler <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span>(n, acc) {
+    ifelse (n <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>,
+        acc,
+        euler(n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc+myInt(n)))
+}
+
+euler1 <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span>(n) euler(n, <span style="color: #ff6600;">0</span>)
+
+euler1(<span style="color: #ff6600;">999</span>)</pre>
+</div>
+R's implementation of Functional programming puts a big smile on my face. It's so straightforward and clean, it couldn't really be any simpler. <a title="First-class_functions" href="http://en.wikipedia.org/wiki/First-class_functions">First-class functions</a>, lambdas, map, filter, reduce... <a title="Everything" href="http://www.youtube.com/watch?v=VrpGhEVyrk0">everything in its right place</a>:
+<div style="background: white; overflow: auto; width: auto; color: black; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in R</span>
+
+myMap    <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span>(n) n
+myFilter <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span>(n) ifelse(n<span style="color: #555555;">%%</span><span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n<span style="color: #555555;">%%</span><span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>, n, <span style="color: #ff6600;">0</span>)
+myReduce <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span>(m,n) m<span style="color: #555555;">+</span>n
+
+euler1 <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span>(n) {
+    mapped   <span style="color: #555555;">=</span> Map(myMap, <span style="color: #ff6600;">1</span>:n)
+    filtered <span style="color: #555555;">=</span> Filter(myFilter, mapped)
+    Reduce(myReduce, filtered)
+}
+
+euler1(<span style="color: #ff6600;">999</span>)</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, <em>euler1() </em>returns <em>euler1</em><em>()</em> calculated on the half of the list before the pivot element, <em>euler1</em><em>() </em>calculated on the half of the list after the pivot element, and the pivot element or 0, all added together. Range creation is is easy as can be, and arrays are 1-based. R returns <em>NA</em> for elements that don't exist in the array, so we'll need to filter out any of those with the builtin <em>na.omit()</em>:
+<!-- HTML generated using hilite.me -->
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; margin-bottom: 20px; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in R</span>
+
+<span style="color: #0099ff; font-style: italic;">#Set recursion limit</span>
+options(expressions <span style="color: #555555;">=</span> <span style="color: #ff6600;">150</span>)
+
+euler1 <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span> (L) {
+    len <span style="color: #555555;">=</span> length(L)
+    piv <span style="color: #555555;">=</span> ceiling(len <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>)
+    l <span style="color: #555555;">=</span> L[piv]
+
+<span style="color: #0099ff; font-style: italic;">      # Calculate the value of the first half of the list</span>
+    pre <span style="color: #555555;">=</span> ifelse( <span style="color: #ff6600;">1</span> <span style="color: #555555;">&lt;=</span> piv<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, euler1( na.omit(L[<span style="color: #ff6600;">1</span>:piv<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>]) ), <span style="color: #ff6600;">0</span>)
+<span style="color: #0099ff; font-style: italic;">      # Calculate the value of the last half of the list</span>
+    post <span style="color: #555555;">=</span> ifelse( piv<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span> <span style="color: #555555;">&lt;=</span> len,
+        euler1( na.omit(L[piv<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span>:len])), <span style="color: #ff6600;">0</span>)
+<span style="color: #0099ff; font-style: italic;">      # Calculate the value of this element</span>
+    i <span style="color: #555555;">=</span> ifelse( l<span style="color: #555555;">%%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> l<span style="color: #555555;">%%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>, l, <span style="color: #ff6600;">0</span>)
+
+<span style="color: #0099ff; font-style: italic;">      # Return the sum of all three</span>
+    pre <span style="color: #555555;">+</span> post <span style="color: #555555;">+</span> i
+}
+
+euler1( <span style="color: #ff6600;">1</span>:<span style="color: #ff6600;">999</span> )</pre>
+</div>
+Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; margin-bottom: 20px; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in R</span>
+
+mySum <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span> (n, size) {
+    n <span style="color: #555555;">*</span> (ceiling(size<span style="color: #555555;">/</span>n)<span style="color: #555555;">**</span><span style="color: #ff6600;">2</span> <span style="color: #555555;">+</span> ceiling(size<span style="color: #555555;">/</span>n)) <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>
+}
+
+euler1 <span style="color: #555555;">&lt;-</span> <span style="color: #006699; font-weight: bold;">function</span> (size) {
+    (mySum(<span style="color: #ff6600;">3</span>,size) <span style="color: #555555;">+</span> mySum(<span style="color: #ff6600;">5</span>,size) <span style="color: #555555;">-</span> mySum(<span style="color: #ff6600;">15</span>,size))
+}
+
+euler1(<span style="color: #ff6600;">999</span>)</pre>
+</div>
+I didn't find R the friendliest language to work with; its error messages didn't seem that helpful. It comes with a REPL and a debugger which you'll probably find useful when orienting yourself to how R does things. To get R for Fedora, <a title="yum" href="http://webcache.googleusercontent.com/search?q=cache:http://joysofprogramming.com/install-xslt-fedora-rhel/&amp;hl=en&amp;strip=1">yum-install</a> R. The language is meant to be run as an interactive console session, though it can be invoked to simply execute a script and quit. To do that, use the following arguments shown here:
+<div style="background: black; overflow: auto; width: auto; color: white; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">R</span> <span style="color: #ffffff;">--no-save</span> <span style="color: #ffffff;">--slave</span> <span style="color: #ffffff;">&lt;</span> <span style="color: #ffffff;">euler1.r</span>
+<span style="color: #0086f7;">[1] 233168</span>
+<span style="color: #ffffff;">$</span></pre>
+</div>

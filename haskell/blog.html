@@ -1,0 +1,42 @@
+<a href="http://en.wikipedia.org/wiki/Haskell_(programming_language)">Haskell</a>, introduced in 1990, is the language that everyone says you should learn, because it will stretch your head. It's strictly functional, and everything is immutable. No, it's not named after <a title="Eddie Haskell" href="http://en.wikipedia.org/wiki/Eddie_Haskell">Eddie Haskell</a>, smartass - it's named after logician <a title="Haskell Curry" href="http://en.wikipedia.org/wiki/Haskell_Curry">Haskell Curry</a> (although when I invent my own language, I will be liberally sprinkling it with <a title="Leave It to Beaver" href="http://en.wikipedia.org/wiki/Leave_It_to_Beaver">LeaveItToBeaverisms</a>).
+
+Rigid adherence to ideology is frustrating. In <a title="Java" href="http://www.oracle.com/technetwork/java/index.html">Java</a>, having to construe everything as an object is a pain in the ass. If I just want to perform a simple function, I have to define and instantiate a <a title="Functor" href="http://en.wikipedia.org/wiki/Function_object#In_Java">functor</a> class. Likewise, Haskell insists on side-effect-free code - all code must be deterministic. For a given input to a function, the function must always return the same output.
+
+So, performing any operation in Haskell that has side effects, like IO, is a pain in the ass. Haskell makes you play a little semantics game. It uses <a title="Monad" href="http://en.wikipedia.org/wiki/Monads_in_functional_programming">monads</a>, a complicated concept that can roughly be likened to encapsulation in <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>. All impure operations with side effects are isolated to these special constructs, which lets you assert the purity of the rest of your code. It's a concept that doesn't exist outside of Functional languages because other languages don't have the purity hangup. Don't get too worked up about it, though - just note its existence for now.
+
+Haskell has built-in monads for common impure operations like <a title="IO" href="http://www.haskell.org/haskellwiki/Introduction_to_IO">IO</a>; you can also write your own. Here is an example of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> using the <em>IO.print</em> monad:
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">-- Euler1 in Haskell</span>
+
+<span style="color:#cc00ff;">mySum</span> <span style="color:#007788;font-weight:bold;">[]</span> <span style="color:#000000;font-weight:bold;">=</span> <span style="color:#ff6600;">0</span>
+<span style="color:#cc00ff;">mySum</span> (x<span style="color:#007788;font-weight:bold;">:</span>xs) <span style="color:#000000;font-weight:bold;">=</span> x <span style="color:#555555;">+</span> mySum xs
+
+<span style="color:#cc00ff;">euler1</span> (n) <span style="color:#000000;font-weight:bold;">=</span> mySum [x <span style="color:#555555;">|</span> x <span style="color:#000000;font-weight:bold;">&lt;-</span> [<span style="color:#ff6600;">0</span><span style="color:#555555;">..</span>n], x `mod` <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> x `mod` <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>]
+
+<span style="color:#cc00ff;">main</span> <span style="color:#000000;font-weight:bold;">=</span> <span style="color:#006699;font-weight:bold;">do</span> { print (euler1 <span style="color:#ff6600;">999</span>) }</pre>
+</div>
+Haskell does things that you've never seen in another language, like <a title="PatternMatching" href="http://stackoverflow.com/questions/2225774/haskell-pattern-matching-what-is-it">pattern matching</a>. Mutiple methods with identical signatures, for example, are typically not allowed in other languages, but Haskell is quite happy with this. Haskell manages to resolve this discrepancy by defining a method with not just types, but actual values.
+
+Here I've defined my own implementation of summation for illustration. The first two lines above define a function, mySum, that takes one parameter, an array. When someone calls mySum with an array containing something, the runtime starts at the top of the program and works its way down, looking for a method instance that takes an array with something. It sees that the first line defines an instance of mySum that takes only an empty array and continues on. It then matches the method signature on the next line - the one with an array containing stuff.
+
+Here's a different version. This one illustrates Haskell's optional strong typing, including of its IO monad. Haskell functions can return one value, so for a function signature with multiple values, all but the last are inputs.
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">-- Euler1 in Haskell</span>
+
+<span style="color:#cc00ff;">mysum</span> <span style="color:#000000;font-weight:bold;">::</span> <span style="color:#007788;font-weight:bold;">Integer</span> <span style="color:#000000;font-weight:bold;">-&gt;</span> <span style="color:#007788;font-weight:bold;">Integer</span> <span style="color:#000000;font-weight:bold;">-&gt;</span> <span style="color:#007788;font-weight:bold;">Integer</span>
+<span style="color:#cc00ff;">mysum</span> mul lim <span style="color:#000000;font-weight:bold;">=</span> foldr (<span style="color:#555555;">+</span>) <span style="color:#ff6600;">0</span> [<span style="color:#ff6600;">0</span>, mul <span style="color:#555555;">..</span> lim<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>]
+
+<span style="color:#cc00ff;">euler1</span> <span style="color:#000000;font-weight:bold;">::</span> <span style="color:#007788;font-weight:bold;">Integer</span> <span style="color:#000000;font-weight:bold;">-&gt;</span> <span style="color:#007788;font-weight:bold;">Integer</span>
+<span style="color:#cc00ff;">euler1</span> (n) <span style="color:#000000;font-weight:bold;">=</span> mysum <span style="color:#ff6600;">3</span> n <span style="color:#555555;">+</span> mysum <span style="color:#ff6600;">5</span> n <span style="color:#555555;">-</span> mysum <span style="color:#ff6600;">15</span> n
+
+<span style="color:#cc00ff;">main</span> <span style="color:#000000;font-weight:bold;">::</span> <span style="color:#007788;font-weight:bold;">IO</span> <span style="color:#336666;">()</span>
+<span style="color:#cc00ff;">main</span> <span style="color:#000000;font-weight:bold;">=</span> <span style="color:#006699;font-weight:bold;">do</span> { print (euler1 <span style="color:#ff6600;">1000</span>) }</pre>
+</div>
+Despite the fact that I've read a lot about this language and thought that I would have no problem with it, I found that this exercise took me over a day to complete. The learning curve is steep, and the tools are not that forgiving. Still, this is undoubtedly a fun language. Give it a try. Plus, what's not to like about a language that's named after the coolest character in 'Leave It To Beaver'?
+
+The instance of Haskell I'm using is the <a href="http://www.haskell.org/ghc/">Glasgow Haskell Compiler</a>. Haskell seems to run amazingly fast. To run this code, you need to compile your code and then execute the resultant object file:
+<div style="background:black;overflow:auto;margin-bottom:20px;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">ghc</span> <span style="color:#ffffff;">-o</span> <span style="color:#ffffff;">euler1_hs</span> <span style="color:#ffffff;">euler1.hs</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1_hs</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

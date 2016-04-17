@@ -1,0 +1,34 @@
+It took me maybe a half hour to write <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in <a href="http://en.wikipedia.org/wiki/Pascal_(programming_language)">Pascal</a>, a language that I really know nothing about besides that it was supposedly designed as a teaching language way back in 1970. It feels a little stilted in its verbosity, its explicit declarations of everything, and its absurdly small integer type (32,767). Still, I can't complain given that it didn't take me that long to write this:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;">program <span style="color:#336600;">Euler1</span>(output);
+{ <span style="color:#336600;">Euler1</span> <span style="color:#006699;font-weight:bold;">in</span> <span style="color:#336600;">Pascal</span> }
+
+<span style="color:#336600;">Function</span> <span style="color:#336600;">Euler</span>(size: integer) : <span style="color:#336600;">LongInt</span>;
+    var i : integer;
+<span style="color:#336600;">Begin</span>
+    <span style="color:#336600;">Euler</span> :<span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+    <span style="color:#336600;">For</span> i :<span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> to size <span style="color:#006699;font-weight:bold;">do</span>
+        <span style="color:#336600;">If</span> (i mod <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>) <span style="color:#000000;font-weight:bold;">or</span> (i mod <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>) <span style="color:#006699;font-weight:bold;">then</span>
+            <span style="color:#336600;">Euler</span> :<span style="color:#555555;">=</span> <span style="color:#336600;">Euler</span> <span style="color:#555555;">+</span> i;
+<span style="color:#336600;">End</span>;
+
+var
+    result : <span style="color:#336600;">LongInt</span>;
+<span style="color:#336600;">Begin</span>
+    result :<span style="color:#555555;">=</span> <span style="color:#336600;">Euler</span>(<span style="color:#ff6600;">999</span>);
+    writeln( result );
+<span style="color:#006699;font-weight:bold;">end</span><span style="color:#555555;">.</span></pre>
+</div>
+To run on <a title="Fedora" href="http://fedoraproject.org/">Fedora</a>, yum-install <em>fpc</em>, the<em> </em> compiler <a title="Free Pascal" href="http://www.freepascal.org/download.html">Free Pascal</a>. Then compile and execute (ignore the irrelevant compiler output):
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> fpc euler1.pscl
+<span style="color:#444444;background-color:#222222;">Free Pascal Compiler version 2.4.2 [2011/02/09] for i386</span>
+<span style="color:#444444;background-color:#222222;">Copyright (c) 1993-2010 by Florian Klaempfl</span>
+<span style="color:#444444;background-color:#222222;">Target OS: Linux for i386</span>
+<span style="color:#444444;background-color:#222222;">Compiling euler1.pscl</span>
+<span style="color:#444444;background-color:#222222;">Linking euler1</span>
+<span style="color:#444444;background-color:#222222;">/usr/bin/ld: warning: link.res contains output sections; did you forget -T?</span>
+<span style="color:#444444;background-color:#222222;">17 lines compiled, 0.2 sec </span>
+<span style="color:#ffffff;">$</span> ./euler1
+<span style="background-color:#222222;color:#3366ff;">233168</span></pre>
+</div>

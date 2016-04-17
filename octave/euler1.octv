@@ -1,0 +1,12 @@
+# Euler1 in Octave
+
+function result = euler1(size)
+    result = 0;
+    for i = 1:size
+        if mod(i,3)==0 || mod(i,5)==0
+            result += i;
+        end
+    end
+end
+
+printf('%i', euler1(999))

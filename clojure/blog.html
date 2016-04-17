@@ -1,0 +1,169 @@
+<a href="http://clojure.org/">Clojure</a>, introduced in 2007, is an interesting beast - a <a title="Lisp" href="http://gdm9000.wordpress.com/2011/10/15/lisp/">Lisp</a> for the <a title="JVM" href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>. Not only will you be able to sneak a Lisp into your workplace, but it is a first-class citizen, able to utilize all your existing <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a> libraries. Clojure is distributed simply as a jar file that you add to your JVM. Give it a try!
+
+Here is <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Clojure. It uses a <a title="List comprehension" href="http://en.wikipedia.org/wiki/List_comprehension#Clojure">list comprehension</a> and <em>reduce</em>. It looks even simpler than my first Lisp example; Clojure has a <em>range</em> function built in, for example:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler1</span> [<span style="color:#003333;">x</span>]
+    (<span style="color:#336666;">reduce </span><span style="color:#003333;">+</span>
+        (<span style="color:#336666;">for </span>[<span style="color:#003333;">n</span> (<span style="color:#336666;">range </span><span style="color:#003333;">x</span>) <span style="color:#ffcc33;">:when</span> (<span style="color:#336666;">or </span>(<span style="color:#336666;">= </span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">= </span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>))]
+            <span style="color:#003333;">n</span>)))
+
+(<span style="color:#336666;">pr </span>(<span style="color:#cc00ff;">euler1</span> <span style="color:#ff6600;">1000</span>))</pre>
+</div>
+Here is another version, which took me an hour to write. It's analogous to my <a title="Standard ML" href="http://gdm9000.wordpress.com/2011/11/23/standard-ml/">Standard ML</a> version, which uses <a title="Tail Call Optimization" href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">tail recursion</a> and an accumulator. Notice also the multiple method signatures for <em>euler1()</em> - the first one takes one param while the second takes two. This lets us internally initialize an accumulator for our recursion:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler1</span>
+    ([<span style="color:#003333;">n</span>] (<span style="color:#cc00ff;">euler1</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">0</span>))
+    ([<span style="color:#003333;">n</span> <span style="color:#003333;">acc</span>] (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#336666;">= </span><span style="color:#003333;">n</span> <span style="color:#ff6600;">0</span>)
+        <span style="color:#003333;">acc</span>
+        (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#336666;">or </span>(<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>)<span style="color:#ff6600;">0</span>) (<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>)<span style="color:#ff6600;">0</span>))
+            (<span style="color:#cc00ff;">recur</span> (<span style="color:#336666;">- </span><span style="color:#003333;">n</span> <span style="color:#ff6600;">1</span>) (<span style="color:#336666;">+ </span><span style="color:#003333;">acc</span> <span style="color:#003333;">n</span>))
+            (<span style="color:#cc00ff;">recur</span> (<span style="color:#336666;">- </span><span style="color:#003333;">n</span> <span style="color:#ff6600;">1</span>) <span style="color:#003333;">acc</span>)))))
+
+(<span style="color:#336666;">pr </span>(<span style="color:#cc00ff;">euler1</span> <span style="color:#ff6600;">999</span>))</pre>
+</div>
+Here's a rewrite of my third Lisp example, in which I recursively pass around a list instead of an integer. It's very similar to the Lisp version:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">mod-3-5</span> [<span style="color:#003333;">n</span>]
+    (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#336666;">or </span>(<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>)<span style="color:#ff6600;">0</span>) (<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>)<span style="color:#ff6600;">0</span>))  <span style="color:#003333;">n</span>  <span style="color:#ff6600;">0</span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler</span> [<span style="color:#003333;">lst</span> <span style="color:#003333;">acc</span>]
+    (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#cc00ff;">not-empty</span> <span style="color:#003333;">lst</span>)
+        (<span style="color:#cc00ff;">recur</span> (<span style="color:#336666;">rest </span><span style="color:#003333;">lst</span>) (<span style="color:#336666;">+ </span><span style="color:#003333;">acc</span> (<span style="color:#cc00ff;">mod-3-5</span> (<span style="color:#336666;">first </span><span style="color:#003333;">lst</span>))))
+        <span style="color:#003333;">acc</span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler1</span> [<span style="color:#003333;">n</span>]
+    (<span style="color:#cc00ff;">euler</span> (<span style="color:#336666;">range </span><span style="color:#003333;">n</span>) <span style="color:#ff6600;">0</span>))
+
+(<span style="color:#336666;">pr </span>(<span style="color:#cc00ff;">euler1</span> <span style="color:#ff6600;">1000</span>))</pre>
+</div>
+Let's write a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a> variant - break the list up into halves and a middle element, call <em>euler1()</em> recursively on both halves, and return a value for the middle element plus the return value of both halves. I couldn't find an <a title="Slice" href="http://en.wikipedia.org/wiki/Array_slicing">array slicing</a> function, so let's also roll our own. This version also shows the use of local variables with the <em>let</em> statement:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">slice</span> [<span style="color:#003333;">coll</span> <span style="color:#003333;">a</span> <span style="color:#003333;">b</span>]
+    <span style="color:#0099ff;font-style:italic;">; a - 1-based starting index</span>
+    <span style="color:#0099ff;font-style:italic;">; b - inclusive ending index</span>
+    (<span style="color:#006699;font-weight:bold;">let </span>[[<span style="color:#003333;">x</span> <span style="color:#003333;">y</span>] (<span style="color:#336666;">split-at </span>(<span style="color:#336666;">dec </span><span style="color:#003333;">a</span>) <span style="color:#003333;">coll</span>)]
+        (<span style="color:#336666;">take </span>(<span style="color:#336666;">inc </span>(<span style="color:#336666;">- </span><span style="color:#003333;">b</span> <span style="color:#003333;">a</span>)) <span style="color:#003333;">y</span>)))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">mod-3-5</span> [<span style="color:#003333;">n</span>]</pre>
+<pre style="margin:0;line-height:125%;">    (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#336666;">or </span>(<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>)<span style="color:#ff6600;">0</span>) (<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>)<span style="color:#ff6600;">0</span>))  <span style="color:#003333;">n</span>  <span style="color:#ff6600;">0</span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler1</span> [<span style="color:#003333;">coll</span>]
+    (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#cc00ff;">empty?</span> <span style="color:#003333;">coll</span>)
+        <span style="color:#ff6600;">0</span>
+        <span style="color:#0099ff;font-style:italic;">; find the midpoint of the list</span>
+        (<span style="color:#006699;font-weight:bold;">let </span>[<span style="color:#003333;">pivot</span> (<span style="color:#336666;">quot </span>(<span style="color:#336666;">count </span><span style="color:#003333;">coll</span>) <span style="color:#ff6600;">2</span>)]
+            <span style="color:#0099ff;font-style:italic;">; return a value for the middle element</span>
+            (<span style="color:#336666;">+ </span>(<span style="color:#cc00ff;">mod-3-5</span> (<span style="color:#336666;">nth </span><span style="color:#003333;">coll</span> <span style="color:#003333;">pivot</span>))
+                <span style="color:#0099ff;font-style:italic;">; plus the calculated value of the first half of the list</span>
+                (<span style="color:#cc00ff;">euler1</span> (<span style="color:#cc00ff;">slice</span> <span style="color:#003333;">coll</span> <span style="color:#ff6600;">1</span> <span style="color:#003333;">pivot</span>))
+                <span style="color:#0099ff;font-style:italic;">; plus the calculated value of the last half of the list</span>
+                (<span style="color:#cc00ff;">euler1</span> (<span style="color:#cc00ff;">slice</span> <span style="color:#003333;">coll</span> (<span style="color:#336666;">+ </span><span style="color:#003333;">pivot</span> <span style="color:#ff6600;">2</span>)(<span style="color:#336666;">count </span><span style="color:#003333;">coll</span>)))))))
+
+(<span style="color:#336666;">println </span>(<span style="color:#cc00ff;">euler1</span> (<span style="color:#336666;">range </span><span style="color:#ff6600;">1000</span>)))</pre>
+</div>
+Here’s a version in which I define my own <em>map/filter/reduce</em> functions, and then simply apply them. <em>Map</em>’s only purpose here is for illustration, since it returns itself. <em>Map</em> and <em>filter</em> demonstrates use of a <a title="Lambda" href="http://en.wikipedia.org/wiki/Anonymous_function">lambda </a>- an anonymous function. Note that there is no recursion or looping involved:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">myMap</span> [<span style="color:#003333;">lst</span>]
+    (<span style="color:#336666;">map (fn [x] x)</span> lst))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">myFilter</span> [<span style="color:#003333;">lst</span>]
+    (<span style="color:#cc00ff;">filter</span>
+        <span style="color:#555555;">#</span>(<span style="color:#336666;">or </span>(<span style="color:#336666;">= </span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">%</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">= </span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">%</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>))
+        <span style="color:#003333;">lst</span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">myReduce</span> [<span style="color:#003333;">lst</span>]
+    (<span style="color:#336666;">reduce + </span><span style="color:#003333;">lst</span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler1</span> [<span style="color:#003333;">lst</span>]
+    (<span style="color:#cc00ff;">myReduce</span> (<span style="color:#cc00ff;">myFilter</span> (<span style="color:#cc00ff;">myMap</span> <span style="color:#003333;">lst</span>))))
+
+(<span style="color:#336666;">pr </span>(<span style="color:#cc00ff;">euler1</span> (<span style="color:#336666;">range </span><span style="color:#ff6600;">1000</span>)))</pre>
+</div>
+Functions in Clojure are <a title="FirstClassFunctions" href="http://en.wikipedia.org/wiki/First-class_function">first-class</a>, meaning they are as easy to manipulate as data. Let’s build off the previous example, but this time we’ll store our <em>map/filter/reduce</em> functions in a list. We’ll pass the functions and the integers into <em>euler1()</em>, and recursively apply the first function to the integers until the function list is empty:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">myMap</span> [<span style="color:#003333;">lst</span>]
+    (<span style="color:#336666;">map (fn [x] x)</span> lst))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">myFilter</span> [<span style="color:#003333;">lst</span>]
+    (<span style="color:#cc00ff;">filter</span>
+        <span style="color:#555555;">#</span>(<span style="color:#336666;">or </span>(<span style="color:#336666;">= </span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">%</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">= </span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">%</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>))
+        <span style="color:#003333;">lst</span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">myReduce</span> [<span style="color:#003333;">lst</span>]
+    (<span style="color:#336666;">reduce + </span><span style="color:#003333;">lst</span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler1</span> [<span style="color:#003333;">fns</span> <span style="color:#003333;">data</span>]
+    (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#cc00ff;">not-empty</span> <span style="color:#003333;">fns</span>)
+        (<span style="color:#cc00ff;">recur</span> (<span style="color:#336666;">rest </span><span style="color:#003333;">fns</span>) ((<span style="color:#336666;">first </span><span style="color:#003333;">fns</span>) <span style="color:#003333;">data</span>))
+        <span style="color:#003333;">data</span>))
+
+(<span style="color:#336666;">pr </span>(<span style="color:#cc00ff;">euler1</span> [<span style="color:#003333;">myMap</span> <span style="color:#003333;">myFilter</span> <span style="color:#003333;">myReduce</span>] (<span style="color:#336666;">range </span><span style="color:#ff6600;">1000</span>)))</pre>
+</div>
+Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation. I couldn't find an exponent function, so I rolled my own. Also, Lisps seem to suck at making long math expressions legible, so I’ve attempted to clarify it with indentation:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">expt</span>
+    ([<span style="color:#003333;">n</span> <span style="color:#003333;">x</span>]
+        (<span style="color:#cc00ff;">expt</span> <span style="color:#003333;">n</span> <span style="color:#003333;">x</span> <span style="color:#ff6600;">1</span>))
+    ([<span style="color:#003333;">n</span> <span style="color:#003333;">x</span> <span style="color:#003333;">acc</span>]
+        (<span style="color:#006699;font-weight:bold;">if </span>(<span style="color:#336666;">= </span><span style="color:#ff6600;">0</span> <span style="color:#003333;">x</span>)
+            <span style="color:#003333;">acc</span>
+            (<span style="color:#cc00ff;">expt</span> <span style="color:#003333;">n</span> (<span style="color:#336666;">- </span><span style="color:#003333;">x</span> <span style="color:#ff6600;">1</span>) (<span style="color:#336666;">* </span><span style="color:#003333;">n</span> <span style="color:#003333;">acc</span>)))))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">mySum</span> [<span style="color:#003333;">n</span> <span style="color:#003333;">size</span>]
+  (<span style="color:#336666;">* </span><span style="color:#003333;">n</span>
+    (<span style="color:#336666;">int </span>
+      (<span style="color:#cc00ff;">/</span>
+        (<span style="color:#336666;">+ </span>
+          (<span style="color:#cc00ff;">expt</span> (<span style="color:#336666;">int </span>(<span style="color:#336666;">/ </span><span style="color:#003333;">size</span> <span style="color:#003333;">n</span>)) <span style="color:#ff6600;">2</span>)
+          (<span style="color:#336666;">int </span>(<span style="color:#336666;">/ </span><span style="color:#003333;">size</span> <span style="color:#003333;">n</span>)))
+        <span style="color:#ff6600;">2</span>))))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">euler1</span> [<span style="color:#003333;">size</span>]
+  (<span style="color:#336666;">- </span>(<span style="color:#336666;">+ </span>(<span style="color:#cc00ff;">mySum</span> <span style="color:#ff6600;">3</span> <span style="color:#003333;">size</span>) (<span style="color:#cc00ff;">mySum</span> <span style="color:#ff6600;">5</span> <span style="color:#003333;">size</span>)) (<span style="color:#cc00ff;">mySum</span> <span style="color:#ff6600;">15</span> <span style="color:#003333;">size</span>)))
+
+(<span style="color:#336666;">pr </span>(<span style="color:#cc00ff;">euler1</span> <span style="color:#ff6600;">999</span>))</pre>
+</div>
+One of Lisp's greatest claims to fame is its regular syntax. It may appear illegible at first, but Lisp is not designed for <em>human-readability</em> - it's designed for <em>machine-readability</em>. Unlike other languages where your code is written as a bunch of text, Lisp is written as collection of syntax symbols having a regular grammar. Lisp also has a precompilation stage called <a title="Macros" href="http://www.apl.jhu.edu/~hall/Lisp-Notes/Macros.html">macros</a> which generate and substitute code using user-defined routines, allowing you to extend the language arbitrarily. What does all this mean? Since I'm a macro novice myself, I'll borrow some material from <a title="LispMacros" href="http://stackoverflow.com/a/4621882/105101">this StackOverflow answer</a>. Let's say you're fond of the <a title="PythonListComprehension" href="http://en.wikipedia.org/wiki/List_comprehension#Python">Python lisp comprehension</a> syntax:
+<pre>    S = [x for x in range(1000) if x%3==0 or x%5==0]</pre>
+Well, Clojure doesn't have anything like that, but don't despair - Clojure lets you roll your own! The macro stage takes source tokens as input, transforms it, and then returns syntax that replaces the original tokens. I've colored the function parameters and arguments passed in for ease of illustration. Notice we do nothing with the tokens <em>for,</em> <em>in, </em>and<em> conditional </em>- they exist merely as part of our list comprehension's grammar:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Clojure</span>
+
+(<span style="color:#006699;font-weight:bold;">defmacro </span><span style="color:#003333;">lcomp</span> [<strong><span style="color:#ff0000;">expression</span> <span style="color:#ff9900;">for </span><span style="color:#99cc00;">var </span><span style="color:#339966;">in</span> <span style="color:#33cccc;">list </span><span style="color:#3366ff;">conditional</span> <span style="color:#800080;">conditional-test</span></strong>]
+    <span style="color:#555555;">`</span>(<span style="color:#336666;">for </span>[<span style="color:#555555;">~</span><span style="color:#99cc00;font-weight:bold;">var </span><span style="color:#555555;">~</span><strong><span style="color:#33cccc;">list </span></strong><span style="color:#ffcc33;">:when</span> <span style="color:#555555;">~</span><span style="color:#800080;"><strong>conditional-test</strong></span>] <span style="color:#555555;">~</span><span style="color:#ff0000;"><strong>expression</strong></span>))
+
+(<span style="color:#006699;font-weight:bold;">defn </span><span style="color:#003333;">mod-3-5</span> [<span style="color:#003333;">n</span>]
+    (<span style="color:#336666;">or </span>(<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>)<span style="color:#ff6600;">0</span>) (<span style="color:#cc00ff;">=</span>(<span style="color:#cc00ff;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>)<span style="color:#ff6600;">0</span>)))
+
+(<span style="color:#336666;">prn </span>(<span style="color:#336666;">reduce + </span>(<span style="color:#cc00ff;">lcomp</span> <strong><span style="color:#ff0000;">x</span> <span style="color:#ff9900;">for </span><span style="color:#99cc00;">x</span> <span style="color:#339966;">in</span></strong> <span style="color:#33cccc;"><strong>(range 1000)</strong></span> <span style="color:#3366ff;"><strong>if </strong></span><span style="color:#800080;"><strong>(mod-3-5 x)</strong></span>)))</pre>
+</div>
+The following code is what is generated in my environment, returned by the macro and substituted for the original tokens:
+<pre>    (clojure.core/for [x (range 1000) :when (mod-3-5 x)] x)</pre>
+Life with Clojure isn't all roses. It took me most of a day to write the first simple example. This is due to the fact that Clojure just feels 'beta'. Runtime error messages are good - they're JVM stack traces. But compile-time error messages are rather cryptic and take some getting used to.
+
+To run a Clojure program under Linux, simply add clojure.jar to your classpath, then execute clojure.jar, passing it your program as an argument:
+<div style="background:black;overflow:auto;width:auto;color:white;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#fb660a;">export</span> <span style="color:#fb660a;">CLASSPATH=/usr/share/java/clojure</span><span style="color:#ffffff;">.</span><span style="color:#fb660a;">jar</span>
+<span style="color:#ffffff;">$</span> <span style="color:#fb660a;">java</span> <span style="color:#fb660a;">clojure</span><span style="color:#ffffff;">.</span><span style="color:#fb660a;">main</span> <span style="color:#fb660a;">euler1</span><span style="color:#ffffff;">.</span><span style="color:#fb660a;">clj</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>
+For those following along with <a title="Cygwin" href="http://www.cygwin.com/">cygwin</a>, be careful. Java doesn't understand cygwin paths - they'll need to be converted first:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="line-height:125%;margin:0;">$</span> <span style="color:#fb660a;">java</span> <span style="color:#fb660a;">-jar `cygpath -m /usr/share/java/clojure.jar`</span> <span style="color:#fb660a;">euler1</span>.<span style="color:#fb660a;">clj</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>
+Clojure sports a spiffy REPL which I was able to get to work with Windows but not with cygwin.

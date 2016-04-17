@@ -1,0 +1,9 @@
+   define('euler(size)')  :(euler_end)
+
+euler euler = size  :(return)
+euler_end
+
+* Test
+   output = euler(10)
+
+end

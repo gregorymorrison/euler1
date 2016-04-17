@@ -1,0 +1,85 @@
+<a title="CoffeeScript" href="http://coffeescript.org">CoffeeScript</a>, introduced in 2009, is a modernization of <a title="JavaScript" href="http://gdm9000.wordpress.com/2011/10/15/javascript/">JavaScript</a>, overhauled to add much of the pleasantry of languages such as <a title="Python" href="http://gdm9000.wordpress.com/2011/10/15/python/">Python</a>, <a title="Ruby" href="http://gdm9000.wordpress.com/2011/10/15/ruby/">Ruby</a>, and <a title="Haskell" href="http://gdm9000.wordpress.com/2011/10/15/haskell/">Haskell</a>. The language actually gets converted to JavaScript for execution, so CoffeeScript is, in effect, just syntactic sugar on top of JS.
+
+My first effort was this standard imperative version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>. It took me maybe 10 minutes from knowing nothing about the language to write this. CS's function signatures borrow from Haskell. And its comments are simply strings that are defined but not used, as in Python:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#cc3300;">'Euler1 in CoffeeScript'</span>
+
+<span style="color:#003333;">euler1 = </span><span style="color:#cc00ff;">(size) -&gt;</span>
+    <span style="color:#003333;">retval = </span><span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> [<span style="color:#ff6600;">1</span>..size<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>]
+        <span style="color:#006699;font-weight:bold;">if</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">or</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span>
+            retval <span style="color:#555555;">+=</span> i
+
+    <span style="color:#006699;font-weight:bold;">return</span> retval
+
+alert euler1(<span style="color:#ff6600;">1000</span>)</pre>
+</div>
+Here's a recursive version. Like Ruby, there are no return statements - a function implicitly returns anything that is evaluated in its last line:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#cc3300;">'Euler1 in CoffeeScript'</span>
+
+<span style="color:#003333;">euler1 = </span><span style="color:#cc00ff;">(n) -&gt;</span>
+    <span style="color:#006699;font-weight:bold;">if</span> n <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span>
+        <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">else</span> <span style="color:#006699;font-weight:bold;">if</span> n <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">or</span> n <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span>
+        n <span style="color:#555555;">+</span> euler1(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>)
+    <span style="color:#006699;font-weight:bold;">else</span>
+        euler1(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>)
+
+alert euler1(<span style="color:#ff6600;">999</span>)</pre>
+</div>
+CoffeeScript supports <a title="Functional programming" href="http://en.wikipedia.org/wiki/Functional_programming">Functional programming</a>. Here is an example. Note that there is no local state or variable manipulation. All that we've defined in the runtime is the function itself. It's written all in one line for maximum obnoxiousness:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#cc3300;">'Euler1 in CoffeeScript'</span>
+
+<span style="color:#003333;">euler1 = </span><span style="color:#cc00ff;">(size) -&gt;</span> (i <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> [<span style="color:#ff6600;">1</span>..size<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>] <span style="color:#006699;font-weight:bold;">when</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span>).reduce <span style="color:#cc00ff;">(x,y) -&gt;</span> x<span style="color:#555555;">+</span>y
+
+alert euler1(<span style="color:#ff6600;">1000</span>)</pre>
+</div>
+Well, yuck. Let's break that down into the canonical operations, <em>Map</em>, <em>Filter</em>, and <em>Reduce</em>. <em>Map</em> and <em>Filter</em> are implemented as List Comprehensions, and <em>Reduce</em> is a built-in function. <em>Map</em> here is a tautology and thus serves no purpose, though it's included anyway for illustration. Also notice that collections are simply passed in as an object.
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#cc3300;">'Euler1 in CoffeeScript'</span>
+
+<span style="color:#003333;">myMap = </span><span style="color:#cc00ff;">(size) -&gt;</span> i <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> [<span style="color:#ff6600;">1</span>..size]
+<span style="color:#003333;">myFilter = </span><span style="color:#cc00ff;">(ints) -&gt;</span> i <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> ints <span style="color:#006699;font-weight:bold;">when</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">or</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">is</span> <span style="color:#ff6600;">0</span>
+<span style="color:#003333;">myReduce = </span><span style="color:#cc00ff;">(ints) -&gt;</span> ints.reduce <span style="color:#cc00ff;">(x,y) -&gt;</span> x<span style="color:#555555;">+</span>y
+
+alert myReduce(myFilter(myMap(<span style="color:#ff6600;">999</span>)))</pre>
+</div>
+If you're unfamiliar with <em>reduce</em> here, it's a curious beast. Notice that it is being performed on the collection <em>ints</em>, which uses it in the lambda <em>(x,y) -&gt; x+y</em>.  What are x and y? The lambda expects two parameters. Each element of <em>ints</em> is iterated through and passed in as <em>x</em>. For the first call, <em>reduce</em> passes nothing in as <em>y</em>, so the runtime initializes <em>y</em> with a value appropriate for the lambda. Since our lambda function is simply addition, <em>y</em> is initialized as 0. For all subsequent calls, <em>reduce</em> passes the return value of the last call in as <em>y</em>. This is an example of <a title="partial application" href="http://en.wikipedia.org/wiki/Partial_application">partial function application</a>. In this way, <em>reduce</em> is able to take a collection and convert it into a single object.
+
+So, you're already a JavaScript whiz - why do you need to learn yet another language, especially one that does nothing new? Following is the JS that was generated by the preceding CS example. Because 7 lines of CS equals 29 lines of JS - that's why:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#cc3300;">'Euler1 in CoffeeScript'</span>;
+<span style="color:#006699;font-weight:bold;">var</span> myFilter, myMap, myReduce;
+
+myMap <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">function</span>(size) {
+  <span style="color:#006699;font-weight:bold;">var</span> i, _results;
+  _results <span style="color:#555555;">=</span> [];
+  <span style="color:#006699;font-weight:bold;">for</span> (i <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span>; <span style="color:#ff6600;">1</span> <span style="color:#555555;">&lt;=</span> size <span style="color:#555555;">?</span> i <span style="color:#555555;">&lt;=</span> size <span style="color:#555555;">:</span> i <span style="color:#555555;">&gt;=</span> size; <span style="color:#ff6600;">1</span> <span style="color:#555555;">&lt;=</span> size <span style="color:#555555;">?</span> i<span style="color:#555555;">++</span> <span style="color:#555555;">:</span> i<span style="color:#555555;">--</span>) {
+    _results.push(i);
+  }
+  <span style="color:#006699;font-weight:bold;">return</span> _results;
+};
+
+myFilter <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">function</span>(ints) {
+  <span style="color:#006699;font-weight:bold;">var</span> i, _i, _len, _results;
+  _results <span style="color:#555555;">=</span> [];
+  <span style="color:#006699;font-weight:bold;">for</span> (_i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>, _len <span style="color:#555555;">=</span> ints.length; _i <span style="color:#555555;">&lt;</span> _len; _i<span style="color:#555555;">++</span>) {
+    i <span style="color:#555555;">=</span> ints[_i];
+    <span style="color:#006699;font-weight:bold;">if</span> (i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">===</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">===</span> <span style="color:#ff6600;">0</span>) _results.push(i);
+  }
+  <span style="color:#006699;font-weight:bold;">return</span> _results;
+};
+
+myReduce <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">function</span>(ints) {
+  <span style="color:#006699;font-weight:bold;">return</span> ints.reduce(<span style="color:#006699;font-weight:bold;">function</span>(x, y) {
+    <span style="color:#006699;font-weight:bold;">return</span> x <span style="color:#555555;">+</span> y;
+  });
+};
+
+alert(myReduce(myFilter(myMap(<span style="color:#ff6600;">999</span>))));</pre>
+</div>
+CoffeeScript's home page includes an interactive code editor, complete with samples, which lets you immediately play with the language. Nothing to install - brilliant! To run, just put your code in the online editor and click the big<em> Run</em> button:
+<pre style="color:#000000;background:#f1f0f0;"><span style="color:#c00000;">233168</span></pre>

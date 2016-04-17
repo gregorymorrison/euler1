@@ -1,0 +1,21 @@
+<a title="Standard ML" href="http://en.wikipedia.org/wiki/Standard_ML">Standard ML</a>, introduced in the late '70s, is a functional language whose niche seems to be solely in academia. I knew nothing of it previously, and imagine that none of my coworkers do, either. My impression so far is that it has much of the same feel of languages like <a title="OCaml" href="http://gdm9000.wordpress.com/2011/10/15/ocaml/">OCaml</a> and <a title="Haskell" href="http://gdm9000.wordpress.com/2011/10/15/haskell/">Haskell</a>, though I struggled with it more. I had a much harder time finding documentation and struggling with the strict type system. For example, it took me probably five hours to figure out how to output an integer returned from a function to the screen - I couldn't figure out how to make the type system happy. Overall, this version of Euler1 took me approximately a whole day. This surprised me, since this this should have been a simple translation of my OCaml version.
+
+I was also surprised that writing recursive code was nontrivial in this language. My perception is that Standard ML should be smart enough to generate efficient recursive code using tail call recursion, etc. But my first efforts generated horrible code that took minutes to calculate <em>Fibonacci(100)</em>, and <em>Fibonacci(1000)</em>  actually overflowed the stack. It took me an hour to figure out how to write a recursive version that actually ran, though when I did, it ran efficiently. Expect a significant learning curve. Here is my version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>, including the aforementioned troublesome print line:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">(* Euler1 in Standard ML *)</span>
+
+<span style="color:#006699;font-weight:bold;">local</span>
+    <span style="color:#006699;font-weight:bold;">fun</span> <span style="color:#cc00ff;">f</span> <span style="color:#ff6600;">1</span> acc = acc
+      | <span style="color:#cc00ff;">f</span> i acc = f (i-<span style="color:#ff6600;">1</span>) (<span style="color:#006699;font-weight:bold;">if</span> i mod <span style="color:#ff6600;">3</span> = <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">orelse</span> i mod <span style="color:#ff6600;">5</span> = <span style="color:#ff6600;">0</span>
+                            <span style="color:#006699;font-weight:bold;">then</span> acc + i
+                            <span style="color:#006699;font-weight:bold;">else</span> acc)
+<span style="color:#006699;font-weight:bold;">in</span>
+    <span style="color:#006699;font-weight:bold;">fun</span> <span style="color:#cc00ff;">euler1</span> size = f size <span style="color:#ff6600;">0</span>
+<span style="color:#006699;font-weight:bold;">end</span>;
+
+print (<span style="color:#00ccff;font-weight:bold;">Int</span>.toString( euler1 <span style="color:#ff6600;">999</span> ) ^ <span style="color:#cc3300;">"</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span>);</pre>
+</div>
+I used the open-source <a title="Mlton" href="http://mlton.org/">Mlton</a> compiler. This compiler is extremely slow, taking at least a minute to compile the above on my Netbook. This caused even more frustration, as I had to wait that much longer to get the obscure error messages complaining about type errors. The generated code seems to be fast enough, though. Simply call the compiler, passing it your program as an argument, then execute the generated object file.
+<pre style="color:#d1d1d1;background:#000000;">$ mlton euler1.sml
+$ .<span style="color:#d2cd86;">/</span>euler1
+<span style="color:#00a800;">233168</span></pre>

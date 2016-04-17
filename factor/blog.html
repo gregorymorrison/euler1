@@ -1,0 +1,121 @@
+<a title="Factor" href="http://factorcode.org/">Factor</a>, introduced in 2003, is a stack-based language, a descendent of <a title="Forth" href="http://en.wikipedia.org/wiki/Forth_%28programming_language%29">Forth</a>. If you have never explored this arcane corner of Computer Science before, then strap on a seatbelt because it's quite a trip. In this language, programs are written in <a title="Postfix" href="http://en.wikipedia.org/wiki/Reverse_Polish_notation">postfix notation</a>, and the compiler and runtime use a stack to manage your syntax. Non-executable tokens - strings, objects, etc - get pushed on the stack, and executable ones - functions, operators, etc - get evaluated, using and storing whatever they want onto the stack. Parameters are passed by the caller pushing them onto the stack and the called routine popping them off. Stack-based operations are a necessary part of the language - there's a lot of pushing, popping, swapping, etc. And not just tokens but whole blocks of code get stored on the stack.
+
+The language has a rich library, including OpenGL bindings, a sockets library, a web framework, etc. And the libraries are distributed as source, so it's easy to see how things work and to find good examples of idiomatic Factor.
+
+Here is a version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Factor:
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; margin-bottom: 20px; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="color: #006699; font-weight: bold;"><span style="color: #0099ff; font-style: italic;">! Euler1 in Factor</span>
+
+<span style="color: #006699; font-weight: bold;">USING:</span> <span style="color: #00ccff; font-weight: bold;">math</span> <span style="color: #00ccff; font-weight: bold;">kernel</span> <span style="color: #00ccff; font-weight: bold;">io</span> <span style="color: #00ccff; font-weight: bold;">math.ranges</span> <span style="color: #00ccff; font-weight: bold;">math.functions</span>
+<span style="color: #00ccff; font-weight: bold;">math.parser</span> <span style="color: #00ccff; font-weight: bold;">sequences</span> <span style="color: #00ccff; font-weight: bold;">prettyprint</span> <span style="color: #00ccff; font-weight: bold;">quotations</span> <span style="color: #006699; font-weight: bold;">;</span>
+<span style="color: #006699; font-weight: bold;">IN:</span> <span style="color: #00ccff; font-weight: bold;">main</span>
+
+<span style="color: #006699; font-weight: bold;">:</span> <span style="color: #cc00ff;">mod3_5?</span> <span style="color: #cc00ff;">(</span> <span style="color: #003333;">n</span> <span style="color: #cc00ff;">--</span> <span style="color: #003333;">?</span> <span style="color: #cc00ff;">)</span>  [ <span style="color: #ff6600;">3 </span>divisor? ] [ <span style="color: #ff6600;">5 </span>divisor? ]<span style="color: #336666;"> bi or </span><span style="color: #006699; font-weight: bold;">;</span>
+<span style="color: #006699; font-weight: bold;">:</span> <span style="color: #cc00ff;">mod3_5</span>  <span style="color: #cc00ff;">(</span> <span style="color: #003333;">n</span> <span style="color: #cc00ff;">--</span> <span style="color: #003333;">n</span> <span style="color: #cc00ff;">)</span>  dup mod3_5? <span style="color: #336666;">swap </span><span style="color: #ff6600;">0 </span>? <span style="color: #006699; font-weight: bold;">;</span>
+<span style="color: #006699; font-weight: bold;">:</span> <span style="color: #cc00ff;">euler1</span>  <span style="color: #cc00ff;">(</span> <span style="color: #003333;">n</span> <span style="color: #cc00ff;">--</span> <span style="color: #003333;">n</span> <span style="color: #cc00ff;">)</span>  <span style="color: #ff6600;">1 </span>[a,b] [ mod3_5 ] <span style="color: #336666;">map sum </span><span style="color: #006699; font-weight: bold;">;</span>
+
+<span style="color: #006699; font-weight: bold;">:</span> <span style="color: #cc00ff;">main</span>    <span style="color: #cc00ff;">(</span> <span style="color: #cc00ff;">--</span> <span style="color: #cc00ff;">)</span>      <span style="color: #ff6600;">999 </span>euler1 <span style="color: #336666; font-weight: bold;">print </span><span style="color: #006699; font-weight: bold;">;</span></pre>
+</div>
+Let's break it down.
+
+<em>mod3_5?</em> takes an integer argument and returns a boolean:
+<table style="margin-left: 20px; margin-bottom: 20px;" border="0">
+<tbody>
+<tr>
+<td>1. First, a test for <em>modulo 3</em> gets pushed on the stack.</td>
+<td>( n [ 3 divisor? ] )</td>
+</tr>
+<tr>
+<td>2. Next, a test for <em>modulo 5</em> gets pushed on the stack.</td>
+<td>( n [ 3 divisor? ] [ 5 divisor? ] )</td>
+</tr>
+<tr>
+<td>3. Next, the <em>bi</em> operator pops the two functions and the integer, performs both tests on the integer passed in, and pushes the boolean results of each.</td>
+<td>( ? ? )</td>
+</tr>
+<tr>
+<td>4. Finally, <em>or</em> pops the two boolean results and pushes its return value, another boolean.</td>
+<td>( ? )</td>
+</tr>
+</tbody>
+</table>
+<em>mod3_5</em> takes an integer and returns an integer. Our goal here is to return <em>n</em> if <em>n</em> is divisible by 3 or 5, else 0. The <em>?</em> conditional operator can perform this test, and requires the following on the stack in this order - a boolean, a true return value, and a false return value. This function starts out with the stack ( n ), and we need to convert it to ( ? n 0 ). So:
+<table style="margin-left: 20px; margin-bottom: 20px;" border="0">
+<tbody>
+<tr>
+<td>1. First, duplicate the top element, so that <em>mod3_5?</em> has something to test:</td>
+<td>( n n )</td>
+</tr>
+<tr>
+<td>2. Next, perform <em>mod3_5?</em>, which pops a number and pushes its evaluated boolean result:</td>
+<td>( n ? )</td>
+</tr>
+<tr>
+<td>3. <em>Swap</em> the top two, moving the boolean to the bottom:</td>
+<td>( ? n )</td>
+</tr>
+<tr>
+<td>4. Next, push a 0 and we are ready for our test:</td>
+<td>( ? n 0 )</td>
+</tr>
+<tr>
+<td>5. Finally, <em>?</em> pops them all, evaluates them, and pushes the return:</td>
+<td>( n )</td>
+</tr>
+</tbody>
+</table>
+<em>euler1</em> takes an integer and returns an integer. This is pure side-effect-free Functional programming using <em>map</em>, which applies a function to all elements of a sequence:
+<table style="margin-left: 20px; margin-bottom: 20px;" border="0">
+<tbody>
+<tr>
+<td>1. First, add 1 to the stack:</td>
+<td>( n 1 )</td>
+</tr>
+<tr>
+<td>2. Next, create a sequence. [a,b] takes two integers and returns a sequence:</td>
+<td>( { n ... 1 } )</td>
+</tr>
+<tr>
+<td>3. Next, add the function that <em>map</em> will be applying:</td>
+<td>( { n ... 1 } [ <em>mod3_5</em> ] )</td>
+</tr>
+<tr>
+<td>4. <em>Map</em> pops the sequence and function, applies the function to the sequence. and pushes the modified sequence back on the stack:</td>
+<td>( { n ... 1 } )</td>
+</tr>
+<tr>
+<td>5. Finally, <em>sum</em> pops the sequence, adds them up, and pushes the result:</td>
+<td>( n )</td>
+</tr>
+</tbody>
+</table>
+I have to admit, it took me forever to learn this language. It took me hours just to figure out how to write a simple conditional. I had originally gone all the way through the Factor tutorial and still had no clue what was going on, and gave up. It wasn't until I spent time with Forth that Factor finally clicked for me. Expect a huge learning curve. The mind expansion is well worth it, though, so I would highly advise any interested parties to give it a few chances.
+
+The IDE is quite foreign, but once you figure it out, it is very nice. It has dynamic help built in, and it breaks when your program is about to crash, which is hugely helpful. And Factor's compiler and runtime error messages are quite good.
+
+At first I was trying to draw out at each step what the stack contained, trying to trace through it on paper. However, that's a mental workout that would not cut it for actual production work. But my breakthrough came when realizing that the IDE is a <a title="REPL" href="http://en.wikipedia.org/wiki/REPL">REPL</a>, yay! You can load each function in the REPL individually and test it to your heart's content.
+
+Now, to actually run this code requires a bit of handholding. I would strongly recommend you start off by following the official <a title="Factor Tutorial" href="http://docs.factorcode.org/content/article-first-program.html">tutorial</a>, which teaches you how to compile and execute your code within Factor's REPL. This process involves turning your code into a reusable library which is well worth learning. Expect this whole process to be a bit of learning curve, since Factor has its own unique way of doing things, so I won't explain it here. My first example above will execute in the REPL.
+
+You can run Factor as a command-line script, but it involves adding a bit of boilerplate. It took me approximately four hours(!) of frustrating trial and error to figure this out - I couldn't find it documented anywhere. Just wrap your entry point with the following command-line declaration. Also, you're supposed to be able run this code with a shebang at the top, but I could not get that to work:
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; margin-bottom: 20px; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">! Euler1 in Factor</span>
+
+<span style="color: #006699; font-weight: bold;">USING:</span> <span style="color: #00ccff; font-weight: bold;">io</span> <span style="color: #00ccff; font-weight: bold;">kernel</span> <span style="color: #00ccff; font-weight: bold;">math.functions</span> <span style="color: #00ccff; font-weight: bold;">math.ranges</span>
+<span style="color: #00ccff; font-weight: bold;">prettyprint</span> <span style="color: #00ccff; font-weight: bold;">quotations</span> <span style="color: #00ccff; font-weight: bold;">sequences</span>
+<span style="color: #00ccff; font-weight: bold;">command-line</span> <span style="color: #00ccff; font-weight: bold;">namespaces</span> <span style="color: #006699; font-weight: bold;">;</span>
+<span style="color: #006699; font-weight: bold;">IN:</span> <span style="color: #00ccff; font-weight: bold;">euler1</span>
+
+<span style="color: #006699; font-weight: bold;">:</span> <span style="color: #cc00ff;">mod3_5?</span> <span style="color: #cc00ff;">( </span><span style="color: #003333;">n</span> <span style="color: #cc00ff;">--</span> <span style="color: #003333;">?</span> <span style="color: #cc00ff;">)</span>  [<span style="color: #ff6600;"> 3 </span>divisor? ] [ <span style="color: #ff6600;">5</span> divisor? ] <span style="color: #336666;">bi or </span><span style="color: #006699; font-weight: bold;">;</span>
+<span style="color: #006699; font-weight: bold;">:</span> <span style="color: #cc00ff;">mod3_5</span>  <span style="color: #cc00ff;">( </span><span style="color: #003333;">n</span> <span style="color: #cc00ff;">--</span> <span style="color: #003333;">n</span> <span style="color: #cc00ff;">)</span>  <span style="color: #336666;">dup</span> mod3_5? <span style="color: #336666;">swap</span><span style="color: #ff6600;"> 0 </span>? <span style="color: #006699; font-weight: bold;">;</span>
+<span style="color: #006699; font-weight: bold;">:</span> <span style="color: #cc00ff;">euler1</span>  <span style="color: #cc00ff;">( </span><span style="color: #003333;">n</span> <span style="color: #cc00ff;">--</span> <span style="color: #003333;">n</span> <span style="color: #cc00ff;">)</span>  <span style="color: #ff6600;">1 </span>[a,b] [ mod3_5 ] <span style="color: #336666;">map sum </span><span style="color: #006699; font-weight: bold;">;</span>
+
+command-line<span style="color: #336666;"> get </span>[
+    <span style="color: #ff6600;">999</span> euler1 .
+] [ ]<span style="color: #336666;"> if-empty</span></pre>
+</div>
+Now, Linux already has a built-in executable <em>factor</em>, so make sure you reference the correct one - this confused me for a little bit. If you get the error message, <em>"'euler1.factor' is not a valid positive integer"</em>, you're using the wrong one. Just execute <em>factor</em>, passing it your script as an argument:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;">$ ~/factor/factor euler1.factor
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

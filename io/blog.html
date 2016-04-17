@@ -1,0 +1,55 @@
+<a href="http://iolanguage.com/">Io</a> is a very lightweight scripting language which debuted in 2002. I'm intrigued by the design of this language, although I have had minimal exposure to it. My development time for this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> took maybe two hours - it took a while because its runtime error messages took a while to get used to...
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/io</span>
+<span style="color:#0099ff;font-style:italic;">// Euler1 in IO</span>
+
+euler1 <span style="color:#555555;">:=</span> <span style="color:#006699;font-weight:bold;">method</span><span style="color:#555555;">(</span>n<span style="color:#555555;">,</span>
+    sum <span style="color:#555555;">:=</span> <span style="color:#ff6600;">0</span><span style="color:#555555;">;</span>
+
+    <span style="color:#006699;font-weight:bold;">for</span><span style="color:#555555;">(</span>i<span style="color:#555555;">,</span> <span style="color:#ff6600;">1</span><span style="color:#555555;">,</span> n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span><span style="color:#555555;">,</span>
+        <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#555555;">((</span>i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> or i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#555555;">),</span>
+            <span style="color:#555555;">(</span>sum <span style="color:#555555;">:=</span> sum <span style="color:#555555;">+</span> i<span style="color:#555555;">);</span>
+        <span style="color:#555555;">);</span>
+    <span style="color:#555555;">);</span>
+    return <span style="color:#555555;">(</span>sum<span style="color:#555555;">);</span>
+<span style="color:#555555;">);</span>
+
+euler1<span style="color:#555555;">(</span><span style="color:#ff6600;">1000</span><span style="color:#555555;">)</span> println<span style="color:#555555;">;</span></pre>
+</div>
+IO's main language paradigm is <a title="Prototype-based programming" href="http://en.wikipedia.org/wiki/Prototype-based_programming#Languages">Prototype</a>, in which classes are implemented simply as collections of stuff. Everything in IO is an object, and all actions are messages to objects. Here's an example. I create a generic solver object inherited from Object which has one property, <em>solution</em>, and one method, <em>solve</em>. I then instantiate a child from this with which I call the solve method. Yes, it's contrived - inheritance doesn't really serve a purpose here; this is simply for illustration. This version of Euler1 took me maybe one hour to write:
+<div style="background:white;overflow:auto;width:auto;margin-bottom:20px;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in IO</span>
+
+Euler1 <span style="color:#555555;">:=</span> Object <span style="color:#006699;font-weight:bold;">clone</span>
+Euler1 solution <span style="color:#555555;">:=</span> <span style="color:#ff6600;">0</span>
+Euler1 solve <span style="color:#555555;">:=</span> <span style="color:#006699;font-weight:bold;">method</span><span style="color:#555555;">(</span>n<span style="color:#555555;">,</span>
+    <span style="color:#006699;font-weight:bold;">for</span><span style="color:#555555;">(</span>i<span style="color:#555555;">,</span> <span style="color:#ff6600;">1</span><span style="color:#555555;">,</span> n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span><span style="color:#555555;">,</span>
+        <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#555555;">((</span>i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> or i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#555555;">),</span>
+            <span style="color:#555555;">(</span>solution <span style="color:#555555;">=</span> solution <span style="color:#555555;">+</span> i<span style="color:#555555;">))))</span>
+
+euler1 <span style="color:#555555;">:=</span> Euler1 <span style="color:#006699;font-weight:bold;">clone</span>
+euler1 solve<span style="color:#555555;">(</span><span style="color:#ff6600;">1000</span><span style="color:#555555;">)</span>
+
+euler1 solution println</pre>
+</div>
+And here's a <a title="Tail Call Optimization" href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">tail-recursive</a> version, which took me maybe 45 minutes to write. IO is a small language, so it doesn't take long to learn:
+<div style="background:white;overflow:auto;width:auto;margin-bottom:20px;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in IO</span>
+
+euler <span style="color:#555555;">:=</span> <span style="color:#006699;font-weight:bold;">method</span><span style="color:#555555;">(</span>n<span style="color:#555555;">,</span> acc<span style="color:#555555;">,</span>
+    <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#555555;">(</span>n <span style="color:#555555;">==</span> <span style="color:#ff6600;">1</span><span style="color:#555555;">,</span> return acc<span style="color:#555555;">)</span>
+
+    <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#555555;">(</span>n<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> or n<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#555555;">,</span>
+        euler<span style="color:#555555;">(</span>n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span><span style="color:#555555;">,</span> acc<span style="color:#555555;">+</span>n<span style="color:#555555;">),</span>
+        euler<span style="color:#555555;">(</span>n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span><span style="color:#555555;">,</span> acc<span style="color:#555555;">))</span></pre>
+<pre style="line-height:125%;margin:0;"><span style="color:#555555;">)</span>
+euler1 <span style="color:#555555;">:=</span> <span style="color:#006699;font-weight:bold;">method</span><span style="color:#555555;">(</span>n<span style="color:#555555;">,</span>
+    euler<span style="color:#555555;">(</span>n<span style="color:#555555;">,</span> <span style="color:#ff6600;">0</span><span style="color:#555555;">))</span>
+
+euler1<span style="color:#555555;">(</span><span style="color:#ff6600;">999</span><span style="color:#555555;">)</span> println</pre>
+</div>
+To install on Fedora, <em>yum install IO-language;</em> <em>yum</em> has a few other supporting packages you also might be interested in. Then to execute your script, simply call it:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1.io</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

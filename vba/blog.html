@@ -1,0 +1,18 @@
+I have to be honest - I've never understood why <a href="http://en.wikipedia.org/wiki/Visual_Basic_for_Applications">VBA</a> has such a bad rap. Other programmers seem to loathe this language that was introduced in 1983, but I just view it as a tool - one that lets me get work done. It doesn't get in my way; it honestly took me around two minutes to write this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> after having not used the language in a few years.
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#006699;font-weight:bold;">Function</span> euler1(x)
+    euler1 <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">For</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span> <span style="color:#006699;font-weight:bold;">To</span> x <span style="color:#555555;">-</span> <span style="color:#ff6600;">1</span>
+        <span style="color:#006699;font-weight:bold;">If</span> i <span style="color:#000000;font-weight:bold;">Mod</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">Or</span> i <span style="color:#000000;font-weight:bold;">Mod</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">Then</span>
+            euler1 <span style="color:#555555;">=</span> euler1 <span style="color:#555555;">+</span> i
+        <span style="color:#006699;font-weight:bold;">End</span> <span style="color:#006699;font-weight:bold;">If</span>
+    <span style="color:#006699;font-weight:bold;">Next</span>
+<span style="color:#006699;font-weight:bold;">End</span> <span style="color:#006699;font-weight:bold;">Function</span>
+
+<span style="color:#006699;font-weight:bold;">Sub</span> main()
+    MsgBox (euler1(<span style="color:#ff6600;">1000</span>))
+<span style="color:#006699;font-weight:bold;">End</span> <span style="color:#006699;font-weight:bold;">Sub</span></pre>
+</div>
+Now, Linux doesn't have an implementation of VBA (that I know of), and I don't have an installation of Visual Basic anymore. However, Excel has a somewhat hidden instance of VBA. If you want to try this from Excel - bring up the VBA IDE using <em>Alt-F11</em>. From there, right-click on VBAProject, and Insert a Module which you can code in. To execute, click the arrow in the toolbar.
+<a href="http://gdm9000.files.wordpress.com/2011/10/untitled1.png"><img class="alignnone size-full wp-image-291" title="untitled" src="http://gdm9000.files.wordpress.com/2011/11/excel.jpg" alt="" /></a>

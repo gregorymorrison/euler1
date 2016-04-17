@@ -1,9 +1,11 @@
 class Euler1(size)
     size = size
     result = nil
+
     init
         // do setup operations here
     end
+
     function solve()
         self.result = 0
         for i in [1 : self.size]

@@ -1,0 +1,30 @@
+My adventure with <a href="http://gdm9000.wordpress.com/2011/10/25/tcltk/">Tcl/Tk</a> led me to compare it to my go-to scripting language, <a title="Python" href="http://gdm9000.wordpress.com/2011/10/15/python/">Python</a>. Here is the simplest version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Python's port of Tk, <a href="http://en.wikipedia.org/wiki/Tkinter">Tkinter</a>, a platform-independent GUI toolkit introduced in the mid '90s. I have to say, there really is no comparison - as much as I love me some Python, Tkinter requires 13 lines to display the simplest HelloWorld, whereas Tcl/Tk requires only two. However, Tcl's version of the Euler1 algorithm took 7 lines while Python's took 2. And it took me probably five minutes to write this. So overall, it's a tie:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python</span>
+<span style="color:#0099ff;"># Euler1 in Tkinter</span>
+<span style="color:#006699;font-weight:bold;">from</span> <span style="color:#00ccff;font-weight:bold;">Tkinter</span> <span style="color:#006699;font-weight:bold;">import</span> <span style="color:#555555;">*</span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">euler1</span>(x):
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#336666;">sum</span>(i <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> <span style="color:#336666;">range</span>(x) <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Application</span>(Frame):
+    <span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">__init__</span>(<span style="color:#336666;">self</span>, master<span style="color:#555555;">=</span><span style="color:#336666;">None</span>):
+        Frame<span style="color:#555555;">.</span>__init__(<span style="color:#336666;">self</span>, master)
+
+        <span style="color:#336666;">self</span><span style="color:#555555;">.</span>QUIT <span style="color:#555555;">=</span> Button(<span style="color:#336666;">self</span>)
+        <span style="color:#336666;">self</span><span style="color:#555555;">.</span>QUIT[<span style="color:#cc3300;">"text"</span>] <span style="color:#555555;">=</span> euler1(<span style="color:#ff6600;">1000</span>)
+        <span style="color:#336666;">self</span><span style="color:#555555;">.</span>QUIT[<span style="color:#cc3300;">"command"</span>] <span style="color:#555555;">=</span>  <span style="color:#336666;">self</span><span style="color:#555555;">.</span>quit
+        <span style="color:#336666;">self</span><span style="color:#555555;">.</span>QUIT<span style="color:#555555;">.</span>pack({<span style="color:#cc3300;">"side"</span>: <span style="color:#cc3300;">"left"</span>})
+        <span style="color:#336666;">self</span><span style="color:#555555;">.</span>pack()
+
+root <span style="color:#555555;">=</span> Tk()
+app <span style="color:#555555;">=</span> Application(master<span style="color:#555555;">=</span>root)
+app<span style="color:#555555;">.</span>mainloop()
+root<span style="color:#555555;">.</span>destroy()</pre>
+</div>
+To run, simply call your script:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">euler1.tk.py</span></pre>
+</div>
+And here is the result:
+<a href="http://gdm9000.files.wordpress.com/2011/10/untitled1.png"><img class="alignnone size-full wp-image-291" title="untitled" src="http://gdm9000.files.wordpress.com/2011/10/untitled1.png" alt="" width="123" height="57" /></a>

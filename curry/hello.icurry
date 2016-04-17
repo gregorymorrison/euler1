@@ -1,0 +1,21 @@
+interface hello where {
+import Prelude;
+hiding data Prelude.Char;
+hiding data Prelude.IO a;
+hiding data Prelude.Int;
+hiding data Prelude.Success;
+copyFile :: [Prelude.Char] -> [Prelude.Char] -> Prelude.IO ();
+det :: Prelude.IO ();
+dialog :: Prelude.IO ();
+echo :: Prelude.IO ();
+euler1 :: Prelude.Int -> Prelude.Int;
+fac :: Prelude.Int -> Prelude.Int;
+facint :: Prelude.IO ();
+generate :: Prelude.Char -> Prelude.Success;
+getInt :: Prelude.IO Prelude.Int;
+main :: Prelude.IO ();
+nondet :: Prelude.IO ();
+parseInt :: [Prelude.Char] -> Prelude.Int;
+putInt :: Prelude.Int -> Prelude.IO ();
+rev :: [a] -> [a]
+}

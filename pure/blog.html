@@ -1,0 +1,147 @@
+The <a title="pure" href="http://purelang.bitbucket.org/">Pure</a> language, introduced in 2008, is a <a title="functional" href="http://en.wikipedia.org/wiki/Functional_programming">Functional</a> language aimed mostly at academic mathematical and scientific uses. It's the successor to an earlier effort, <a title="q" href="http://en.wikipedia.org/wiki/Q_(equational_programming_language)">Q</a>, by the same author, Albert Gräf. Given its math roots, it has the expected equation-like syntax of a language like <a title="ml" href="http://en.wikipedia.org/wiki/ML_(programming_language)">ML</a> or <a title="haskell" href="http://gdm9000.wordpress.com/2012/02/27/haskell/">Haskell</a>. Here is an example of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Pure:
+<div style="background: #f0f3f3; overflow: auto; width: auto; color: black; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><em><span style="color: #007788;">// Euler1 in Pure</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #cc00ff;">mySum</span> <span style="color: #007788; font-weight: bold;">[]</span> <span style="color: #000000; font-weight: bold;">=</span> <span style="color: #ff6600;">0</span>;
+<span style="color: #cc00ff;">mySum</span> (x<span style="color: #007788; font-weight: bold;">:</span>xs) <span style="color: #000000; font-weight: bold;">=</span> x <span style="color: #555555;">+</span> mySum xs;
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> mySum [x <span style="color: #555555;">|</span> x <span style="color: #000000; font-weight: bold;">=</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">..</span>n; x mod <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> x mod <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>];
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+Pure has full support for functional operations. Here's an example using the canonical functions <em><a title="map" href="http://en.wikipedia.org/wiki/Map_(higher-order_function)">map</a>, <a title="filter" href="http://en.wikipedia.org/wiki/Filter_(higher-order_function)">filter</a></em>, and <em><a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)">fold</a></em>. Map’s only purpose here obviously is for illustration, since it returns itself. It also demonstrates use of <a title="lambda" href="http://en.wikipedia.org/wiki/Anonymous_function">lambda</a> - an anonymous inline function using the \ operator, and <a title="function composition" href="http://en.wikipedia.org/wiki/Function_composition">function composition</a>, where we chain together our three functions with the <em>$</em> operator:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><em><span style="color: #007788;">// Euler1 in Pure</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #cc00ff;">myMap   </span> xs <span style="color: #000000; font-weight: bold;">=</span> map id xs;
+<span style="color: #cc00ff;">myFilter</span> xs <span style="color: #000000; font-weight: bold;">=</span> filter (<span style="color: #cc00ff;">\</span> x <span style="color: #000000; font-weight: bold;">-&gt;</span> x mod <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> x mod <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) xs;
+<span style="color: #cc00ff;">myFold</span>   xs <span style="color: #000000; font-weight: bold;">=</span> foldl (<span style="color: #555555;">+</span>) <span style="color: #ff6600;">0</span> xs;
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> myFold <span style="color: #555555;">$</span> myFilter <span style="color: #555555;">$</span> myMap (<span style="color: #ff6600;">1</span><span style="color: #555555;">..</span>n);
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+Notice that we are not maintaining any state to solve our problem. No loops, no variables, no mutable state - only function application. We simply call map, filter, and fold, and get the solution. This is an important part of the solution of the concurrency problem – how do you keep threads from stepping on each other’s states? By eliminating mutable state!
+
+Next is a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation – there are instead only functions which return values. The other main point is that this recursion uses tail call optimization – it’s written in such a way that an intelligent compiler can optimize its stack usage to be <a title="big o notation" href="http://en.wikipedia.org/wiki/Big_O_notation"><em>O(n)</em> instead of<em> O(n!)</em></a>. In English, this means that your program will probably not crash even for hugely recursive calls.
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><em><span style="color: #007788;">// Euler1 in Pure</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> euler n <span style="color: #ff6600;">0</span> with
+    <span style="color: #cc00ff;">euler</span> <span style="color: #ff6600;">0</span> acc <span style="color: #000000; font-weight: bold;">=</span> acc;
+    <span style="color: #cc00ff;">euler</span> n acc <span style="color: #000000; font-weight: bold;">=</span> euler (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>) (acc<span style="color: #555555;">+</span>n)  <span style="color: #006699; font-weight: bold;">if</span> (n mod <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n mod <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>);
+                <span style="color: #000000; font-weight: bold;">=</span> euler (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>)  acc;
+<span style="color: #cc00ff;">end</span>;
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+Here, our function <em>euler</em>  takes two parameters, but we wrap it in an outer function using the <em>with</em> keyword so that we can expose a simpler signature <em>euler1</em> having only one parameter. Unlike imperative languages, which require each function to have a unique signature, Pure allows multiple instances having the same signature. The runtime uses <em>pattern matching</em> and <em>guards</em> to resolve which instance to call. When a function is called, the runtime checks all functions with a given name, and starting at the top of the code and working down, it finds the first function that matches and executes that. Obviously then, you'll need to order your functions from most restrictive to least.
+
+With pattern matching, not only does the runtime match parameter types, but it matches parameter values. If the first parameter has value 0, it calls the first function, else it calls the second. Obviously, the version with <em>0</em> needs to be listed first; if the version with <em>n</em> was listed first, the runtime would always choose it:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">    <span style="color: #cc00ff;">euler</span> <em><strong><span style="color: #ff0000;">0 acc</span></strong></em> <span style="color: #000000; font-weight: bold;">=</span> acc;
+    <span style="color: #cc00ff;">euler</span> <em><strong><span style="color: #ff0000;">n acc</span></strong></em> <span style="color: #000000; font-weight: bold;">=</span> euler (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>) (acc<span style="color: #555555;">+</span>n)  <span style="color: #006699; font-weight: bold;">if</span> (n mod <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n mod <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>);</pre>
+</div>
+Guards are additional checks against parameters. Here a guard is added to assert that <em>n</em> be divisible by 3 and 5. Again, obviously, this version must be listed first:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">    <span style="color: #cc00ff;">euler</span> n acc <span style="color: #000000; font-weight: bold;">=</span> euler (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>) (acc<span style="color: #555555;">+</span>n)  <strong><em><span style="color: #ff0000;">if</span> <span style="color: #ff0000;">(n mod 3 == 0 || n mod 5 == 0)</span></em></strong>;
+                <span style="color: #000000; font-weight: bold;">=</span> euler (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>)  acc;</pre>
+</div>
+Pure has an extensible type system. Here we create a new type - an int that is divisible by 3 and 5. Types can be used as guards; let's use it to replace the <em>if</em> condition from the last version:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><em><span style="color: #007788;">// Euler1 in Pure</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #006699; font-weight: bold;">type</span> mod_3_5 n<span style="color: #000000; font-weight: bold;">::</span>int <span style="color: #000000; font-weight: bold;">=</span> n mod <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n mod <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>;
+<span style="color: #cc00ff;">mod_3_5</span> n <span style="color: #000000; font-weight: bold;">=</span> typep mod_3_5 n;
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> euler <span style="color: #ff6600;">0</span> n with
+    <span style="color: #cc00ff;">euler</span> acc <span style="color: #ff6600;">0</span>          <span style="color: #000000; font-weight: bold;">=</span> acc;
+    <span style="color: #cc00ff;">euler</span> acc n<span style="color: #000000; font-weight: bold;">::</span>mod_3_5 <span style="color: #000000; font-weight: bold;">=</span> euler (acc<span style="color: #555555;">+</span>n) (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>);
+    <span style="color: #cc00ff;">euler</span> acc n          <span style="color: #000000; font-weight: bold;">=</span> euler  acc    (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>);
+<span style="color: #cc00ff;">end</span>;
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+Pure's native data structure is the <a title="linked list" href="https://en.wikipedia.org/wiki/Linked_list">linked list</a>. Here's an example where we work with lists. Let's modify the internal <em>euler</em> above to take two arguments - a list of functions and a list of ints. Each recursive call to <em>euler</em> will peel off another function from the list and apply it to the ints. Here, the first version of <em>euler</em> matches an empty list of functions, and whose job is to simply return the last calculated value. The function list in the other version is symbolized as <em>(f:fs)</em>, where <em>f</em> matches the first item in the list, and <em>fs</em> matches to the rest of the list:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><em><span style="color: #007788;">// Euler1 in Pure</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #cc00ff;">myMap</span>    xs <span style="color: #000000; font-weight: bold;">=</span> map id xs;
+<span style="color: #cc00ff;">myFilter</span> xs <span style="color: #000000; font-weight: bold;">=</span> filter (<span style="color: #cc00ff;">\</span>x <span style="color: #000000; font-weight: bold;">-&gt;</span> x mod <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> x mod <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) xs;
+<span style="color: #cc00ff;">myFold</span>   xs <span style="color: #000000; font-weight: bold;">=</span> foldl (<span style="color: #555555;">+</span>) <span style="color: #ff6600;">0</span> xs;
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> euler [myMap,myFilter,myFold] (<span style="color: #ff6600;">1</span><span style="color: #555555;">..</span>n) with
+    <span style="color: #cc00ff;">euler</span> <span style="color: #007788; font-weight: bold;">[]</span>     x  <span style="color: #000000; font-weight: bold;">=</span> x;
+    <span style="color: #cc00ff;">euler</span> (f<span style="color: #007788; font-weight: bold;">:</span>fs) xs <span style="color: #000000; font-weight: bold;">=</span> euler fs (f xs);
+<span style="color: #cc00ff;">end</span>;
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, e<em>uler </em>returns e<em>uler</em> calculated on the half of the list before the pivot element, e<em>uler</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together. It demonstrates some of Pure's string operations such as slicing:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><em><span style="color: #007788;">// Euler1 in Pure</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> euler (<span style="color: #ff6600;">1</span><span style="color: #555555;">..</span>n) with
+    <span style="color: #cc00ff;">mod_3_5</span> n <span style="color: #000000; font-weight: bold;">=</span> <span style="color: #006699; font-weight: bold;">if</span> (n mod <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n mod <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) <span style="color: #006699; font-weight: bold;">then</span> n <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #ff6600;">0</span>;
+
+    <em><span style="color: #007788;">// the midpoint of the list</span></em>
+    <span style="color: #cc00ff;">mid</span>  xs <span style="color: #000000; font-weight: bold;">=</span> int(<span style="color: #555555;">#</span>xs <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>);
+    <em><span style="color: #007788;">// return a value for the midpoint element</span></em>
+    <span style="color: #cc00ff;">val</span>  xs <span style="color: #000000; font-weight: bold;">=</span> mod_3_5 (xs <span style="color: #555555;">!</span> mid xs);
+    <em><span style="color: #007788;">// plus euler on the first half of the list</span></em>
+    <span style="color: #cc00ff;">pre</span>  xs <span style="color: #000000; font-weight: bold;">=</span> xs <span style="color: #555555;">!!</span> (<span style="color: #ff6600;">0</span><span style="color: #555555;">..</span>(mid xs)<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>);
+    <em><span style="color: #007788;">// plus euler on the last half of the list</span></em>
+    <span style="color: #cc00ff;">post</span> xs <span style="color: #000000; font-weight: bold;">=</span> xs <span style="color: #555555;">!!</span> ((mid xs)<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span><span style="color: #555555;">..#</span>xs);
+
+    <span style="color: #cc00ff;">euler</span> <span style="color: #007788; font-weight: bold;">[]</span> <span style="color: #000000; font-weight: bold;">=</span> <span style="color: #ff6600;">0</span>;
+    <span style="color: #cc00ff;">euler</span> xs <span style="color: #000000; font-weight: bold;">=</span> euler(pre xs) <span style="color: #555555;">+</span> (val xs) <span style="color: #555555;">+</span> euler(post xs);
+<span style="color: #cc00ff;">end</span>;
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+I'm a little concerned with this version's efficiency - you can see that for every call to <em>euler xs</em>, <em>mid xs</em> gets called three times - by <em>pre, val</em>, and <em>post</em>. I can't put it in a local variable since I only have a collection of functions. I'm not sure how the compiler or runtime will optimize this.
+
+Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">//</span> <span style="color: #007788; font-weight: bold;">Euler1</span> <span style="color: #006699; font-weight: bold;">in</span> <span style="color: #007788; font-weight: bold;">Pure</span>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> euler n with
+    <span style="color: #cc00ff;">mySum</span> n size <span style="color: #000000; font-weight: bold;">=</span> int (n <span style="color: #555555;">*</span> (floor(size<span style="color: #555555;">/</span>n)<span style="color: #555555;">^</span><span style="color: #ff6600;">2</span> <span style="color: #555555;">+</span> floor(size<span style="color: #555555;">/</span>n)) <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>);
+    <span style="color: #cc00ff;">euler</span> n <span style="color: #000000; font-weight: bold;">=</span> mySum <span style="color: #ff6600;">3</span> n <span style="color: #555555;">+</span> mySum <span style="color: #ff6600;">5</span> n <span style="color: #555555;">-</span> mySum <span style="color: #ff6600;">15</span> n;
+<span style="color: #cc00ff;">end</span>;
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+Being foremost a language for math, Pure has a symbolic macro system. It's actually not the textual substitution found in most languages such as C or Lisp. Pure's substitution is actually real algebraic manipulation of terms. In the following example, the interpreter sees that the term <em>mySum x n </em>is a phrase to be redefined before being executed instead of it being a function call. Ironically, we get the same result whether the keyword <em>def</em> is included here or not even though they're executed very differently:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">//</span> <span style="color: #007788; font-weight: bold;">Euler1</span> <span style="color: #006699; font-weight: bold;">in</span> <span style="color: #007788; font-weight: bold;">Pure</span>
+<span style="color: #006699; font-weight: bold;">using</span> system;
+
+<span style="color: #cc00ff;">def</span> mySum n size <span style="color: #000000; font-weight: bold;">=</span> int (n <span style="color: #555555;">*</span> (floor(size<span style="color: #555555;">/</span>n)<span style="color: #555555;">^</span><span style="color: #ff6600;">2</span> <span style="color: #555555;">+</span> floor(size<span style="color: #555555;">/</span>n)) <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>);
+
+<span style="color: #cc00ff;">euler1</span> n <span style="color: #000000; font-weight: bold;">=</span> mySum <span style="color: #ff6600;">3</span> n <span style="color: #555555;">+</span> mySum <span style="color: #ff6600;">5</span> n <span style="color: #555555;">-</span> mySum <span style="color: #ff6600;">15</span> n;
+
+<span style="color: #006699; font-weight: bold;">printf</span> <span style="color: #cc3300;">"%d</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> (euler1 <span style="color: #ff6600;">999</span>);</pre>
+</div>
+Pure has more interesting math-oriented functionality, like full support for matrix operations. I wanted to show an example using matrix manipulation, but because our problem is so linear, any solution I came up with just seemed too contrived. The weirdest part of Pure is its support for undefined symbols. The runtime lets you define algebraic formulas with undefined symbols on the right-hand side. This isn't allowed in imperative languages, but Pure is perfectly happy dealing with the abstract. Here, we define function <em>foo</em> equal to the sum of some undefined symbols, and when we ask the runtime for <em>foo's</em> value, it returns an <em>equation</em>:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #555555;">&gt;</span> foo <span style="color: #000000; font-weight: bold;">=</span> a <span style="color: #555555;">+</span> b <span style="color: #555555;">+</span> c;
+<span style="color: #555555;">&gt;</span> show foo
+<span style="color: #555555;">foo</span> <span style="color: #000000; font-weight: bold;">=</span> a<span style="color: #555555;">+</span>b<span style="color: #555555;">+</span>c;
+<span style="color: #555555;">&gt;</span></pre>
+</div>
+So be careful - if you try to pass the wrong type to a function, its pattern matching will see that no function signature exists with that type, the runtime will simply create a new symbol (symbolic) instance of that signature. The new symbol has no value, but the runtime doesn't care! Expect to pull out some of your hair wondering why your program doesn't produce expected results. Actually, like most new languages, Pure has a great <a title="repl" href="http://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a> for debugging that you're going to want to make friends with.
+
+Overall, I had a lot of fun with Pure and would recommend it for those looking to expand their horizons. To kick the tires on the language and run your program from the command-line, simply yum-install pure, then pass your file as an argument to the runtime:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">pure</span> <span style="color: #ffffff;">euler1.pure</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span>
+<span style="color: #ffffff;">$</span></pre>
+</div>

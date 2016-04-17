@@ -1,0 +1,55 @@
+I took an initial look at one of Google's newest technologies today, <a title="Dart" href="http://www.dartlang.org/">Dart</a>. Introduced in 2009, it's supposed to be a modernized replacement for <a title="JavaScript" href="http://gdm9000.wordpress.com/2011/10/15/javascript/">JavaScript</a>, adding features such as <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>, optional static types, and shared libraries, and addressing issues such as performance optimization and better security. The Dart compiler compiles your code into JS for execution in the browser. Since any given Dart code has an equivalent JS translation, I'm not sure how the Dart team sees that they can overcome JS's deficiencies. Also, I think that JS is so entrenched, that even a company the size of Google will have a hard time dethroning JS. Still, being no fan of JS, I wish them well...
+
+To my eyes, it looks pretty much like JavaScript. In fact, it literally took me less than five minutes from the time I first looked at Dart to write this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Dart</span>
+
+<span style="color:#006699;font-weight:bold;">int</span> euler1(<span style="color:#006699;font-weight:bold;">int</span> size) {
+  <span style="color:#006699;font-weight:bold;"> var</span> retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+
+  <span style="color:#006699;font-weight:bold;"> for</span>(<span style="color:#006699;font-weight:bold;">int</span> i<span style="color:#555555;">=</span><span style="color:#ff6600;">1</span>; i<span style="color:#555555;">&lt;</span>size; i<span style="color:#555555;">++</span>)
+    <span style="color:#006699;font-weight:bold;"> if</span> (i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#555555;"> ||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)
+            retval <span style="color:#555555;">+=</span> i;
+
+  <span style="color:#006699;font-weight:bold;"> return</span> retval ;
+}
+
+main() {
+    print(euler1(<span style="color:#ff6600;">1000</span>));
+}</pre>
+</div>
+After writing a Functional version of Euler1 in JavaScript, I decided to try my hand at it with Dart. Although for any Imperative code there should be an equivalent Functional translation, I was not completely success. This language still feels a little immature. My attempt is not terrible to read, though.
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Dart</span>
+
+List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;</span> _range<span style="color:#555555;">(</span><span style="color:#007788;font-weight:bold;">int</span> lo<span style="color:#555555;">,</span> <span style="color:#007788;font-weight:bold;">int</span> hi<span style="color:#555555;">,</span> List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;</span> acc<span style="color:#555555;">)</span> <span style="color:#555555;">{</span>
+    <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#555555;">(</span>lo <span style="color:#555555;">==</span> hi<span style="color:#555555;">)</span> <span style="color:#555555;">{</span>
+        <span style="color:#006699;font-weight:bold;">return</span> acc<span style="color:#555555;">;</span>
+    <span style="color:#555555;">}</span> <span style="color:#006699;font-weight:bold;">else</span> <span style="color:#555555;">{</span>
+        acc<span style="color:#555555;">.</span><span style="color:#330099;">add</span><span style="color:#555555;">(</span>lo<span style="color:#555555;">);</span>
+        <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#cc00ff;">_range</span><span style="color:#555555;">(</span>lo<span style="color:#555555;">+</span><span style="color:#ff6600;">1</span><span style="color:#555555;">,</span> hi<span style="color:#555555;">,</span> acc<span style="color:#555555;">);</span>
+    <span style="color:#555555;">}</span>
+<span style="color:#555555;">}</span>
+
+List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;</span> range<span style="color:#555555;">(</span><span style="color:#007788;font-weight:bold;">int</span> lo<span style="color:#555555;">,</span> <span style="color:#007788;font-weight:bold;">int</span> hi<span style="color:#555555;">)</span> <span style="color:#555555;">{</span>
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#cc00ff;">_range</span><span style="color:#555555;">(</span>lo<span style="color:#555555;">,</span> hi<span style="color:#555555;">,</span> <span style="color:#006699;font-weight:bold;">new</span> List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;());</span>
+<span style="color:#555555;">}</span>
+
+main<span style="color:#555555;">()</span> <span style="color:#555555;">{</span>
+    List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;</span> ints <span style="color:#555555;">=</span> range<span style="color:#555555;">(</span><span style="color:#ff6600;">0</span><span style="color:#555555;">,</span> <span style="color:#ff6600;">1000</span><span style="color:#555555;">);</span>
+
+    List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;</span> mapped <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">new</span> List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;();</span>
+    ints<span style="color:#555555;">.</span><span style="color:#330099;">forEach</span><span style="color:#555555;">((</span>i<span style="color:#555555;">)</span> <span style="color:#555555;">=&gt;</span> mapped<span style="color:#555555;">.</span><span style="color:#330099;">add</span><span style="color:#555555;">(</span>i<span style="color:#555555;">));</span>
+
+    List<span style="color:#555555;">&lt;</span><span style="color:#007788;font-weight:bold;">int</span><span style="color:#555555;">&gt;</span> filtered <span style="color:#555555;">=</span> mapped<span style="color:#555555;">.</span><span style="color:#330099;">filter</span><span style="color:#555555;">((</span>i<span style="color:#555555;">)</span> <span style="color:#555555;">=&gt;</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#555555;">);</span>
+
+    <span style="color:#007788;font-weight:bold;">int</span> reduced <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span><span style="color:#555555;">;</span>
+    filtered<span style="color:#555555;">.</span><span style="color:#330099;">forEach</span><span style="color:#555555;">((</span>i<span style="color:#555555;">)</span> <span style="color:#555555;">=&gt;</span> reduced <span style="color:#555555;">+=</span> i<span style="color:#555555;">);</span>
+
+    print <span style="color:#555555;">(</span>reduced<span style="color:#555555;">);</span>
+<span style="color:#555555;">}</span></pre>
+</div>
+Dart has no range generator, so I rolled my own. And Filter is already built into the language, though Map and Reduce are not. I couldn't figure out how to avoid the mutables state of <em>acc</em>, <em>mapped</em>, and <em>reduced</em>. Let me know if you can figure it out.
+
+Dart's home page opens up to an interactive code editor, complete with samples, which lets you immediately play with the language. Nothing to install - brilliant! To run, just put your code in the online editor and click the big<em> Run</em> button:
+<pre style="color:#000000;background:#f1f0f0;"><span style="color:#c00000;">233168</span></pre>

@@ -1,0 +1,13 @@
+# Euler1 in Brat
+
+euler1 = { x |
+    result = 0
+    while {x > 0} {
+        true? x % 3 == 0 || x % 5 == 0 
+            { result = result + x }
+        x = x - 1
+    }
+    result
+}
+
+p euler1 999

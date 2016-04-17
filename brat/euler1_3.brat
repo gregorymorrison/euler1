@@ -1,0 +1,12 @@
+# Euler1 in Brat
+
+euler = { n, acc |
+    true? n <= 1
+        { acc }
+        { true? n % 3 == 0 || n % 5 == 0
+            { euler n - 1, acc + n }
+            { euler n - 1, acc }}}
+
+euler1 = { n | euler n, 0 }
+
+p euler1 999

@@ -1,0 +1,14 @@
+/* Euler1 in Nickle */
+
+int function euler(size) {
+    int retval = 0;
+
+    for (int i = 1; i < size; i++) {
+        if (i % 3 == 0 || i % 5 == 0) { retval += i; }
+    }
+
+    return (retval);
+}
+
+printf("%i\n", euler(1000));
+quit;

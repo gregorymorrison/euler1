@@ -1,0 +1,26 @@
+sdfg
+<!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Neko</span>
+
+<span style="color:#006699;font-weight:bold;">var</span> euler1 <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">function</span>(size) {
+    result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+
+    <span style="color:#006699;font-weight:bold;">do</span> {
+        <span style="color:#006699;font-weight:bold;">if</span> size <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> size <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+            result <span style="color:#555555;">=</span> result <span style="color:#555555;">+</span> size;
+        size <span style="color:#555555;">=</span> size <span style="color:#555555;">-</span> <span style="color:#ff6600;">1</span>;
+    } <span style="color:#006699;font-weight:bold;">while</span> size <span style="color:#555555;">&gt;</span> <span style="color:#ff6600;">0</span>
+
+    result;
+}
+
+$print(euler1(<span style="color:#ff6600;">999</span>) <span style="color:#555555;">+</span> <span style="color:#cc3300;">"\n"</span>);</pre>
+</div>
+sdfg
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$ nekoc</span> <span style="color:#ffffff;">euler1.neko</span>
+<span style="color:#ffffff;">$ neko</span> <span style="color:#ffffff;">euler1.n</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>

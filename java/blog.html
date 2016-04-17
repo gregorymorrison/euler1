@@ -1,0 +1,42 @@
+I wanted to write a representative version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in <a href="http://www.oracle.com/technetwork/java/index.html">Java</a>, a pure <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">Object-Oriented language</a> developed in 1995 by Sun, but I failed. It turns out that this is a stupid idea - <a href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a> is just overkill for what is essentially a simple function. There is no benefit to construing a simple function in terms of classes. This is the problem with languages like Java and <a title="Haskell" href="http://gdm9000.wordpress.com/2011/10/15/haskell/">Haskell</a> that rigidly enforce purity – there will always be edge cases that require you to subvert the paradigm.
+
+Anyway, here is my attempt – a class with members, a constructor, and a method. Obviously overkill, but it is cleanly defined. Java is my bread and butter language, so it took me only a minute to write the following:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Java</span>
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#555555;">{</span>
+    <span style="color:#006699;font-weight:bold;">private</span> <span style="color:#007788;font-weight:bold;">int</span> size<span style="color:#555555;">;</span>
+    <span style="color:#006699;font-weight:bold;">private</span> <span style="color:#007788;font-weight:bold;">int</span> result<span style="color:#555555;">;</span>
+
+    <span style="color:#006699;font-weight:bold;">public</span> <span style="color:#cc00ff;">Euler1</span><span style="color:#555555;">(</span><span style="color:#007788;font-weight:bold;">int</span> size<span style="color:#555555;">)</span> <span style="color:#555555;">{</span>
+        <span style="color:#006699;font-weight:bold;">this</span><span style="color:#555555;">.</span><span style="color:#330099;">size</span> <span style="color:#555555;">=</span> size<span style="color:#555555;">;</span>
+    <span style="color:#555555;">}</span>
+
+    <span style="color:#006699;font-weight:bold;">public</span> <span style="color:#007788;font-weight:bold;">void</span> <span style="color:#cc00ff;">solve</span><span style="color:#555555;">()</span> <span style="color:#555555;">{</span>
+        result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span><span style="color:#555555;">;</span>
+        <span style="color:#006699;font-weight:bold;">for</span> <span style="color:#555555;">(</span><span style="color:#007788;font-weight:bold;">int</span> i<span style="color:#555555;">=</span><span style="color:#ff6600;">0</span><span style="color:#555555;">;</span> i<span style="color:#555555;">&lt;</span>size<span style="color:#555555;">;</span> i<span style="color:#555555;">++)</span> <span style="color:#555555;">{</span>
+            <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#555555;">(</span>i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span><span style="color:#555555;">)</span> <span style="color:#555555;">{</span>
+                result <span style="color:#555555;">+=</span> i<span style="color:#555555;">;</span>
+            <span style="color:#555555;">}</span>
+        <span style="color:#555555;">}</span>
+    <span style="color:#555555;">}</span>
+
+    <span style="color:#006699;font-weight:bold;">public</span> <span style="color:#007788;font-weight:bold;">int</span> <span style="color:#cc00ff;">getResult</span><span style="color:#555555;">()</span> <span style="color:#555555;">{</span>
+        <span style="color:#006699;font-weight:bold;">return</span> result<span style="color:#555555;">;</span>
+    <span style="color:#555555;">}</span>
+
+    <span style="color:#006699;font-weight:bold;">public</span> <span style="color:#006699;font-weight:bold;">static</span> <span style="color:#007788;font-weight:bold;">void</span> <span style="color:#cc00ff;">main</span><span style="color:#555555;">(</span>String<span style="color:#555555;">[]</span> args<span style="color:#555555;">)</span> <span style="color:#555555;">{</span>
+        Euler1 euler1 <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">new</span> Euler1<span style="color:#555555;">(</span><span style="color:#ff6600;">1000</span><span style="color:#555555;">);</span>
+
+        euler1<span style="color:#555555;">.</span><span style="color:#330099;">solve</span><span style="color:#555555;">();</span>
+
+        System<span style="color:#555555;">.</span><span style="color:#330099;">out</span><span style="color:#555555;">.</span><span style="color:#330099;">println</span><span style="color:#555555;">(</span>euler1<span style="color:#555555;">.</span><span style="color:#330099;">getResult</span><span style="color:#555555;">());</span>
+    <span style="color:#555555;">}</span>
+<span style="color:#555555;">}</span></pre>
+</div>
+To run this, compile to bytecode using the java compiler, then execute the resultant class file:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">javac</span> <span style="color:#ffffff;">Euler1.java</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">java</span> <span style="color:#ffffff;">Euler1</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

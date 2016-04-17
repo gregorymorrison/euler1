@@ -1,0 +1,8 @@
+interface euler1_2 where {
+import Prelude;
+hiding data Prelude.IO a;
+hiding data Prelude.Int;
+euler1 :: Prelude.Int -> Prelude.Int;
+main :: Prelude.IO ();
+mysum :: Prelude.Int -> Prelude.Int -> Prelude.Int
+}

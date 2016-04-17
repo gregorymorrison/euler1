@@ -11,8 +11,9 @@ euler1["solve"] = function ()
         if i%3 == 0 or i%5 == 0
             self.result += i
         end
-    end
+    end    
 end
 
 euler1.solve()
+
 > euler1.result

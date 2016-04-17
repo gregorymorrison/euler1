@@ -1,0 +1,22 @@
+<a href="http://en.wikipedia.org/wiki/SQL">ANSI SQL</a> is a database query language, not a general-purpose language. Even so, with a little cleverness we can bend it to our will, abusing it to do things that would make <a href="http://en.wikipedia.org/wiki/Edgar_F._Codd">E. F. Codd</a> sad. The following is <a title="Oracle" href="http://www.oracle.com/us/products/database/index.html">Oracle</a> SQL; with other DBMSes your mileage may vary:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#888888;">-- Euler1 in SQL</span>
+
+<span style="color:#008800;font-weight:bold;">WITH</span> euler1 <span style="color:#008800;font-weight:bold;">AS</span> (
+    <span style="color:#008800;font-weight:bold;">select</span> <span style="color:#008800;font-weight:bold;">SUM</span>(lvl) <span style="color:#008800;font-weight:bold;">from</span> (
+	<span style="color:#008800;font-weight:bold;">select</span> <span style="color:#008800;font-weight:bold;">LEVEL</span> lvl <span style="color:#008800;font-weight:bold;">from</span> dual
+	<span style="color:#008800;font-weight:bold;">where</span> <span style="color:#008800;font-weight:bold;">MOD</span>(<span style="color:#008800;font-weight:bold;">LEVEL</span>,<span style="color:#0000dd;font-weight:bold;">3</span>)=<span style="color:#0000dd;font-weight:bold;">0</span> <span style="color:#008800;font-weight:bold;">or</span> <span style="color:#008800;font-weight:bold;">MOD</span>(<span style="color:#008800;font-weight:bold;">LEVEL</span>,<span style="color:#0000dd;font-weight:bold;">5</span>)=<span style="color:#0000dd;font-weight:bold;">0</span>
+	<span style="color:#008800;font-weight:bold;">connect</span> <span style="color:#008800;font-weight:bold;">by</span> <span style="color:#008800;font-weight:bold;">LEVEL</span> &lt; <span style="color:#0000dd;font-weight:bold;">1000</span>))
+
+<span style="color:#008800;font-weight:bold;">select</span> * <span style="color:#008800;font-weight:bold;">from</span> euler1;</pre>
+</div>
+I tried to keep to my <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> design as much as possible. User-defined runtime variables don't exist in pure ANSI SQL, although database tools often allow substitution variables to be passed in through the UI for compile-time binding.
+
+SQL doesn't allow for user-defined functions, either - there is nothing like a call stack. No functions, no recursion - only one flat global state. So then what is <em>euler1()</em> here?  It looks like a separate function, but it's not; think of <em>euler1()</em> instead as a compile-time substitution. Oracle's WITH clause allows some flexibility to decompose your problem, with which we can simulate function calls. Notice that there's no parameter passing, though. Like I said - just one global state.
+
+Cleverer people may be able to bastardize SQL further; I am not a clever man. For a real crime against SQLmanity, check out this neato <a href="http://code.openark.org/blog/mysql/sql-pie-chart">pie chart (including legend) done entirely in SQL</a>.
+
+Simply execute the query to get your results, then apologize to Dr. Codd:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

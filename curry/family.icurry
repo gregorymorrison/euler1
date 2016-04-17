@@ -1,0 +1,22 @@
+interface family where {
+import Prelude;
+hiding data Prelude.IO a;
+hiding data Prelude.Success;
+data Person
+  = Christine
+  | Maria
+  | Monica
+  | Alice
+  | Susan
+  | Antony
+  | Bill
+  | John
+  | Frank
+  | Peter
+  | Andrew;
+father :: Person -> Person;
+grandfather :: Person -> Person -> Prelude.Success;
+husband :: Person -> Person;
+main :: Prelude.IO ();
+mother :: Person -> Person
+}

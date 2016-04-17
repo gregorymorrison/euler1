@@ -1,13 +1,13 @@
 // Euler1 in IO
 
-Euler1 := Object clone
-Euler1 solution := 0
-Euler1 solve := method(n,
-    for(i, 1, n-1,
-        if ((i%3==0 or i%5==0),
-            (solution = solution + i))))
+euler := method(n, acc,
+    if (n == 1, return acc)
 
-euler1 := Euler1 clone
-euler1 solve(1000)
+    if (n%3==0 or n%5==0,
+        euler(n-1, acc+n),
+        euler(n-1, acc))
+)
+euler1 := method(n,
+    euler(n, 0))
 
-euler1 solution println
+euler1(999) println

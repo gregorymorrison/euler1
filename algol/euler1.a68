@@ -1,0 +1,14 @@
+# Euler1 in Algol 68 #
+
+PROC euler1 = (INT n) INT: (
+    INT retval := 0;
+
+    FOR i FROM 1 TO n-1 DO
+        IF i %* 3 = 0 OR i %* 5 = 0 THEN
+            retval +:= i
+        FI
+    OD;
+    retval
+);
+
+print (euler1(1000))

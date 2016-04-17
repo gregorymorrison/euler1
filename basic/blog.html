@@ -1,0 +1,60 @@
+<a title="Basic" href="http://en.wikipedia.org/wiki/BASIC">BASIC</a> <em>(Beginner's All-purpose Symbolic Instruction Code)</em> is the language that I cut my teeth on. Introduced way back in 1964, it was the first exposure that many of had to programming, because it was the native language of the first personal computers. Machines from Apple, Commodore, Radio Shack, Atari, IBM, etc. all had Basic built in and many even booted up into a Basic interpreter. Compared to today's standards, it was pretty crude. Early version required line numbers and didn't have support for <a title="Procedural" href="http://en.wikipedia.org/wiki/Procedural_programming">procedures</a>. Later versions like <a title="VisualBasic" href="http://en.wikipedia.org/wiki/Visual_Basic">Visual Basic</a> added limited <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a> support. Here's a recursive version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in <a title="QBasic" href="http://en.wikipedia.org/wiki/QBasic">QBasic</a>:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">' Euler1 in QBasic</span>
+
+<span style="color:#006699;font-weight:bold;">DECLARE</span> <span style="color:#006699;font-weight:bold;">FUNCTION</span> <span style="color:#cc00ff;">Euler1</span> (n)
+<span style="color:#006699;font-weight:bold;">FUNCTION</span> <span style="color:#cc00ff;">Euler1</span> (n)
+    <span style="color:#006699;font-weight:bold;">IF</span> n <span style="color:#555555;">&lt;</span> <span style="color:#ff6600;">3</span> <span style="color:#006699;font-weight:bold;">THEN</span>
+        Euler1 <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">ELSE</span> <span style="color:#006699;font-weight:bold;">IF</span> n <span style="color:#000000;font-weight:bold;">MOD</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">OR</span> n <span style="color:#000000;font-weight:bold;">MOD</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">THEN</span>
+        Euler1 <span style="color:#555555;">=</span> n <span style="color:#555555;">+</span> Euler1(n <span style="color:#555555;">-</span> <span style="color:#ff6600;">1</span>)
+    <span style="color:#006699;font-weight:bold;">ELSE</span>
+        Euler1 <span style="color:#555555;">=</span> Euler1(n <span style="color:#555555;">-</span> <span style="color:#ff6600;">1</span>)
+    <span style="color:#006699;font-weight:bold;">END</span> <span style="color:#006699;font-weight:bold;">IF</span>
+<span style="color:#006699;font-weight:bold;">END</span> <span style="color:#006699;font-weight:bold;">FUNCTION</span>
+
+PRINT Euler1(<span style="color:#ff6600;">999</span>)</pre>
+</div>
+Notice there's no declared return variable - it's implicitly the same as the function name. Here's an iterative version of the same:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">' Euler1 in QBasic</span>
+
+<span style="color:#006699;font-weight:bold;">DECLARE</span> <span style="color:#006699;font-weight:bold;">FUNCTION</span> <span style="color:#cc00ff;">Euler1</span> (n)
+<span style="color:#006699;font-weight:bold;">FUNCTION</span> <span style="color:#cc00ff;">Euler1</span> (n)
+    result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">FOR</span> i% <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span> <span style="color:#006699;font-weight:bold;">TO</span> n
+        <span style="color:#006699;font-weight:bold;">IF</span> i% <span style="color:#000000;font-weight:bold;">MOD</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">OR</span> i% <span style="color:#000000;font-weight:bold;">MOD</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">THEN</span>
+            result <span style="color:#555555;">=</span> result <span style="color:#555555;">+</span> i%
+        <span style="color:#006699;font-weight:bold;">END</span> <span style="color:#006699;font-weight:bold;">IF</span>
+    <span style="color:#006699;font-weight:bold;">NEXT</span> i%
+    Euler1 <span style="color:#555555;">=</span> result
+<span style="color:#006699;font-weight:bold;">END</span> <span style="color:#006699;font-weight:bold;">FUNCTION</span>
+
+PRINT Euler1(<span style="color:#ff6600;">999</span>)</pre>
+</div>
+And here is the same code, written in the BBC Basic dialect:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">REM Euler1 in BBC Basic</span>
+
+PRINT <span style="color:#ff00ff;">Euler1</span>(<span style="color:#ff6600;">999</span>)
+QUIT
+
+DEF <span style="color:#ff00ff;">Euler1</span>(n)
+LOCAL i, result
+result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+<span style="color:#006699;font-weight:bold;">FOR</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span> <span style="color:#006699;font-weight:bold;">TO</span> n
+    <span style="color:#006699;font-weight:bold;">IF</span> i <span style="color:#000000;font-weight:bold;">MOD</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">OR</span> i <span style="color:#000000;font-weight:bold;">MOD</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">THEN</span>
+        result <span style="color:#555555;">=</span> result <span style="color:#555555;">+</span> i
+    <span style="color:#006699;font-weight:bold;">ENDIF</span>
+<span style="color:#006699;font-weight:bold;">NEXT</span> i
+<span style="color:#555555;">=</span>result</pre>
+</div>
+This example illustrates the effect of the interpreter on the language's design. Execution starts at the top and works its way down. The main body of the program must be at the top because BBC Basic's runtime isn't even smart enough to predefine functions - it only defines and executes them as needed. Moving '<em>DEF Euler1(n)</em>' to the top merely confuses it. Likewise, I couldn't get recursion to work in BBC Basic, though the runtime supposedly supports it.
+
+To execute the QBasic code, I used the cool JavaScript-based web interpreter, <a title="repl.it" href="http://repl.it/#:languages">repl.it</a>. Just type your code in the box and click the arrow to run. I'm embarrassed to admit that it took me a little bit to realize why my execution attempts would only work the first time. It's because it's a <a title="REPL" href="http://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a>, duh! The very first line of code is a declaration, and the REPL announces that it's already defined and then quits. Fair enough...
+
+To run BBC Basic code, I used <a title="Brandy" href="http://webcache.googleusercontent.com/search?q=cache:http://joysofprogramming.com/install-brandy-fedora-rhel/&amp;hl=en&amp;strip=1">Brandy</a>. Yum-install and then execute, including a quit flag to exit the interpreter when finished:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">brandy</span> <span style="color:#ffffff;">-quit</span> <span style="color:#ffffff;">euler1.bas</span>
+    <span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

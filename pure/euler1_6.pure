@@ -1,0 +1,9 @@
+// Euler1 in Pure
+using system;
+
+euler1 n = euler n with
+    mySum n size = int (n * (floor(size/n)^2 + floor(size/n)) / 2);
+    euler n = mySum 3 n + mySum 5 n - mySum 15 n;
+end;
+
+printf "%d\n" (euler1 999);

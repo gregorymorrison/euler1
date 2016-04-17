@@ -1,0 +1,154 @@
+<a title="Smalltalk" href="http://en.wikipedia.org/wiki/Smalltalk">Smalltalk</a> is the first Object Oriented language. Introduced in 1972, it was widely regarded at the time as a great language, but due to various circumstances time has passed it by. In Smalltalk, everything is an object, and every communication between objects is a message. Here is a version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in which I extend the parent class <em>Integer</em> to include a new method - a <a title="Haskell" href="http://en.wikipedia.org/wiki/Haskell_(programming_language)">Haskell</a>-style algorithm. It has an range iterator with <em>self </em>as its upper bound, and here the caret is a return operator:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">"Euler1 in Smalltalk"</span>
+
+<span style="color:#00aa88;font-weight:bold;">Integer</span> <span style="color:#cc00ff;">extend</span> [
+    <span style="color:#00aa88;font-weight:bold;">Euler1</span> [
+        <span style="color:#555555;">^</span> ((<span style="color:#ff6600;">1</span> <span style="color:#cc00ff;">to:</span> <span style="color:#336666;">self</span>)
+            <span style="color:#cc00ff;">select:</span> [<span style="color:#555555;">:</span><span style="color:#003333;">x</span> <span style="color:#555555;">|</span> ((<span style="color:#003333;">x</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">3</span>) <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#cc00ff;">or:</span> [(<span style="color:#003333;">x</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">5</span>) <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span>])])
+            <span style="color:#cc00ff;">fold:</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">x</span> <span style="color:#555555;">:</span><span style="color:#003333;">y</span> <span style="color:#555555;">|</span> <span style="color:#003333;">x</span> <span style="color:#cc00ff;">+</span> <span style="color:#003333;">y</span> ]
+    ]
+]
+
+(<span style="color:#ff6600;">999</span> <span style="color:#cc00ff;">Euler1</span>) <span style="color:#cc00ff;">displayNl</span></pre>
+</div>
+Since everything is an object, my algorithm has to inherit from some parent class. I chose class <em>Integer</em>, since the result will be an integer. It feels like an abuse of design, but it works fine. Any Smalltalkers out there know if this is good or bad design? Smalltalk's overall feel is pretty weird, though it's strict purity is attractive. The last line above has the method <em>Euler1</em> being a message sent to class instance <em>999</em>. The integer's instantiation returns a value which is then sent as a message to the IO routine displayNl. Everything is chained together in this manner.
+
+Since everything in Smalltalk is an object, even standalone functions must be construed as objects - called <em>blocks.</em> Here is Euler1 as a block which implements the brute-force solution of looping through numbers manually and checking each one. The default return value of a block is the value evaluated on the last line:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">"Euler1 in Smalltalk"</span>
+
+<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">size</span> <span style="color:#555555;">|</span>
+    <span style="color:#003333;">result</span> <span style="color:#555555;">:=</span> <span style="color:#ff6600;">0</span>.
+
+    <span style="color:#ff6600;">0</span> <span style="color:#cc00ff;">to:</span> <span style="color:#003333;">size</span> <span style="color:#cc00ff;">do:</span> [<span style="color:#555555;">:</span><span style="color:#003333;">i</span> <span style="color:#555555;">|</span>
+        (<span style="color:#003333;">i</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">3</span> <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#cc00ff;">or:</span> [<span style="color:#003333;">i</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">5</span> <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span>])
+        <span style="color:#336666;">ifTrue:</span>
+            [<span style="color:#003333;">result</span> <span style="color:#555555;">:=</span> <span style="color:#003333;">result</span> <span style="color:#cc00ff;">+</span> <span style="color:#003333;">i</span>].
+    ].
+
+    <span style="color:#003333;">result</span>.
+].
+
+(<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#cc00ff;">value:</span> <span style="color:#ff6600;">999</span>) <span style="color:#cc00ff;">displayNl</span></pre>
+</div>
+Smalltalk has <a title="Functional" href="http://onsmalltalk.com/on-simple-functional-idioms">Functional</a> programming constructs baked right in. Here are the canonical <em>collect/select/inject</em>; <em>collect</em> does nothing and is included only for illustration. <em>Euler1</em> is a <a title="Lambda" href="http://en.wikipedia.org/wiki/Lambda_(programming)">lambda</a>- an anonymous function, though I happened to name it. One of the main points of Functional programming is that the program is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is illustrated in the block <em>Euler1</em> by the absence of any variable manipulation – there are instead only methods which return values. As a matter of fact, it's simply one statement - a bunch of methods chained together using parentheses:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">"Euler1 in Smalltalk"</span>
+
+<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">size</span> <span style="color:#555555;">|</span>
+  (((<span style="color:#ff6600;">1</span> <span style="color:#cc00ff;">to:</span> <span style="color:#003333;">size</span>)
+    <span style="color:#cc00ff;">collect:</span> [<span style="color:#555555;">:</span><span style="color:#003333;">x</span> <span style="color:#555555;">|</span> <span style="color:#003333;">x</span>])
+      <span style="color:#cc00ff;">select:</span> [<span style="color:#555555;">:</span><span style="color:#003333;">x</span> <span style="color:#555555;">|</span> ((<span style="color:#003333;">x</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">3</span>) <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#cc00ff;">or:</span> [(<span style="color:#003333;">x</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">5</span>) <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span>])])
+        <span style="color:#cc00ff;">inject:</span> <span style="color:#ff6600;">0</span> <span style="color:#cc00ff;">into:</span> [<span style="color:#555555;">:</span><span style="color:#003333;">x</span> <span style="color:#555555;">:</span><span style="color:#003333;">y</span> <span style="color:#555555;">|</span> <span style="color:#003333;">x</span> <span style="color:#cc00ff;">+</span> <span style="color:#003333;">y</span>]
+].
+
+(<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#cc00ff;">value:</span> <span style="color:#ff6600;">999</span>) <span style="color:#cc00ff;">displayNl</span></pre>
+</div>
+Here’s a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. Tail recursion is a technique that allows an intelligent compiler to optimize its stack usage to be O(n) instead of O(n!). In English, this means that your program will probably not crash even for hugely recursive calls. Note here how arguments are passed to functions. The function instance is passed the message <em>value</em> with its value being the argument, and these are simply chained one after the other.
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">"Euler1 in Smalltalk"</span>
+
+<span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">n</span> <span style="color:#555555;">:</span><span style="color:#003333;">acc</span> <span style="color:#555555;">|</span>
+    (<span style="color:#003333;">n</span> <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">1</span>)
+    <span style="color:#336666;">ifTrue:</span>
+        [<span style="color:#003333;">acc</span>]
+    <span style="color:#336666;">ifFalse:</span> [
+        (<span style="color:#003333;">n</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">3</span> <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#cc00ff;">or:</span> [<span style="color:#003333;">n</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">5</span> <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span>])
+        <span style="color:#336666;">ifTrue:</span>
+            [<span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#cc00ff;">value:</span> (<span style="color:#003333;">n</span><span style="color:#cc00ff;">-</span><span style="color:#ff6600;">1</span>) <span style="color:#cc00ff;">value:</span> (<span style="color:#003333;">acc</span><span style="color:#cc00ff;">+</span><span style="color:#003333;">n</span>)]
+        <span style="color:#336666;">ifFalse:</span>
+            [<span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#cc00ff;">value:</span> (<span style="color:#003333;">n</span><span style="color:#cc00ff;">-</span><span style="color:#ff6600;">1</span>) <span style="color:#cc00ff;">value:</span> <span style="color:#003333;">acc</span>].
+    ].
+].
+
+<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">n</span> <span style="color:#555555;">|</span> <span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#cc00ff;">value:</span> <span style="color:#003333;">n</span> <span style="color:#cc00ff;">value:</span> <span style="color:#ff6600;">0</span> ].
+
+(<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#cc00ff;">value:</span> <span style="color:#ff6600;">999</span>) <span style="color:#cc00ff;">displayNl</span></pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to <em>0</em> if it’s not divisible. Here, <em>Euler() </em>returns <em>Euler()</em> calculated on the half of the list before the pivot element, <em>Euler()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together. This code demonstrates Smalltalk's range generation and array slicing. Arrays in Smalltalk are 1-based. Be careful with this code - Smalltalk's stack frames seem to not be isolated the way I expected. Calling Euler recursively at lines 10 and 11 actually affects the value of local variables <em>pivotVal</em> and <em>i at lines 13-17</em>. To address this, I simply moved their definition after 10-11 instead of before. This seems like a bug in Smalltalk, but I'll assume it's ignorance on my part.
+
+This example actually fails - it appears that Smalltalk cannot handle this much recursion, and simply hangs for size=1000. Even for size=100, Smalltalk returns the correct result, although it still produces a cryptic error message. :
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin:0;line-height:125%;"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">"Euler1 in Smalltalk"</span>
+
+<span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">L</span> <span style="color:#555555;">|</span>
+    (<span style="color:#00aa88;font-weight:bold;">L</span> <span style="color:#cc00ff;">isEmpty</span>)
+    <span style="color:#336666;">ifTrue:</span>
+        [ <span style="color:#ff6600;">0</span> ]
+    <span style="color:#336666;">ifFalse:</span> [
+        <span style="color:#003333;">pivot</span> <span style="color:#555555;">:=</span> ((<span style="color:#00aa88;font-weight:bold;">L</span> <span style="color:#cc00ff;">size</span>) <span style="color:#cc00ff;">//</span> <span style="color:#ff6600;">2</span>) <span style="color:#cc00ff;">max:</span> <span style="color:#ff6600;">1</span>.
+
+        <span style="color:#003333;">pre</span>  <span style="color:#555555;">:=</span> <span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#cc00ff;">value:</span> (<span style="color:#00aa88;font-weight:bold;">L</span> <span style="color:#cc00ff;">copyFrom:</span> <span style="color:#ff6600;">1</span> <span style="color:#cc00ff;">to:</span> (<span style="color:#003333;">pivot</span><span style="color:#cc00ff;">-</span><span style="color:#ff6600;">1</span>)).
+        <span style="color:#003333;">post</span> <span style="color:#555555;">:=</span> <span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#cc00ff;">value:</span> (<span style="color:#00aa88;font-weight:bold;">L</span> <span style="color:#cc00ff;">copyFrom:</span> (<span style="color:#003333;">pivot</span><span style="color:#cc00ff;">+</span><span style="color:#ff6600;">1</span>) <span style="color:#cc00ff;">to:</span> (<span style="color:#00aa88;font-weight:bold;">L</span> <span style="color:#cc00ff;">size</span>)).
+
+        <span style="color:#003333;">pivotVal</span> <span style="color:#555555;">:=</span> <span style="color:#00aa88;font-weight:bold;">L</span> <span style="color:#cc00ff;">at:</span> <span style="color:#003333;">pivot</span>.
+        <span style="color:#003333;">i</span> <span style="color:#555555;">:=</span> <span style="color:#ff6600;">0</span>.
+        (<span style="color:#003333;">pivotVal</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">3</span> <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#cc00ff;">or:</span> [<span style="color:#003333;">pivotVal</span> <span style="color:#cc00ff;">\\</span> <span style="color:#ff6600;">5</span> <span style="color:#cc00ff;">=</span> <span style="color:#ff6600;">0</span>])
+        <span style="color:#336666;">ifTrue:</span>
+            [<span style="color:#003333;">i</span> <span style="color:#555555;">:=</span> <span style="color:#003333;">pivotVal</span>].
+
+        <span style="color:#003333;">i</span> <span style="color:#cc00ff;">+</span> <span style="color:#003333;">pre</span> <span style="color:#cc00ff;">+</span> <span style="color:#003333;">post</span>.
+    ].
+].
+
+<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">n</span> <span style="color:#555555;">|</span> <span style="color:#00aa88;font-weight:bold;">Euler</span> <span style="color:#cc00ff;">value:</span> (<span style="color:#ff6600;">1</span> <span style="color:#cc00ff;">to:</span> <span style="color:#003333;">n</span>) ].
+
+(<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#cc00ff;">value:</span> <span style="color:#ff6600;">999</span>) <span style="color:#cc00ff;">displayNl</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+Here's an elegant algorithm based on an observation by little Carl Friedrich Gauss - <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">"Euler1 in Smalltalk"</span>
+
+<span style="color:#003333;">mySum</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">n</span> <span style="color:#555555;">:</span><span style="color:#003333;">size</span> <span style="color:#555555;">|</span>
+    (((<span style="color:#003333;">size</span><span style="color:#cc00ff;">//</span><span style="color:#003333;">n</span>) <span style="color:#cc00ff;">raisedTo:</span> <span style="color:#ff6600;">2</span>) <span style="color:#cc00ff;">+</span> (<span style="color:#003333;">size</span><span style="color:#cc00ff;">//</span><span style="color:#003333;">n</span>)) <span style="color:#cc00ff;">*</span> <span style="color:#003333;">n</span> <span style="color:#cc00ff;">//</span> <span style="color:#ff6600;">2</span>
+].
+
+<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#555555;">:=</span> [ <span style="color:#555555;">:</span><span style="color:#003333;">size</span> <span style="color:#555555;">|</span>
+    (<span style="color:#003333;">mySum</span> <span style="color:#cc00ff;">value:</span>  <span style="color:#ff6600;">3</span> <span style="color:#cc00ff;">value:</span> <span style="color:#003333;">size</span>) <span style="color:#cc00ff;">+</span>
+    (<span style="color:#003333;">mySum</span> <span style="color:#cc00ff;">value:</span>  <span style="color:#ff6600;">5</span> <span style="color:#cc00ff;">value:</span> <span style="color:#003333;">size</span>) <span style="color:#cc00ff;">-</span>
+    (<span style="color:#003333;">mySum</span> <span style="color:#cc00ff;">value:</span> <span style="color:#ff6600;">15</span> <span style="color:#cc00ff;">value:</span> <span style="color:#003333;">size</span>)
+].
+
+(<span style="color:#00aa88;font-weight:bold;">Euler1</span> <span style="color:#cc00ff;">value:</span> <span style="color:#ff6600;">999</span>) <span style="color:#cc00ff;">displayNl</span></pre>
+</div>
+This language was a bit of a headscratcher for me. It took about an hour each to figure out how to do simple things such as print an integer or define a function. And it took me several hours just to figure out how to return a goddamn value from a function. The compiler messages are just okay, and the compiler is quite unforgiving about syntax. For example, version one above compiles fine with no periods following the closing square brackets, while version two does not. Expect a bit of a learning curve. One of the things Smalltalk is known for is being a complete programming environment. It's not <em>just</em> an IDE - it's a complete windowing environment with its own text editor, GUI designer, etc. Normally if you want to write Smalltalk, you have to use its editor. Well, GNU has a version of Smalltalk - <a title="GNU Smalltalk" href="http://smalltalk.gnu.org/">gnu-smalltalk</a>, which lets you use Smalltalk's syntax and compiler on text files outside of an IDE. To run your code in gnu-smalltalk, simply invoke <em>gst</em>, passing it your code as an argument:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> gst euler1.st
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

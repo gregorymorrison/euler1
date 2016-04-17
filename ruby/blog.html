@@ -1,0 +1,24 @@
+<a href="http://www.ruby-lang.org/">Ruby</a>, introduced in 1995, is a simple, dynamic, strongly typed, multiparadigm language language that gets compared often to <a title="Python" href="http://gdm9000.wordpress.com/2011/10/15/python/">Python</a>. Both serve the same niche, so pick one or the other to learn. I expected that getting a version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Ruby up and running would be an easiest case, which it turned out to be.
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">#!/usr/bin/ruby</span></pre>
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;"># Euler1 in Ruby</span></pre>
+<pre style="line-height: 125%; margin: 0;"></pre>
+&nbsp;
+<pre style="line-height: 125%; margin: 0;"><span style="color: #006699; font-weight: bold;">def</span> <span style="color: #cc00ff;">euler1</span>(x)</pre>
+<pre style="line-height: 125%; margin: 0;">    (<span style="color: #ff6600;">0</span><span style="color: #555555;">.</span>.<span style="color: #555555;">.</span>x)<span style="color: #555555;">.</span>select{<span style="color: #555555;">|</span>i<span style="color: #555555;">|</span> i <span style="color: #006699; font-weight: bold;">if</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #000000; font-weight: bold;">or</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>}<span style="color: #555555;">.</span>inject{<span style="color: #555555;">|</span>retval,j<span style="color: #555555;">|</span> retval<span style="color: #555555;">+</span>j}</pre>
+<pre style="line-height: 125%; margin: 0;"><span style="color: #006699; font-weight: bold;">end</span></pre>
+<pre style="line-height: 125%; margin: 0;"></pre>
+&nbsp;
+<pre style="line-height: 125%; margin: 0;"><span style="color: #336666;">puts</span> euler1(<span style="color: #ff6600;">1000</span>)</pre>
+</div>
+Notice that in Ruby, operations tend to be chained together. Another interesting aspect of Ruby is its blocks, e.g.: <span class="Apple-style-span" style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 15px; white-space: pre;">inject{|retval,j| retval+j}</span>
+
+Here it is again, for versions of Ruby 1.8.7+  that support the new <span class="Apple-style-span" style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 15px; white-space: pre;">.inject(:+)</span> syntax. Note the concision here - an IO statement, a loop, a condition, and an accumulator, all in one line - very nice!
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #336666;">puts</span> (<span style="color: #ff6600;">0</span><span style="color: #555555;">.</span>.<span style="color: #555555;">.</span><span style="color: #ff6600;">1000</span>)<span style="color: #555555;">.</span>select{<span style="color: #555555;">|</span>x<span style="color: #555555;">|</span> x <span style="color: #006699; font-weight: bold;">if</span> x<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #000000; font-weight: bold;">or</span> x<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>}<span style="color: #555555;">.</span>inject(<span style="color: #ffcc33;">:+</span>)</pre>
+</div>
+Ruby may already be installed on your Linux box. If not, on Fedora simply <em>yum install ruby</em>. Then to execute our Ruby script, simply call it:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">./euler1.rb</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

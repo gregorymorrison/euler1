@@ -1,0 +1,51 @@
+<a title="COBOL" href="http://en.wikipedia.org/wiki/Cobol">COBOL</a> is one of the oldest languages still in regular use. Introduced in 1959, it's an imperative language that has had some modernizations such as object-orientation. Even though it is used heavily in my office, I've never looked at the language before; I was always scared of its baroque syntax and ugly interface. Well, I just found a version of COBOL available for Windows, Linux, and OSX called <a title="OpenCOBOL" href="http://www.opencobol.org/">OpenCOBOL</a>, so I decided to give it a whirl.
+
+My experience was not a pleasant one. This language has a dinosaur feel to it, much like <a title="Fortran" href="http://en.wikipedia.org/wiki/Fortran">Fortran</a>. The language itself is very simplistic, but the compiler is super-cranky - everything is extremely explicit. Functions are actually written as separate programs. Integer datatypes of different lengths are actually considered different datatypes. And it actually requires the first seven positions of each line to be empty - a holdover from card readers. Really - you port over a version of the language to a PC and you keep that limitation? Okaaay...  It took me maybe a day and a half to write this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> - available documentation for COBOL on the Internet is not that great.
+<div style="background: white; overflow: auto; margin-bottom: 20px; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;">      <span style="color: #339966;"><em> * Euler1 <span style="font-weight: bold;">in</span> COBOL</em></span>
+
+       <span style="color: #003333; font-weight: bold;">IDENTIFICATION DIVISION</span>.
+       <span style="color: #003333; font-weight: bold;">PROGRAM-ID</span>. <span style="color: #800000;">myTest</span>.
+       <span style="color: #003333; font-weight: bold;">DATA DIVISION</span>.
+       <span style="color: #003333; font-weight: bold;">WORKING-STORAGE SECTION</span>.
+       <span style="color: #ff6600;">01</span>  <span style="color: #800080;">cnt </span>    <span style="color: #003333;">PIC 9</span>(<span style="color: #ff6600;">4</span>) <span style="color: #003333; font-weight: bold;">VALUE</span> <span style="color: #ff6600;">999</span>.
+       <span style="color: #ff6600;">01</span>  <span style="color: #800080;">result </span> <span style="color: #003333;">PIC 9</span>(<span style="color: #ff6600;">9</span>).
+       <span style="color: #003333; font-weight: bold;">PROCEDURE DIVISION</span>.
+           <strong><span style="color: #003333;">CALL</span></strong> <span style="color: #800000;">"euler1"</span> <span style="color: #003333;"><strong>USING BY CONTENT</strong> <span style="color: #800080;">cnt</span>, </span>
+                               <strong><span style="color: #003333;">BY</span> <span style="color: #003333;">REFERENCE</span></strong> <span style="color: #800080;">result</span>.
+           <strong><span style="color: #003333;">DISPLAY</span></strong> <span style="color: #800080;">result</span>.
+           <span style="color: #003300;"><span style="font-weight: bold;">STOP RUN</span>.</span>
+       <span style="color: #003333; font-weight: bold;">END PROGRAM</span> <span style="color: #800000;">myTest</span>.
+
+       <span style="color: #003333; font-weight: bold;">IDENTIFICATION DIVISION</span>.
+       <span style="color: #003333; font-weight: bold;">PROGRAM-ID</span>. <span style="color: #800000;">euler1</span>.
+       <span style="color: #003333; font-weight: bold;">DATA DIVISION</span>.
+       <span style="color: #003333; font-weight: bold;">WORKING-STORAGE SECTION</span>.
+       <span style="color: #ff6600;">01</span>  <span style="color: #800080;">quot </span><strong><span style="color: #003333;">PIC 9</span></strong>(<span style="color: #ff6600;">3</span>) <span style="color: #003333; font-weight: bold;">VALUE</span> <span style="color: #ff6600;">0</span>.
+       <span style="color: #ff6600;">01</span>  <span style="color: #800080;">rem </span> <strong><span style="color: #003333;">PIC 9</span></strong>(<span style="color: #ff6600;">3</span>) <span style="color: #003333; font-weight: bold;">VALUE</span> <span style="color: #ff6600;">0</span>.
+       <span style="color: #003333; font-weight: bold;">LINKAGE</span> <span style="color: #003333;">SECTION</span>.
+       <span style="color: #ff6600;">01</span>  <span style="color: #800080;">cnt </span>    <span style="color: #003333;">PIC 9</span>(<span style="color: #ff6600;">4</span>).
+       <span style="color: #ff6600;">01</span>  <span style="color: #800080;">result </span> <span style="color: #003333;">PIC 9</span>(<span style="color: #ff6600;">9</span>) <span style="color: #006699; font-weight: bold;">VALUE</span> <span style="color: #ff6600;">0</span>.
+       <strong><span style="color: #003333;">PROCEDURE</span> <span style="color: #003333;">DIVISION</span> <span style="color: #006699;">USING</span></strong> <span style="color: #800080;">cnt</span>, <span style="color: #800080;">result</span>.
+           <span style="color: #006699; font-weight: bold;">PERFORM UNTIL</span> <span style="color: #800080;">cnt</span> <span style="color: #555555;">&lt;=</span> <span style="color: #ff6600;">0</span>
+               <span style="color: #006699; font-weight: bold;">DIVIDE</span> <span style="color: #ff6600;">3</span> <span style="color: #006699; font-weight: bold;">INTO</span> <span style="color: #800080;">cnt</span> <strong><span style="color: #003333;">GIVING</span></strong> <span style="color: #800080;">quot</span> <strong><span style="color: #003333;">REMAINDER</span></strong> <span style="color: #800080;">rem</span>
+               <span style="color: #006699; font-weight: bold;">IF</span> <span style="color: #800080;">rem</span> <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span> <span style="color: #3366ff;"><strong>THEN</strong></span>
+                   <span style="color: #006699; font-weight: bold;">ADD</span> <span style="color: #800080;">cnt</span> <span style="color: #006699; font-weight: bold;">TO</span> <span style="color: #003333;">result</span>
+               <span style="color: #006699; font-weight: bold;">ELSE</span>
+                   <span style="color: #006699; font-weight: bold;">DIVIDE</span> <span style="color: #ff6600;">5</span> <span style="color: #006699; font-weight: bold;">INTO</span> <span style="color: #800080;">cnt</span> <strong><span style="color: #003333;">GIVING</span></strong> <span style="color: #800080;">quot</span> <strong><span style="color: #003333;">REMAINDER</span></strong> <span style="color: #800080;">rem</span>
+                   <span style="color: #006699; font-weight: bold;">IF</span> <span style="color: #800080;">rem</span> <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span> <strong><span style="color: #3366ff;">THEN</span></strong>
+                       <span style="color: #006699; font-weight: bold;">ADD</span> <span style="color: #800080;">cnt</span> <span style="color: #006699; font-weight: bold;">TO</span> <span style="color: #800080;">result</span><span style="color: #3366ff;"><strong> </strong></span>
+                   <span style="color: #3366ff;"><strong> END-IF </strong></span>
+               <span style="color: #3366ff;"><strong> END-IF</strong></span>
+
+               <span style="color: #006699; font-weight: bold;">ADD</span> <span style="color: #555555;">-</span><span style="color: #ff6600;">1</span> <span style="color: #006699; font-weight: bold;">TO</span> <span style="color: #800080;">cnt</span>
+           <strong><span style="color: #006699;">END-PERFORM</span> </strong>
+       <span style="color: #003300;"><strong>EXIT PROGRAM.</strong></span>
+       <strong><span style="color: #003333;">END PROGRAM</span></strong> <span style="color: #800000;">euler1</span>.</pre>
+</div>
+OpenCOBOL converts your program into C which it then hands off to <a title="GCC" href="http://gcc.gnu.org/">gcc</a>, so you'll also need that installed also. You can grab it with <a title="yum" href="http://www.cyberciti.biz/faq/rhel-centos-fedora-linux-yum-command-howto/">yum</a> as <em>open-cobol</em>, along with additional dependencies <em>libdb</em> and <em>libdb-devel</em> if you don't already have those. To compile your code, run <em>cobc</em>, passing it your file as an argument. Then simply run the resulting object file. Notice the displayed result has the same size as the declared <em>result</em> variable:
+<div style="background: black; overflow: auto; width: auto; margin-bottom: 20px; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$ cobc -x Euler1.cob</span></pre>
+<pre style="line-height: 125%; margin: 0;">$ ./Euler1
+<span style="color: #00ccff;">000233168</span></pre>
+</div>

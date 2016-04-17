@@ -1,0 +1,21 @@
+sdfghs
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;"># Euler1 in Octave</span>
+
+<span style="color:#006699;font-weight:bold;">function</span> result = <span style="color:#cc00ff;">euler1</span>(size)
+result = 0;
+    <span style="color:#006699;font-weight:bold;">for</span> i = 1:<span style="color:#336666;">size</span>
+        <span style="color:#006699;font-weight:bold;">if</span> <span style="color:#336666;">mod</span>(i,3)<span style="color:#555555;">==</span>0 <span style="color:#555555;">||</span> <span style="color:#336666;">mod</span>(i,5)<span style="color:#555555;">==</span>0
+            result <span style="color:#555555;">+=</span> i;
+        <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+<span style="color:#006699;font-weight:bold;">end</span>
+
+<span style="color:#336666;">printf</span>(<span style="color:#cc3300;">'%i'</span>, euler1(999))</pre>
+</div>
+sdfrg
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$ octave -q</span> <span style="color:#ffffff;">euler1.octv</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>

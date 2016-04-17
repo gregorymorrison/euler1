@@ -1,4 +1,5 @@
 ' Euler1 in VB.NET
+
 Imports System
 
 Public Module modmain

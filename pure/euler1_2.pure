@@ -1,0 +1,10 @@
+// Euler1 in Pure
+using system;
+
+euler1 n = euler n 0 with
+    euler 0 acc = acc;
+    euler n acc = euler (n-1) (acc+n)  if (n mod 3 == 0 || n mod 5 == 0);
+                = euler (n-1)  acc     otherwise;
+end;
+
+printf "%d\n" (euler1 999);

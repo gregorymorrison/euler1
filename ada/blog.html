@@ -1,0 +1,31 @@
+I had a semester of <a href="http://en.wikipedia.org/wiki/Ada_(programming_language)">Ada</a> way back when I started programming. This language was introduced back in 1980. I didn't think I'd remember much of it, but surprisingly writing this felt like putting on a pair of old shoes. It is about as unsexy as languages get - everything is explicit, but the compiler also holds your hand with great error messages. Here is <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Ada:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#555555;">--</span> <span style="color:#336600;">Euler1</span> <span style="color:#006699;font-weight:bold;">in</span> <span style="color:#336600;">Ada</span>
+with <span style="color:#336600;">Ada</span><span style="color:#555555;">.</span>Integer_Text_IO;
+
+procedure <span style="color:#336600;">Euler</span> is
+
+    function <span style="color:#336600;">Euler1</span>(size : <span style="color:#006699;font-weight:bold;">in</span> <span style="color:#336666;">Integer</span>) <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#336666;">Integer</span> is
+        result: <span style="color:#336666;">Integer</span>;
+    <span style="color:#006699;font-weight:bold;">begin</span>
+        result :<span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+        <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> <span style="color:#ff6600;">1</span><span style="color:#555555;">.</span>.size<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span> <span style="color:#006699;">loop</span>
+            <span style="color:#006699;font-weight:bold;">if</span> i mod <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i mod <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">then</span>
+                result :<span style="color:#555555;">=</span> result <span style="color:#555555;">+</span> i;
+            <span style="color:#006699;font-weight:bold;">end</span> <span style="color:#006699;font-weight:bold;">if</span>;
+        <span style="color:#006699;font-weight:bold;">end</span> <span style="color:#006699;">loop</span>;
+        <span style="color:#006699;font-weight:bold;">return</span> result;
+    <span style="color:#006699;font-weight:bold;">end</span> <span style="color:#336600;">Euler1</span>;
+
+<span style="color:#006699;font-weight:bold;">begin</span>
+    <span style="color:#336600;">Ada</span><span style="color:#555555;">.</span>Integer_Text_IO<span style="color:#555555;">.</span>Put (<span style="color:#336666;">Integer</span>( <span style="color:#336600;">Euler1</span>(<span style="color:#ff6600;">1000</span>) ));
+<span style="color:#006699;font-weight:bold;">end</span> <span style="color:#336600;">Euler</span>;</pre>
+</div>
+If you haven't tried this language before, it's worth giving it a chance. It produces very robust code, and has some great modern features like concurrency support. And it runs screamingly fast.
+
+I used the <a href="http://en.wikipedia.org/wiki/GNAT">GNAT</a> compiler to run this code, which also runs screamingly fast on this code. Just compile and execute:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">gnatmake</span> <span style="color:#ffffff;">euler.adb</span>
+<span style="color:#999999;">gcc -c euler.adb gnatbind -x euler.ali gnatlink euler.ali </span><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1</span>
+     <span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

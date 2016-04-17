@@ -1,0 +1,54 @@
+<a href="http://groovy.codehaus.org/">Groovy</a>, introduced in 2003, is a dynamic language for the <a title="JVM" href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>. It's a superset of <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a> with <a title="Ruby" href="http://gdm9000.wordpress.com/2011/10/15/ruby/">Ruby</a>-like dynamic elements added. This gives a programmer the comfort of plain old Java while allowing them to adopt dynamic elements as they grow more comfortable. This version illustrates the traditional <a title="Imperative programming" href="http://en.wikipedia.org/wiki/Imperative_programming">imperative</a> <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> algorithm, with some dynamic declarations, and with the <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a> omitted:
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Groovy</span>
+
+<span style="color: #00aa88; font-weight: bold;">BigInteger</span> euler1 <span style="color: #555555;">(</span><span style="color: #00aa88; font-weight: bold;">Integer</span> n<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    retval <span style="color: #006699; font-weight: bold;">=</span> <span style="color: #ff6600;">0</span>
+    <span style="color: #006699; font-weight: bold;">for</span> <span style="color: #555555;">(</span>i<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span><span style="color: #555555;">;</span> i<span style="color: #555555;">&lt;</span>n<span style="color: #555555;">;</span> i<span style="color: #555555;">++)</span>
+        <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>i<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span><span style="color: #555555;">)</span>
+            retval <span style="color: #555555;">+=</span> i
+    <span style="color: #006699; font-weight: bold;">return</span> retval
+<span style="color: #555555;">}</span>
+
+println <span style="color: #cc3300;">"${ euler1(1000) }"</span></pre>
+</div>
+The traditional and dynamic subsets of Groovy functionality can be quite disjoint sets - a Java programmer would not even recognize anything in this next example:
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Groovy</span>
+
+<span style="color: #006699; font-weight: bold;">def</span> <span style="color: #cc00ff;">euler1</span>(n) { (<span style="color: #ff6600;">0</span><span style="color: #555555;">.</span>.n)<span style="color: #555555;">.</span>findAll{x <span style="color: #555555;">-&gt;</span> x<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> x<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>}<span style="color: #555555;">.</span>sum() }
+
+<span style="color: #336666;">print</span> euler1(<span style="color: #ff6600;">999</span>) <span style="color: #555555;">+</span> <span style="color: #cc3300;">'\n'</span></pre>
+</div>
+This dual nature of Groovy - that it can't decide if it is Java or Ruby - confounds me. The language has the feel of, well, Windows 8, with its dual interfaces written to support both servers and tablets. It has a design smell. Still, Groovy is actually quite fun, and this code took me no time at all to write. And it is very elegantly concise code.
+
+Now let's try a <a title="Tail Call Optimization" href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">tail-recursive</a> version:
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">// DOES NOT WORK - JVM doesn't support tail recursion</span>
+
+<span style="color: #006699; font-weight: bold;">def</span> euler1
+euler1 <span style="color: #006699; font-weight: bold;">=</span> <span style="color: #555555;">{</span> <span style="color: #00aa88; font-weight: bold;">Integer</span> n<span style="color: #555555;">,</span> <span style="color: #00aa88; font-weight: bold;">BigInteger</span> acc<span style="color: #555555;">=</span><span style="color: #ff6600;">1</span> <span style="color: #555555;">-&gt;</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>n <span style="color: #555555;">==</span> <span style="color: #ff6600;">1</span><span style="color: #555555;">)</span> <span style="color: #006699; font-weight: bold;">return</span> acc
+
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>n<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span><span style="color: #555555;">)</span>
+        <span style="color: #006699; font-weight: bold;">return</span> euler1<span style="color: #555555;">(</span>n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span><span style="color: #555555;">,</span> acc<span style="color: #555555;">+</span>n<span style="color: #555555;">)</span>
+    <span style="color: #006699; font-weight: bold;">else</span>
+        <span style="color: #006699; font-weight: bold;">return</span> euler1<span style="color: #555555;">(</span>n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span><span style="color: #555555;">,</span> acc<span style="color: #555555;">)</span>
+<span style="color: #555555;">}</span>
+
+print euler1<span style="color: #555555;">(</span><span style="color: #ff6600;">999</span><span style="color: #555555;">)</span> <span style="color: #555555;">+</span> <span style="color: #cc3300;">'\n'</span></pre>
+</div>
+<!-- HTML generated using hilite.me -->D'Oh! Groovy, Y U No Work?
+<div style="background: black; overflow: auto; margin-bottom: 20px; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$ groovy euler1.grv
+Caught: java.lang.StackOverflowError
+ at euler1$_run_closure1.doCall(euler1.grv:11)
+ at euler1$_run_closure1.doCall(euler1.grv:9) . . . </span></pre>
+</div>
+Actually, it's not Groovy's fault - blame the JVM. <a title="stackoverflow" href="http://stackoverflow.com/">Stack Overflow</a> has this <a title="JVM Tail Recursion" href="http://stackoverflow.com/questions/105834/does-the-jvm-prevent-tail-call-optimizations">explanation</a>... I tried both proposed solutions on <a title="Groovy Tail Recursion" href="http://stackoverflow.com/questions/7374887/tail-recursion-with-groovy">this page</a> but neither work with my version, 1.5, sigh...
+
+Groovy comes with a console, so you can paste your code into the console and run it from there. Or, you can execute Groovy, passing your script in as an argument. Oh, and even with this trivial example, Groovy is as slow as an <a title="Snail" href="http://www.odditycentral.com/wp-content/uploads/2010/04/giant-African-snail.jpg">asthmatic snail</a>:
+<div style="background: black; margin-bottom: 20px; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">groovy</span> <span style="color: #ffffff;">euler1.grv</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

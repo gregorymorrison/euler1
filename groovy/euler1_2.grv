@@ -1,5 +1,13 @@
-// Euler1 in Groovy
+// DOES NOT WORK - JVM doesn't support tail recursion
 
-def euler1(n) { (0..n).findAll{x -> x%3==0 || x%5==0}.sum() }
+def euler1
+euler1 = { Integer n, BigInteger acc=1 ->
+    if (n == 1) return acc
+
+    if (n%3==0 || n%5==0)
+        return euler1(n-1, acc+n)
+    else
+        return euler1(n-1, acc)
+}
 
 print euler1(999) + '\n'

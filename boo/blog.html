@@ -1,0 +1,102 @@
+<a title="Boo" href="http://boo.codehaus.org/">Boo</a> is a statically-typed <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented</a> language for the <a title=".NET" href="http://msdn.microsoft.com/netframework">.NET</a> runtime introduced in 2003. Its syntax is inspired by <a title="Python" href="http://python.org/">Python</a>. It comes with a compiler, an interpreter, and a shell.
+
+Time to play! Let's see if it will run any of my <a title="Python" href="http://gdm9000.wordpress.com/2011/10/15/python/">Python Euler1 examples</a>? The first one only required me to change <em>xrange</em> to <em>range</em>, and declare <em>x</em>'s type. Hooray!
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/booi </span>
+<span style="color:#0099ff;font-style:italic;"># Euler1 in Boo</span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">euler1</span>(x <span style="color:#006699;font-weight:bold;">as</span> <span style="color:#336666;">int</span>):
+    result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> <span style="color:#336666;">range</span>(x):
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>:
+            result <span style="color:#555555;">+=</span> i
+
+    <span style="color:#006699;font-weight:bold;">return</span> result
+
+<span style="color:#006699;font-weight:bold;">print</span> euler1(<span style="color:#ff6600;">1000</span>)</pre>
+</div>
+This next example took me a little bit to get to work. I couldn't find any functions for <em>sum</em> or <em>reduce</em>, so I had to write my own. Hmm... It also required me to figure out Boo's casting mechanism:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/booi </span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">sum</span>(ls):
+    retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> l <span style="color:#000000;font-weight:bold;">in</span> ls:
+        retval <span style="color:#555555;">+=</span> <span style="color:#ff6600;">l</span> cast <span style="color:#336666;">int</span>
+    <span style="color:#006699;font-weight:bold;">return</span> retval
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">euler1</span>(n <span style="color:#006699;font-weight:bold;">as</span> <span style="color:#336666;">int</span>):
+    i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">while</span> i <span style="color:#555555;">&lt;</span> n:
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>:
+            <span style="color:#006699;font-weight:bold;">yield</span> i
+        i <span style="color:#555555;">+=</span> <span style="color:#ff6600;">1</span>
+
+<span style="color:#006699;font-weight:bold;">print</span> <span style="color:#336666;">sum</span>(euler1(<span style="color:#ff6600;">1000</span>))</pre>
+</div>
+The next illustrates some of the differences in OOP between Python and Boo. In Boo, the class keyword <em>self</em> is not required. And a naming convention is enforced on member variables, which changes how getters and setters are implemented:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/booi </span>
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span>:
+    [Property(Size)]
+    _size <span style="color:#006699;font-weight:bold;">as</span> <span style="color:#336666;">int</span>
+
+    [Getter(Result)]
+    _result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">solve</span>():
+        <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> <span style="color:#336666;">range</span>(_size):
+            <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>:
+                _result <span style="color:#555555;">+=</span> i
+
+euler1 <span style="color:#555555;">=</span> Euler1(Size:<span style="color:#ff6600;">1000</span>)
+euler1<span style="color:#555555;">.</span>solve()
+<span style="color:#006699;font-weight:bold;">print</span> euler1<span style="color:#555555;">.</span>Result</pre>
+</div>
+I had to make substantial changes to get the next example to work. Boo doesn't do <a title="Functional programming" href="http://en.wikipedia.org/wiki/Functional_programming">Functional </a>very well at all:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/booi </span>
+
+myMap <span style="color:#555555;">=</span> def(size <span style="color:#006699;font-weight:bold;">as</span> <span style="color:#336666;">int</span>): <span style="color:#006699;font-weight:bold;">return</span> [x <span style="color:#006699;font-weight:bold;">for</span> x <span style="color:#000000;font-weight:bold;">in</span> <span style="color:#336666;">range</span>(size)]
+myFilter <span style="color:#555555;">=</span> def(ints): <span style="color:#006699;font-weight:bold;">return</span> [x <span style="color:#006699;font-weight:bold;">for</span> x <span style="color:#000000;font-weight:bold;">in</span> ints <span style="color:#006699;font-weight:bold;">if</span> x cast <span style="color:#336666;">int</span><span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> x cast <span style="color:#336666;">int</span><span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>]
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">myReduce</span>(ls):
+    retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> l <span style="color:#000000;font-weight:bold;">in</span> ls:
+        retval <span style="color:#555555;">+=</span> <span style="color:#ff6600;">l</span> cast <span style="color:#336666;">int</span>
+    <span style="color:#006699;font-weight:bold;">return</span> retval
+
+<span style="color:#006699;font-weight:bold;">print</span> myReduce(myFilter(myMap(<span style="color:#ff6600;">1000</span>)))</pre>
+</div>
+Boo has optional <a title="Duck typing" href="http://en.wikipedia.org/wiki/Duck_typing">duck typing</a>, <a title="List comprehension" href="http://en.wikipedia.org/wiki/List_comprehensions">list comprehensions</a>, and <a title="Generators" href="http://wiki.python.org/moin/Generators">generators</a>. It's hard to believe that Boo wouldn't have a <em>sum</em> function built in  :(
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/booi </span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">sum</span>(ls):
+    retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> l <span style="color:#000000;font-weight:bold;">in</span> ls:
+        retval <span style="color:#555555;">+=</span> l cast <span style="color:#336666;">int</span>
+    <span style="color:#006699;font-weight:bold;">return</span> retval
+
+euler1 <span style="color:#555555;">=</span> def(size): <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#336666;">sum</span>(x <span style="color:#006699;font-weight:bold;">for</span> x <span style="color:#000000;font-weight:bold;">in</span> <span style="color:#336666;">range</span>(size) <span style="color:#006699;font-weight:bold;">if</span> x cast <span style="color:#336666;">int</span><span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> x cast <span style="color:#336666;">int</span><span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)
+
+<span style="color:#006699;font-weight:bold;">print</span> euler1(<span style="color:#ff6600;">1000</span>)</pre>
+</div>
+And Boo doesn't support <a title="Tail Call Optimization" href="http://paulbarry.com/articles/2009/08/30/tail-call-optimization">tail recursion</a> at all, <a title="Boo tail recursion" href="http://old.nabble.com/recursion-in-boo-td16902627.html">apparently</a>. Still, it does have the .NET libraries available. And Boo ships with a compiler, an interpreter, and an interactive shell.
+
+I tried playing with the shell, <em>booish.exe</em>, but it didn't seem to handle exceptions like a <a title="Read–eval–print loop" href="http://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a> should; any errors would crash booish and drop me back to the prompt. Maybe you'll have better luck with it  :(
+
+To run these examples, simply call them - they will be executed by Boo's interpreter, <em>booi.exe</em>.
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$ </span>euler1.boo
+<span style="color:#00ccff;">233168</span></pre>
+</div>
+You can also compile them using Boo's compiler, <em>booc.exe</em>:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$ </span>booc euler1.boo
+<span style="color:#00ccff;">Boo Compiler version 0.9.4.9 (2.10.6 (mono-2-10/378032b Thu, Dec 08, 2011 21:45:06))</span>
+
+<span style="line-height:125%;margin:0;">$ </span>euler1
+<span style="color:#00ccff;">233168</span></pre>
+</div>

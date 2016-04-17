@@ -1,0 +1,77 @@
+<a href="http://en.wikipedia.org/wiki/Prolog">Prolog</a>, introduced in 1972, is a different beast that involves writing a bunch of true statements about a problem domain and then letting its fact engine distill some solution from it. Here is my <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>. Notice that my assertions mostly take the form of canonical <a title="Functional programming" href="http://en.wikipedia.org/wiki/Functional_programming">Functional programming</a> operations:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/pl -q -t euler -f</span>
+
+<span style="color:#cc00ff;">range</span>(<span style="color:#003333;">N</span>, <span style="color:#003333;">N</span>, [<span style="color:#003333;">N</span>]).
+<span style="color:#cc00ff;">range</span>(<span style="color:#003333;">Start</span>, <span style="color:#003333;">End</span>, <span style="color:#003333;">Result</span>) :-
+	<span style="color:#003333;">Start</span> <span style="color:#555555;">&lt;</span> <span style="color:#003333;">End</span>,
+	<span style="color:#003333;">Next</span> <span style="color:#555555;">is</span> <span style="color:#003333;">Start</span> <span style="color:#555555;">+</span> <span style="color:#ff6600;">1</span>,
+	<span style="color:#cc00ff;">range</span>(<span style="color:#003333;">Next</span>, <span style="color:#003333;">End</span>, <span style="color:#003333;">Partial</span>),
+	<span style="color:#003333;">Result</span> <span style="color:#555555;">=</span> [<span style="color:#003333;">Start</span> | <span style="color:#003333;">Partial</span>].
+
+<span style="color:#cc00ff;">filter</span>([], []).
+<span style="color:#cc00ff;">filter</span>([<span style="color:#003333;">H</span>|<span style="color:#003333;">T</span>], <span style="color:#003333;">Result</span>) :-
+	<span style="color:#cc00ff;">test</span>(<span style="color:#003333;">H</span>),
+	<span style="color:#cc00ff;">filter</span>(<span style="color:#003333;">T</span>, <span style="color:#003333;">Partial</span>),
+	<span style="color:#003333;">Result</span> <span style="color:#555555;">=</span> [<span style="color:#003333;">H</span> | <span style="color:#003333;">Partial</span>].
+<span style="color:#cc00ff;">filter</span>([<span style="color:#003333;">H</span>|<span style="color:#003333;">T</span>], <span style="color:#003333;">Result</span>) :-
+	<span style="color:#555555;">not</span>(<span style="color:#cc00ff;">test</span>(<span style="color:#003333;">H</span>)),
+	<span style="color:#cc00ff;">filter</span>(<span style="color:#003333;">T</span>, <span style="color:#003333;">Result</span>).
+
+<span style="color:#cc00ff;">sum</span>([], <span style="color:#ff6600;">0</span>).
+<span style="color:#cc00ff;">sum</span>([<span style="color:#003333;">H</span>|<span style="color:#003333;">T</span>], <span style="color:#003333;">Total</span>) :-
+	<span style="color:#cc00ff;">sum</span>(<span style="color:#003333;">T</span>, <span style="color:#003333;">SemiTotal</span>),
+	<span style="color:#003333;">Total</span> <span style="color:#555555;">is</span> <span style="color:#003333;">H</span> <span style="color:#555555;">+</span> <span style="color:#003333;">SemiTotal</span>.
+
+<span style="color:#cc00ff;">test</span>(<span style="color:#003333;">N</span>) :- <span style="color:#003333;">N</span> <span style="color:#555555;">mod</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=:=</span> <span style="color:#ff6600;">0</span>.
+<span style="color:#cc00ff;">test</span>(<span style="color:#003333;">N</span>) :- <span style="color:#003333;">N</span> <span style="color:#555555;">mod</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=:=</span> <span style="color:#ff6600;">0</span>.
+
+<span style="color:#cc00ff;">euler</span> <span style="color:#555555;">:-</span>
+	<span style="color:#cc00ff;">range</span>(<span style="color:#ff6600;">1</span>, <span style="color:#ff6600;">999</span>, <span style="color:#003333;">MyRange</span>),
+	<span style="color:#cc00ff;">filter</span>(<span style="color:#003333;">MyRange</span>, <span style="color:#003333;">MyFilteredRange</span>),
+	<span style="color:#cc00ff;">sum</span>(<span style="color:#003333;">MyFilteredRange</span>, <span style="color:#003333;">MyAnswer</span>),
+	<span style="color:#cc00ff;">format</span>(<span style="color:#cc3300;">'~w~n'</span>, [<span style="color:#003333;">MyAnswer</span>]).</pre>
+</div>
+Notice also that there are two versions of <em>test()</em> here. These two function declarations have identical signatures and would be illegal in imperative languages. Even in functional languages that allow multiple identical signatures and use guards for differentiation, this is illegal. That's because as stated earlier, <em>test()</em> is not a function - it's an assertion. Here I declare that my integer must be divisible by 3. Also, it must be divisible be 5. Like I said, the whole program is simply a compendium of true statements.
+
+Like every other <a title="Turing completeness" href="http://en.wikipedia.org/wiki/Turing-complete">Turing-complete</a> language that strives for ideologically purity, Prolog has to make compromises in its design. Prolog's seem to take the shape of including side-effects in with the assertions. Instead of an assertion being a simple true-false declaration, it's actually a collection of Turing-complete statements. Witness this more compact, more Prolog idiomatic version of Euler1:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/pl -q -t euler -f</span>
+
+<span style="color:#cc00ff;">solve</span>(<span style="color:#003333;">Start</span>, <span style="color:#003333;">End</span>, <span style="color:#003333;">Total</span>) :-
+	<span style="color:#cc00ff;">write</span>(<span style="color:#cc3300;">'Entering solve'</span>)
+	(<span style="color:#003333;">Start</span> <span style="color:#555555;">mod</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=:=</span> <span style="color:#ff6600;">0</span>; <span style="color:#003333;">Start</span> <span style="color:#555555;">mod</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=:=</span> <span style="color:#ff6600;">0</span>),
+	<span style="color:#003333;">Start</span> <span style="color:#555555;">&lt;</span> <span style="color:#003333;">End</span>,
+	<span style="color:#003333;">Next</span> <span style="color:#555555;">is</span> <span style="color:#003333;">Start</span> <span style="color:#555555;">+</span> <span style="color:#ff6600;">1</span>,
+	<span style="color:#cc00ff;">solve</span>(<span style="color:#003333;">Next</span>, <span style="color:#003333;">End</span>, <span style="color:#003333;">SemiTotal</span>),
+	<span style="color:#003333;">Total</span> <span style="color:#555555;">is</span> <span style="color:#003333;">SemiTotal</span> <span style="color:#555555;">+</span> <span style="color:#003333;">Start</span>.
+<span style="color:#cc00ff;">solve</span>(<span style="color:#003333;">Start</span>, <span style="color:#003333;">End</span>, <span style="color:#003333;">Total</span>) :-
+	<span style="color:#003333;">Start</span> <span style="color:#555555;">&lt;</span> <span style="color:#003333;">End</span>,
+	<span style="color:#003333;">Next</span> <span style="color:#555555;">is</span> <span style="color:#003333;">Start</span> <span style="color:#555555;">+</span> <span style="color:#ff6600;">1</span>,
+	<span style="color:#cc00ff;">solve</span>(<span style="color:#003333;">Next</span>, <span style="color:#003333;">End</span>, <span style="color:#003333;">Total</span>).
+<span style="color:#cc00ff;">solve</span>(<span style="color:#003333;">N</span>, <span style="color:#003333;">N</span>, <span style="color:#003333;">N</span>).
+
+<span style="color:#cc00ff;">euler</span> <span style="color:#555555;">:-</span>
+	<span style="color:#cc00ff;">solve</span>(<span style="color:#ff6600;">1</span>, <span style="color:#ff6600;">999</span>, <span style="color:#003333;">MyAnswer</span>),
+	<span style="color:#cc00ff;">format</span>(<span style="color:#cc3300;">'~w~n'</span>, [<span style="color:#003333;">MyAnswer</span>]).</pre>
+</div>
+Here each version of <em>solve()</em> is a collection of operations. The first one reads:
+<ol>
+	<li>A blatant side effect - output something to the console.</li>
+	<li>Start must be divisible by 3 and 5.</li>
+	<li>Start must be less than End.</li>
+	<li>Define a local variable NEXT equal to Start + 1.</li>
+	<li>Recursively call <em>solve()</em>.</li>
+	<li>Assign the result to our <a title="Call by reference " href="http://en.wikipedia.org/wiki/Call_by_reference#Call_by_reference">Pass-By-Reference</a> variable, Total.</li>
+</ol>
+As you can see, points 2 and 3 above serve as <a title="Pattern guard" href="http://en.wikipedia.org/wiki/Guard_%28computing%29#Pattern_guard">guards for pattern matching</a>. The runtime will execute the first version of <em>solve()</em> in which all initial conditions are true.
+
+Also note that Prolog uses Pass-By-Reference to return values. You must include a return variable in your <del>method signature</del> assertion to get anything back from it. Returning values from an assertion sounds like a side-effect to me, as does the I/O operation at the end that prints out the final answer.
+
+I must say, it took me a long time to wrap my head around this language. On paper it doesn't look that complicated, but I struggled for a couple of days to write this simple problem, and even then I had to give up and Google a solution. It's a <em>very </em>different environment - I spent an entire day just trying to figure out how to print a variable's value to the console! Even after all this, I still lack fundamental knowledge of how this runtime works.
+
+Normally, Prolog is executed as statements in an interactive <a href="http://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a>. But <a href="http://www.swi-prolog.org/">SWI-Prolog</a> allows for sessions to be compiled into an executable script. Just make sure that you include the same arguments that I did in the <a title="Shebang" href="http://en.wikipedia.org/wiki/Shebang_(Unix)">shebang</a>. To install SWI-Prolog on Fedora, <em>yum install pl</em> and <em>yum install pl-devel</em>.
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1.prlg</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

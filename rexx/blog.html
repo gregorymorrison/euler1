@@ -1,0 +1,54 @@
+<a title="Rexx" href="http://en.wikipedia.org/wiki/REXX">Rexx</a>, introduced in 1979, is a scripting language. I really don't know much about it; I was able to bang this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> out in about 15 minutes:
+<div style="background:white;overflow:auto;width:auto;margin-bottom:20px;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#339966;">/* Euler1 <span style="font-weight:bold;">in</span> Rexx */</span>
+
+<span style="color:#006699;font-weight:bold;">SAY</span> <span style="color:#ff0000;">Euler1</span>(<span style="color:#ff6600;">1000</span>)
+<span style="color:#006699;font-weight:bold;">EXIT</span>
+
+<span style="color:#ff0000;">Euler1</span>:
+    <span style="color:#006699;font-weight:bold;">PROCEDURE</span>
+    <span style="color:#006699;font-weight:bold;">PARSE ARG</span> <span style="color:#cc00ff;">size</span>
+    <span style="color:#cc00ff;">retval</span> <span style="color:#555555;">=</span> <span style="color:#ff9900;">0</span>
+    <span style="color:#006699;font-weight:bold;">DO</span> <span style="color:#cc00ff;">i</span> <span style="color:#555555;">=</span> <span style="color:#ff9900;">1</span> <span style="color:#006699;font-weight:bold;">TO</span> <span style="color:#cc00ff;">size</span><span style="color:#555555;">-</span><span style="color:#ff9900;">1</span>
+        <span style="color:#006699;font-weight:bold;">IF</span> <span style="color:#cc00ff;">i</span><span style="color:#555555;">//</span>(<span style="color:#ff6600;">3</span>)<span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">THEN</span>
+            <span style="color:#ff00ff;">retval</span> <span style="color:#555555;">=</span> <span style="color:#ff00ff;">retval</span> <span style="color:#555555;">+</span> <span style="color:#ff00ff;">i</span>
+        <span style="color:#006699;font-weight:bold;">ELSE</span> <span style="color:#006699;font-weight:bold;">IF</span> i<span style="color:#555555;">//</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">THEN</span>
+            <span style="color:#ff00ff;">retval</span> <span style="color:#555555;">=</span> <span style="color:#ff00ff;">retval</span> <span style="color:#555555;">+</span> <span style="color:#ff00ff;">i</span>
+    <span style="color:#006699;font-weight:bold;">END</span>
+    <span style="color:#006699;font-weight:bold;">RETURN</span> <span style="color:#cc00ff;">retval</span></pre>
+</div>
+And here is a version using <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OO</a>P. Yes, I know it's contrived; cut me some slack - this problem is too simple to lend itself to OOP cleanly. This is very much like OOP in other languages - just with different syntax. The constructor is defined with the keyword <em>init</em>, and a string representation of self with keyword <em>string</em>, analogous to <a title="toString" href="http://docs.oracle.com/javase/1.4.2/docs/api/java/lang/Object.html#toString%28%29">Java's toString</a>. Messages are passed using a tilde, as in the dot operator in C++/Java/C#. And the keyword <em>EXPOSE </em>is used to declare that class-level members are to be used instead of local variables, analogous to <em>self</em> or <em>this</em> in other OO languages. It took me maybe 45 minutes to figure out this example:
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#339966;">/* <span style="font-weight:bold;">Euler1</span> <span style="font-weight:bold;">in</span> <span style="font-weight:bold;">Rexx</span> */</span>
+
+<span style="color:#3366ff;">euler</span> <span style="color:#555555;">=</span> <span style="color:#555555;">.</span><span style="font-weight:bold;color:#ff0000;">Euler1</span><span style="color:#555555;">~</span><span style="color:#006699;font-weight:bold;">new</span><span style="color:#555555;">(</span><span style="color:#ff6600;">1000</span><span style="color:#555555;">)</span>
+<span style="color:#3366ff;">euler</span><span style="color:#555555;">~</span><span style="color:#3366ff;">solve</span>
+<span style="color:#00aa88;font-weight:bold;">SAY</span> <span style="color:#3366ff;">euler</span>
+<span style="color:#00aa88;font-weight:bold;">EXIT</span>
+
+<span style="color:#555555;">::</span><span style="color:#00aa88;font-weight:bold;">CLASS</span> <span style="font-weight:bold;color:#ff0000;">Euler1</span>
+    <span style="color:#555555;">::</span><span style="color:#00aa88;font-weight:bold;">ATTRIBUTE</span> <span style="color:#3366ff;">size</span>
+    <span style="color:#555555;">::</span><span style="color:#00aa88;font-weight:bold;">ATTRIBUTE</span> <span style="color:#3366ff;">result</span>
+
+    <span style="color:#555555;">::</span><span style="color:#00aa88;font-weight:bold;">METHOD</span> <span style="color:#3366ff;">init</span>
+        <span style="color:#00aa88;font-weight:bold;">EXPOSE</span> <span style="color:#3366ff;">size</span>
+        <span style="color:#00aa88;font-weight:bold;">USE</span> <span style="color:#00aa88;font-weight:bold;">ARG</span> <span style="color:#3366ff;">size</span>
+
+    <span style="color:#555555;">::</span><span style="color:#00aa88;font-weight:bold;">METHOD</span> <span style="color:#3366ff;">solve</span>
+        <span style="color:#00aa88;font-weight:bold;">EXPOSE</span> <span style="color:#3366ff;">size</span> <span style="color:#3366ff;">result</span>
+        <span style="color:#3366ff;">result</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+        <span style="color:#00aa88;font-weight:bold;">DO</span> <span style="color:#3366ff;">i</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span> <span style="color:#006699;font-weight:bold;">TO</span> <span style="color:#3366ff;">size</span><span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>
+            <span style="color:#00aa88;font-weight:bold;">IF</span> <span style="color:#3366ff;">i</span><span style="color:#555555;">//(</span><span style="color:#ff6600;">3</span><span style="color:#555555;">)==</span><span style="color:#ff6600;">0</span> <span style="color:#00aa88;font-weight:bold;">THEN</span>
+                <span style="color:#3366ff;">result</span> <span style="color:#555555;">=</span> <span style="color:#3366ff;">result</span> <span style="color:#555555;">+</span> <span style="color:#3366ff;">i</span>
+            <span style="color:#00aa88;font-weight:bold;">ELSE</span> <span style="color:#00aa88;font-weight:bold;">IF</span> i<span style="color:#555555;">//</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#3366ff;">0 <span style="font-weight:bold;">THEN</span> result = result</span> <span style="color:#555555;">+</span> <span style="color:#3366ff;">i</span>
+        <span style="color:#00aa88;font-weight:bold;">END</span>
+
+    <span style="color:#555555;">::</span><span style="color:#00aa88;font-weight:bold;">METHOD</span> <span style="color:#007788;font-weight:bold;">string</span>
+        <span style="color:#00aa88;font-weight:bold;">EXPOSE</span> <span style="color:#3366ff;">result</span>
+        <span style="color:#00aa88;font-weight:bold;">RETURN</span> <span style="color:#3366ff;">result </span></pre>
+</div>
+For these examples, I used <a title="OORexx" href="http://www.oorexx.org/">Open Object Rexx</a>. Yum-install rexx and rexx-devel. Then simply invoke Rexx's interpreter, passing it your script as an argument. Rexx doesn't care if you add the file extension or not:
+<div style="background:black;overflow:auto;margin-bottom:20px;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">rexx</span> <span style="color:#ffffff;">euler1</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

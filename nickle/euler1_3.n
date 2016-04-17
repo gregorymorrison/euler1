@@ -1,0 +1,44 @@
+/* Euler1 in Nickle */
+
+/* generates a list of integers from 1 to size */
+int[] function range(size) {
+    int[size] retval = {};
+
+    for (int i = 0; i < size; i++) {
+        retval[i] = i+1;
+    }
+
+    return retval;
+}
+
+/* returns an array slice of ints from start to end (not inclusive) */
+int[] function slice(ints, start, end) {
+    int[end-start] retval = {};
+
+    for (int i = start; i < end; i++) {
+        retval[i-start] = ints[i];
+    }
+
+    return retval;
+}
+
+
+int function euler1(ints) {
+    if (dim(ints) == 0) {
+        return 0;
+    }
+
+    int len = dim(ints);
+    int pivot = ceil( len/2 );
+    int pre = euler1( slice(ints, 0, pivot-1) );
+    int post = euler1( slice(ints, pivot, len) );
+    int i = 0;
+    if (ints[pivot-1] % 3 == 0 || ints[pivot-1] % 5 == 0) { 
+        i = ints[pivot-1];
+    }
+
+    return pre + i + post;
+}
+
+printf("%i\n", euler1( range(999) ));
+quit;

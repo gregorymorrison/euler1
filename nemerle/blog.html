@@ -1,0 +1,55 @@
+From <a title="Nemerle" href="http://en.wikipedia.org/wiki/Nemerle">Wikipedia</a>: <em><a title="Nemerle" href="http://nemerle.org/wiki/index.php?title=Main_Page">Nemerle</a> is a general-purpose high-level statically typed programming language for the <a title=".NET" href="http://msdn.microsoft.com/en-us/netframework">.NET</a> platform. It offers <a title="Functional programming" href="http://en.wikipedia.org/wiki/Functional_programming">functional</a>, <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented</a> and <a title="Imperative programming" href="http://en.wikipedia.org/wiki/Imperative_programming">imperative</a> features. It has a simple <a title="C#" href="http://gdm9000.wordpress.com/2011/11/05/c-2/">C#</a>-like syntax and a powerful <a title="Metaprogramming" href="http://en.wikipedia.org/wiki/Metaprogramming">metaprogramming</a> system.</em> Nemerle, introduced in 2003, has optional typing, optional classes, optional functions. You can write your code in C# style, <a title="Standard ML" href="http://gdm9000.wordpress.com/2011/11/23/standard-ml/">ML</a> style, etc.
+
+I didn't have too bad a time writing this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>; it's a direct translation of my <a title="Standard ML" href="http://gdm9000.wordpress.com/2011/11/23/standard-ml/">Standard ML</a> version. It took maybe an hour to get the compiler to stop complaining:
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #555555;">//</span> <span style="color: #007788; font-weight: bold;">Euler1</span> <span style="color: #006699; font-weight: bold;">in</span> <span style="color: #007788; font-weight: bold;">Nemerle</span>
+<span style="color: #cc00ff;">using</span> <span style="color: #007788; font-weight: bold;">System</span><span style="color: #555555;">.</span><span style="color: #007788; font-weight: bold;">Console</span>;
+
+<span style="color: #cc00ff;">def</span> <span style="color: #007788; font-weight: bold;">Euler1</span>(x<span style="color: #007788; font-weight: bold;">:</span> int, acc<span style="color: #000000; font-weight: bold;">=</span><span style="color: #ff6600;">0</span><span style="color: #007788; font-weight: bold;">:</span> int)<span style="color: #007788; font-weight: bold;">:</span> int {
+    match (x) {
+      <span style="color: #555555;">|</span> <span style="color: #ff6600;">1</span>             <span style="color: #000000; font-weight: bold;">=&gt;</span> acc
+      <span style="color: #555555;">|</span> x when x<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #000000; font-weight: bold;">=&gt;</span> <span style="color: #007788; font-weight: bold;">Euler1</span>(x<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc<span style="color: #555555;">+</span>x)
+      <span style="color: #555555;">|</span> x when x<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #000000; font-weight: bold;">=&gt;</span> <span style="color: #007788; font-weight: bold;">Euler1</span>(x<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc<span style="color: #555555;">+</span>x)
+      <span style="color: #555555;">|</span> <span style="color: #006699; font-weight: bold;">_</span>             <span style="color: #000000; font-weight: bold;">=&gt;</span> <span style="color: #007788; font-weight: bold;">Euler1</span>(x<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc)
+    }
+};
+
+<span style="color: #007788; font-weight: bold;">WriteLine</span>( <span style="color: #007788; font-weight: bold;">Euler1</span>(<span style="color: #ff6600;">999</span>) );</pre>
+</div>
+And here's an <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a> version. I modified just enough of my first C# version to get it to compile. It's mostly the same, though by default member variables are constant and need to be declared mutable:
+<!-- HTML generated using hilite.me -->
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Nemerle</span>
+<span style="color: #006699; font-weight: bold;">using</span> <span style="color: #00ccff; font-weight: bold;">System.Console</span>;
+
+<span style="color: #006699; font-weight: bold;">class</span> <span style="color: #00aa88; font-weight: bold;">Euler1</span> {
+    mutable size : <span style="color: #007788; font-weight: bold;">int</span>;
+    mutable result : <span style="color: #007788; font-weight: bold;">int</span>;
+
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #cc00ff;">this</span>(size : <span style="color: #007788; font-weight: bold;">int</span>) {
+        <span style="color: #006699; font-weight: bold;">this</span>.size = size;
+    }
+
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #cc00ff;">solve</span>() : <span style="color: #006699; font-weight: bold;">void</span> {
+        <span style="color: #006699; font-weight: bold;">this</span>.result = <span style="color: #ff6600;">0</span>;
+        <span style="color: #006699; font-weight: bold;">foreach</span> (i <span style="color: #006699; font-weight: bold;">in</span> [<span style="color: #ff6600;">1</span> .. size]) {
+            when (i%<span style="color: #ff6600;">3</span>==<span style="color: #ff6600;">0</span> || i%<span style="color: #ff6600;">5</span>==<span style="color: #ff6600;">0</span>) {
+                <span style="color: #006699; font-weight: bold;">this</span>.result = <span style="color: #006699; font-weight: bold;">this</span>.result + i;
+            }
+        }
+    }
+
+    <span style="color: #006699; font-weight: bold;">static</span> <span style="color: #cc00ff;">Main</span>() : <span style="color: #006699; font-weight: bold;">void</span> {
+        def euler1 = Euler1(<span style="color: #ff6600;">999</span>);
+        euler1.solve();
+        WriteLine(euler1.result);
+    }
+}</pre>
+</div>
+To execute, I used <a href="http://www.mono-project.com/Main_Page">Mono</a>.  I simply used <a href="http://fedoraproject.org/wiki/Yum">Yum</a> to install <em>mono-basic.i686</em>. Then, I compiled my code with Nemerle's compiler<em> <a title="NCC" href="http://nemerle.org/wiki/index.php?title=Compiling_programs">ncc</a></em> and executed it with <em>mono</em>:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">ncc</span> <span style="color: #ffffff;">euler1.n</span>
+
+<span style="color: #ffffff;">$</span> <span style="color: #ffffff;">mono</span> <span style="color: #ffffff;">out.exe</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

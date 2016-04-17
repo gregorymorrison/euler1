@@ -1,0 +1,98 @@
+<a title="Forth" href="http://en.wikipedia.org/wiki/Forth_%28programming_language%29">Forth</a> is a fascinating language. Introduced in the 1970's, it is the oldest of the <a title="Concatenative" href="http://en.wikipedia.org/wiki/Concatenative_programming_language">Concatenative</a> languages, a stack-based paradigm. It is known for its brutally efficient syntax that can compile down to a smaller code size than non-stack-based languages can. Yoda-like <a title="Postfix" href="http://en.wikipedia.org/wiki/Reverse_Polish_notation">postfix notation</a>, it uses. And it doesn't use a stack to manage scope like most languages. Instead, there is just one scope and a stack to manage data.
+
+It is said that there are more instances of Forth than any other language. It is also said that Forth is typically the first language ported to any architecture. It is likely that there is a version of Forth for every single platform.
+
+Toss out your existing programming preconceptions - experience with other languages  is not relevant here. Instead of the procedural operations of <a title="Imperative programming" href="http://en.wikipedia.org/wiki/Imperative_programming">Imperative</a> languages, class and object operations of <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>, or the list operations of <a title="Functional programming" href="http://en.wikipedia.org/wiki/Functional_programming">Functional</a> languages, Forth is written using <a title="Stack manipulation" href="http://en.wikipedia.org/wiki/Stack-oriented_programming_language#Stack_manipulation">stack manipulation</a> operations. The language is structured, having subroutines and flow control, but there is no concept of parameters or namespaces - just a stack for managing state.
+
+It took me a few days to wrap my head around how this odd language works. Curl up with a manual for a while, starting at the beginning. Here's a good one - <a title="Starting Forth" href="http://www.forth.com/starting-forth/sf0/sf0.html">Starting Forth</a>. It is a minimalist language with few constructs that should take you only a few days to learn, once you understand what's going on. The mind expansion is well worth the effort.
+
+Forth is a minimal language, like <a title="Scheme" href="http://gdm9000.wordpress.com/2011/10/15/scheme/">Scheme</a> and <a title="Assembly language" href="http://en.wikipedia.org/wiki/Assembly_language">Assembly</a> - a metalanguage in which you construct your own elements. It is so minimal that it has no immutable syntax! The compiler does have keywords and operators supplied with initial definitions, but really this is just a convenience - every single element can be redefined. All the language really has is a parser and a stack. And the parser is brain-dead simple - just tokenizes on spaces, so any Unicode garbage can be a syntax element.
+
+Once I put the time into understanding the language, it took me maybe an hour to write my first Forth program, this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>. The runtime didn't seem to help me out much with its error messages, but the code's brevity and that old standby, the print statement, was all I needed to crank this out:
+<!-- HTML generated using hilite.me -->
+<div style="background: white; margin-bottom: 20px; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="line-height: 125%; margin: 0;"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre style="line-height: 125%; margin: 0;"><span style="color: #008000;">( Euler1 in Forth )</span>
+
+<span style="color: #000000; font-weight: bold;">:</span> <span style="color: #800080;">Euler1</span> <span style="color: #008000;">( n -- r )</span>
+    <span style="color: #ff6600;">0</span>
+    SWAP
+    <span style="color: #ff6600;">1</span> DO
+        I <span style="color: #ff6600;">3</span> MOD 0= I <span style="color: #ff6600;">5</span> MOD 0= OR
+        IF
+            I <span style="color: #555555;">+</span> THEN
+    LOOP <span style="color: #000000; font-weight: bold;">;</span>
+
+<span style="color: #ff6600;">1000</span> <span style="color: #800080;">Euler1</span>
+.
+BYE</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+Let's break it down. I'll draw the stack contents at each step, as a list with the top at the right:
+<ol>
+	<li>Line 3: the declaration of subroutine Euler1, which is commented to use one stack variable and add one stack variable. When called, <em>S</em> will contain one value, <em>n</em>, the iteration size. <em>S</em> =&gt;<em>n</em></li>
+	<li>Line 4: Initialize an accumulator variable - add 0 to the stack. <em>S</em> =&gt;<em>n 0</em></li>
+	<li>Line 5: We need <em>n</em> available for the loop, so swap the top two stack values. <em>S</em> =&gt;<em>0 n</em></li>
+	<li>Line 6: A do loop expects two arguments, <em>start</em> and <em>end</em>. The parser finds one hardcoded argument, <em>1</em>, so it looks on the stack for the other. It finds and pops <em>n</em>. Remember - this is postfix, so it will be looping from 1 up to <em>n</em>. <em> S</em> =&gt;<em>0</em></li>
+	<li>Line 7: Our postfix Mod3/Mod5 test. <em>I</em> is the implicit loop index. These operations have all the arguments they need, so nothing is read from the stack. The end result is pushed onto it. <em> S</em> =&gt;<em>0</em> <em>false</em></li>
+	<li>Line 8: The IF test expects a boolean. None is provided in the code, so it looks for one on the stack. <em> S</em> =&gt;<em>0</em></li>
+	<li>Line 9: When Mod3/Mod5 is true, this is executed. The addition operator expects two arguments. One is provided, so the other is popped from the stack. The result is pushed onto the stack. <em> S</em> =&gt;<em> 3</em></li>
+	<li>Line 10: Keep looping. The semicolon completes the subroutine declaration.</li>
+	<li>Line 12: Push an iteration size onto the stack, then call Euler1. <em> S</em> =&gt;<em> 1000</em></li>
+	<li>Line 13: Pop and print the stack top, which is the result. <em> S</em> =&gt;</li>
+	<li>Line 14: <em>Bye</em> exits the runtime.</li>
+</ol>
+Here's a recursive version. It took me a couple hours to write this. I thought after doing the previous example that I would fly through this, but such was not the case. I found I tripped on the postfix quite a bit, and I actually had to diagram in comments what was in the stack at all times. Forth actually has a large number of stack manipulation operations, but for purpose of illustration I am limiting myself to only the bare minimum - <em>DUP</em>, <em>DROP</em>, <em>SWAP</em>, and <em>OVER</em>. The current stack contents are included as comments following each line:
+<pre style="color: black; background: white; margin-bottom: 20px;"><span style="color: #008000;"><em>( Euler1 in Forth )</em></span>
+
+<strong>: </strong><span style="color: #800080;"><strong>Euler1</strong></span> RECURSIVE   <span style="color: #008000;"><em>( acc n -- r )</em></span>
+    <strong>DUP</strong>              <span style="color: #008000;"><em>( acc n n )</em></span>
+    0= <strong>IF</strong>            <span style="color: #008000;"><em>( acc n )</em></span>
+        <strong>DROP</strong>         <span style="color: #008000;"><em>( acc )</em></span>
+
+    <strong>ELSE</strong>
+        <strong>DUP</strong>          <span style="color: #008000;"><em>( acc n n )</em></span>
+        <span style="color: #ff6600;">3</span>            <span style="color: #008000;"><em>( acc n n 3 )</em></span>
+        <strong>MOD</strong> 0=       <span style="color: #008000;"><em>( acc n tf )</em></span>
+        <strong>OVER</strong>         <span style="color: #008000;"><em>( acc n tf n )</em></span>
+        <span style="color: #ff6600;">5</span>            <span style="color: #008000;"><em>( acc n tf n 5 )</em></span>
+        <strong>MOD</strong> 0=       <span style="color: #008000;"><em>( acc n tf tf )</em></span>
+        <strong>OR</strong>           <span style="color: #008000;"><em>( acc n tf )</em></span>
+        <strong>IF</strong>           <span style="color: #008000;"><em>( acc n )</em></span>
+            <strong>SWAP</strong>     <span style="color: #008000;"><em>( n acc )</em></span>
+            <strong>OVER</strong>     <span style="color: #008000;"><em>( n acc n )</em></span>
+            <strong>+</strong>        <span style="color: #008000;"><em>( n acc+n )</em></span>
+            <strong>SWAP</strong>     <span style="color: #008000;"><em>( acc+n n )</em></span>
+        <strong>THEN</strong>
+        <span style="color: #ff6600;">1</span> <strong>-</strong>          <span style="color: #008000;"><em>( acc n-1 )</em></span>
+        <span style="color: #800080;">Euler1</span>       <span style="color: #008000;"><em>( acc n-1 )</em></span>
+    <strong>THEN</strong> ;
+
+<span style="color: #ff6600;">0 999</span> <span style="color: #800080;">Euler1</span> <strong>.</strong> <strong>BYE </strong></pre>
+If you want to play around with Forth without any installation, there is a JavaScript interpreter available that is hosted here - <a title="JSForth" href="http://forthfreak.net/jsforth80x25.html">http://forthfreak.net/jsforth80x25.html</a>. To run this code, I've used GNU's <a title="GForth" href="http://bernd-paysan.de/gforth.html">gforth</a>. Just run gforth, passing it your file as an argument:
+<div style="background: black; margin-bottom: 20px; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;">$ gforth euler1.forth
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

@@ -1,10 +1,3 @@
--- Euler1 in Haskell
+euler1(n) = foldr (+) 0 [x | x <- [0..n], x `mod` 3 == 0 || x `mod` 5 == 0]
 
-mysum :: Integer -> Integer -> Integer
-mysum mul lim = foldr (+) 0 [0, mul .. lim-1]
-
-euler1 :: Integer -> Integer
-euler1 (n) = mysum 3 n + mysum 5 n - mysum 15 n
-
-main :: IO ()
-main = do { print (euler1 1000) }
+main = do { print (euler1 999) }

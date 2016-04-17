@@ -1,0 +1,21 @@
+// Euler1 in Pure
+using system;
+
+euler1 n = euler (1..n) with
+    mod_3_5 n = if (n mod 3 == 0 || n mod 5 == 0) then n else 0;
+
+    // the midpoint of the list
+    mid  xs = int(#xs / 2);
+    // return a value for the midpoint element
+    val  xs = mod_3_5 (xs ! mid xs);
+    // plus euler on the first half of the list
+    pre  xs = xs !! (0..(mid xs)-1);
+    // plus euler on the last half of the list
+    post xs = xs !! ((mid xs)+1..#xs);
+
+    euler [] = 0;
+    euler xs = euler(pre xs) + (val xs) + euler(post xs);
+end;
+
+printf "%d\n" (euler1 999);
+

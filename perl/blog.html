@@ -1,0 +1,25 @@
+<a href="http://www.perl.org/">Perl</a> was at one time a revolutionary language, but language fashion has left this workhorse, introduced in 1987, somewhat behind. More recent advances, such as the <a title="JVM" href="http://en.wikipedia.org/wiki/Java_virtual_machine">JVM</a>, mainstream <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>, and <a title="Python" href="http://gdm9000.wordpress.com/2011/10/15/python/">Python</a>/<a title="Ruby" href="http://gdm9000.wordpress.com/2011/10/15/ruby/">Ruby</a> with their fancy-schmancy stack traces and <a title="Read–eval–print loop" href="http://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a>s, have caught our attention, but I thought I'd try my hand at some old-skool coding. I'm glad I did, because this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> is clear, concise, and took maybe an hour to write:
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">#!/usr/bin/perl</span>
+<span style="color: #0099ff; font-style: italic;"># Euler1 in Perl</span>
+
+<span style="color: #006699; font-weight: bold;">sub </span><span style="color: #cc00ff;">euler1</span> {
+    <span style="color: #006699; font-weight: bold;">my</span> <span style="color: #003333;">@array</span> <span style="color: #555555;">=</span> (<span style="color: #ff6600;">0</span><span style="color: #555555;">..</span><span style="color: #336666;">shift</span>);
+    <span style="color: #006699; font-weight: bold;">my</span> <span style="color: #003333;">$sum</span> <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+    <span style="color: #006699; font-weight: bold;">foreach</span> (<span style="color: #003333;">@array</span>) {
+        <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #003333;">$_</span> <span style="color: #003333;">%</span> <span style="color: #003333;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #000000; font-weight: bold;">or</span> <span style="color: #003333;">$_</span> <span style="color: #003333;">%</span> <span style="color: #003333;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+            <span style="color: #003333;">$sum</span> <span style="color: #555555;">+=</span> <span style="color: #003333;">$_</span>;
+        }
+    }
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #003333;">$sum</span>;
+}</pre>
+<pre style="line-height: 125%; margin: 0;"><span style="color: #006699; font-weight: bold;">print</span> euler1(<span style="color: #ff6600;">999</span>);</pre>
+</div>
+Perl has some weird constructs. Variables are defined with keyword <span class="Apple-style-span" style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px; white-space: pre;">my</span>, and variables passed in are contained in the array <span class="Apple-style-span" style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px; white-space: pre;">shift</span>. Also, I hate sigils...
+
+Perl should already be installed on any Linux machine. And Perl is easy to execute - simply call your script:
+<!-- HTML generated using hilite.me -->
+<div style="overflow: auto; width: auto; color: white; background: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">./euler1.pl</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

@@ -1,0 +1,34 @@
+class BidToken
+   value = 0
+   callback = {=> >"No winner" }
+end
+
+class Player( id )
+   id = id
+
+   init
+      subscribe( "play", self.subMe )
+   end
+
+   function subMe( tk )
+      // tk is a bid token.
+      bet = random(10)
+      if bet > tk.value
+         tk.value, tk.callback = bet, self.callMe
+      end
+   end
+
+   function callMe()
+      > @"Player $self.id won the auction!"
+   end
+end
+
+// all the players
+players = []
+for i in [0:10]: players += Player(i+1)
+
+// action they want us to do 
+tok = BidToken()
+broadcast( "play", tok )
+// elect the winner
+tok.callback()

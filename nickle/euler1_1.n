@@ -1,0 +1,12 @@
+/* Euler1 in Nickle */
+
+int function mySum(n, size) {
+    return n * (floor(size/n)**2 + floor(size/n)) / 2;
+}
+
+int function Euler1(size) {
+    return (mySum(3,size) + mySum(5,size) - mySum(15,size));
+}
+
+printf("%i\n", Euler1(999));
+quit;

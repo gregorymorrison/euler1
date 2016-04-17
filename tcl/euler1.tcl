@@ -10,7 +10,7 @@ proc euler1 {n} {
         }
         incr i
     }
-
+    
     return $sum
 }
 

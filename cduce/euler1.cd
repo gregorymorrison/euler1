@@ -1,0 +1,13 @@
+(* Euler1 in CDuce *)
+
+let euler ((Int,Int) -> Int)
+ | (0 | 1, x) -> x
+ | (n, x) -> 
+    if (n mod 3 = 0) || (n mod 5 = 0) then 
+        euler (n - 1, x + n)
+    else
+        euler (n - 1, x);;
+
+let euler1 (size : Int) : Int = euler (size, 0);;
+
+print (string_of (euler1(999)) @ "\n");;

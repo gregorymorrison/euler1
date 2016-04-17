@@ -1,0 +1,28 @@
+<a title="C" href="http://en.wikipedia.org/wiki/C_(programming_language)">C</a> is a general purpose programming language introduced in 1972. I grew up on C; my background is in procedural languages. And after not having looked at this language in years, it took me less than five minutes to get back in the saddle and bang out this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>. Verbose but elegant:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in C</span>
+<span style="color:#009999;">#include&lt;stdio.h&gt;</span>
+
+<span style="color:#007788;font-weight:bold;">int</span> <span style="color:#cc00ff;">euler</span>(<span style="color:#007788;font-weight:bold;">int</span> n) {
+    <span style="color:#007788;font-weight:bold;">int</span> retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+    <span style="color:#006699;font-weight:bold;">for</span> (<span style="color:#007788;font-weight:bold;">int</span> i<span style="color:#555555;">=</span><span style="color:#ff6600;">0</span>; i<span style="color:#555555;">&lt;</span>n; i<span style="color:#555555;">++</span>) {
+        <span style="color:#006699;font-weight:bold;">if</span> ((i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>) <span style="color:#555555;">||</span> (i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>)) {
+            retval <span style="color:#555555;">+=</span> i;
+        }
+    }
+    <span style="color:#006699;font-weight:bold;">return</span> retval;
+}
+
+main() {
+    printf(<span style="color:#cc3300;">"%i</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span>, euler(<span style="color:#ff6600;">1000</span>));
+}</pre>
+</div>
+My belated thanks to <a title="Dennis Ritchie" href="http://en.wikipedia.org/wiki/Dennis_Ritchie">Dennis Ritchie</a> for giving us such a well-designed language.
+
+To run this, I used the venerable <a href="http://gcc.gnu.org/">GCC</a> compiler. Compile to object code, enable execute permissions on the resultant object file, then execute:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> g++ euler -o euler1</pre>
+<pre style="line-height:125%;margin:0;">$ chmod 777 euler1</pre>
+<pre style="line-height:125%;margin:0;">$ ./euler1
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

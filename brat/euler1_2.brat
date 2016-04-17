@@ -1,0 +1,14 @@
+# Euler1 in Brat
+
+euler1 = object.new
+
+euler1.size = 999
+euler1.result = 0
+
+euler1.solve = {
+    ints = 1.to(my.size).select { x | x % 3 == 0 || x % 5 == 0 }
+    my.result = ints.reduce :+
+}
+
+euler1.solve
+p euler1.result

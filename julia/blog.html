@@ -1,0 +1,112 @@
+<!-- HTML generated using hilite.me -->
+
+<a title="Julia" href="http://julialang.org/">Julia</a>, a new language introduced in 2011(?), attempts to be a high-level, high-performance scientific computing platform. It was inspired by <a title="MATLAB" href="http://en.wikipedia.org/wiki/Matlab">Matlab</a> and extended with features from other modern languages - <a title="Lisp" href="http://gdm9000.wordpress.com/2011/10/15/lisp/">Lisp</a>, <a title="Perl" href="http://gdm9000.wordpress.com/2011/10/15/perl/">Perl</a>, <a title="Python" href="http://gdm9000.wordpress.com/2011/10/15/python/">Python</a>, <a title="Ruby" href="http://gdm9000.wordpress.com/2011/10/15/ruby/">Ruby</a>, <a title="Lua" href="http://gdm9000.wordpress.com/2011/10/16/lua/">Lua</a>. So, along with having first-class functions, regular expressions, and multiple dispatch, it has built-in libraries for linear algebra, combinatorics, and signal processing. The runtime also transparently optimizes your process across multiple cores when it makes sense.
+
+Here's a simple imperative version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>. It took me maybe 15 minutes to write this code - five minutes to get the syntax, and ten minutes to make sense of the cryptic compiler errors. Note the return value is simply the value of the last line of a function:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;"># Euler1 in Julia</span>
+
+function euler1(n)
+    result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span>:n
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+            result <span style="color:#555555;">+=</span> i
+        <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+    result
+<span style="color:#006699;font-weight:bold;">end</span>
+
+print ( euler1(<span style="color:#ff6600;">999</span>), <span style="color:#cc3300;">"</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span> )</pre>
+</div>
+Here's a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler()</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> - it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation - there are instead only functions which return values. The other main point is that this recursion uses tail call optimization - it's written in such a way that an intelligent compiler can optimize its stack usage to be O(n) instead of O(n!). In English, this means that your program will probably not crash even for hugely recursive calls.
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;"># Euler1 in Julia</span>
+
+function euler(n, acc)
+    <span style="color:#006699;font-weight:bold;">if</span> n <span style="color:#555555;">==</span> <span style="color:#ff6600;">1</span>
+        acc
+    elseif n<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> n<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+        euler(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, acc<span style="color:#555555;">+</span>n)
+    <span style="color:#006699;font-weight:bold;">else</span>
+        euler(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, acc)
+    <span style="color:#006699;font-weight:bold;">end</span>
+<span style="color:#006699;font-weight:bold;">end</span>
+
+function Euler1(n)
+    euler(n, <span style="color:#ff6600;">0</span>)
+<span style="color:#006699;font-weight:bold;">end</span>
+
+println (Euler1(<span style="color:#ff6600;">999</span>))</pre>
+</div>
+Here's another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, <em>euler() </em>returns <em>euler()</em> calculated on the half of the list before the pivot element, <em>euler()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together. Note the <a title="ShortCircuit" href="http://en.wikipedia.org/wiki/Short-circuit_evaluation">short-circuit conditional</a> in the middle of that mess. Oddly, I couldn't get the right answer without defining the variables <em>pre</em>, <em>post</em>, and <em>i</em>, even though they are never manipulated. This code demonstrates Julia's range generation and array slicing. Arrays in Julia are 1-based.
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;"># Euler1 in Julia</span>
+
+function euler1(L)
+    <span style="color:#006699;font-weight:bold;">if</span> length(L) <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+        <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+
+    pivot <span style="color:#555555;">=</span> <span style="color:#007788;font-weight:bold;">int</span>( length(L)<span style="color:#555555;">/</span><span style="color:#ff6600;">2</span> )
+    pre <span style="color:#555555;">=</span>  euler1( L<span style="color:#555555;">[</span><span style="color:#ff6600;">1</span>:pivot<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span><span style="color:#555555;">]</span>)
+    post <span style="color:#555555;">=</span> euler1( L<span style="color:#555555;">[</span>pivot<span style="color:#555555;">+</span><span style="color:#ff6600;">1</span>:<span style="color:#555555;">]</span> )
+    i <span style="color:#555555;">=</span> (L<span style="color:#555555;">[</span>pivot<span style="color:#555555;">]%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> L<span style="color:#555555;">[</span>pivot<span style="color:#555555;">]%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>) <span style="color:#555555;">?</span> L<span style="color:#555555;">[</span>pivot<span style="color:#555555;">]</span> : <span style="color:#ff6600;">0</span>
+
+    pre <span style="color:#555555;">+</span> post <span style="color:#555555;">+</span> i
+<span style="color:#006699;font-weight:bold;">end</span>
+
+println (euler1( <span style="color:#555555;">[</span><span style="color:#ff6600;">1</span>:<span style="color:#ff6600;">999</span><span style="color:#555555;">]</span> ))</pre>
+</div>
+Julia's implementation of Functional programming puts a big smile on my face. It's so straightforward and clean, it couldn't really be any simpler. <a title="First-class_functions" href="http://en.wikipedia.org/wiki/First-class_functions">First-class functions</a>, lambdas, map, filter, reduce... <a title="Everything" href="http://www.youtube.com/watch?v=VrpGhEVyrk0">everything in its right place</a>:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;"># Euler1 in Julia</span>
+
+myMap <span style="color:#555555;">=</span> x <span style="color:#555555;">-&gt;</span> x
+myFilter <span style="color:#555555;">=</span> x <span style="color:#555555;">-&gt;</span> x<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> x<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>
+myReduce <span style="color:#555555;">=</span> (x,y) <span style="color:#555555;">-&gt;</span> x<span style="color:#555555;">+</span>y
+
+function euler1(n)
+    mapped <span style="color:#555555;">=</span> map(myMap, <span style="color:#555555;">[</span><span style="color:#ff6600;">1</span>:n<span style="color:#555555;">]</span>)
+    filtered <span style="color:#555555;">=</span> filter(myFilter, mapped)
+    reduced <span style="color:#555555;">=</span> reduce(myReduce, filtered)
+<span style="color:#006699;font-weight:bold;">end</span>
+
+println ( euler1(<span style="color:#ff6600;">999</span>) )</pre>
+</div>
+Julia has support for symmetric coroutines, a sort of producer/consumer paradigm. Producers are like lightweight threads that go to sleep when they are not executing:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;"># Euler1 in Julia</span>
+
+function euler()
+    i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">while</span> <span style="color:#006699;">true</span>
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+             <span style="color:#008000;">produce</span>(i)
+        <span style="color:#006699;font-weight:bold;">end</span>
+        i <span style="color:#555555;">+=</span> <span style="color:#ff6600;">1</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+<span style="color:#006699;font-weight:bold;">end</span>
+
+function euler1(n)
+    task <span style="color:#555555;">=</span> <span style="color:#008000;">Task</span>(euler)
+
+    result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">while</span> <span style="color:#006699;">true</span>
+        i <span style="color:#555555;">=</span> <span style="color:#008000;">consume</span>(task)
+        <span style="color:#006699;font-weight:bold;">if</span> i <span style="color:#555555;">&gt;=</span> n
+            <span style="color:#006699;font-weight:bold;">break</span>
+        <span style="color:#006699;font-weight:bold;">end</span>
+        result <span style="color:#555555;">+=</span> i
+    <span style="color:#006699;font-weight:bold;">end</span>
+
+    <span style="color:#006699;font-weight:bold;">return</span> result
+<span style="color:#006699;font-weight:bold;">end</span>
+
+println (euler1(<span style="color:#ff6600;">1000</span>))</pre>
+</div>
+Julia has an online REPL that lets you can kick its tires without installing anything - <a href="http://julia.forio.com/repl.htm">http://julia.forio.com/repl.htm</a>. It seems like a great idea, though I didn't have a lot of luck with it - it kept locking up on me. Instead, I opted to install it from source using these <a title="JuliaSource" href="https://github.com/JuliaLang/julia">directions</a>. The process was simple, though it took hours to compile on my netbook. To run your code, simply pass it as an argument to the runtime:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$ julia</span> <span style="color:#ffffff;">euler1.j</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>

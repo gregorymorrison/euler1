@@ -1,0 +1,6 @@
+interface first where {
+import Prelude;
+hiding data Prelude.Int;
+nine :: Prelude.Int;
+square :: Prelude.Int -> Prelude.Int
+}

@@ -1,8 +1,7 @@
 -- Euler1 in Haskell
 
-mySum [] = 0
-mySum (x:xs) = x + mySum xs
+-- euler1 :: (Num a) => a -> a
+euler1 (a) = sum $ [3,6..a] ++ [5,20..a] ++ [10,25..a]
 
-result = mySum [x | x <- [0..999], x `mod` 3 == 0 || x `mod` 5 == 0]
-
-main = do print result
+main :: IO ()
+main = do { print (euler1 999) }

@@ -1,0 +1,14 @@
+let data = "
+print ['let data = ##' !data '## in'];
+let fun f (Latin1 -> Latin1)
+	| [ '#' '#'; s ] -> [ '##'; f s ]
+	| [ c; s ] -> [ c; f s ]
+	| [] -> [] in
+print (f data)
+" in
+print ['let data = "' !data '" in'];
+let fun f (Latin1 -> Latin1)
+	| [ '#' '#'; s ] -> [ '"'; f s ]
+	| [ c; s ] -> [ c; f s ]
+	| [] -> [] in
+print (f data)

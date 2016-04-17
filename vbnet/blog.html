@@ -1,0 +1,27 @@
+<a href="http://en.wikipedia.org/wiki/Visual_Basic_.NET">VB.NET</a> was introduced in 2001 as a successor to <a title="VB6" href="http://en.wikipedia.org/wiki/Visual_Basic">Visual Basic</a>. I had had no prior experience with anything .NET, and was expecting a bit of a learning curve, but it took me five minutes to write this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> - it looks just like VB6 of yore:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">' Euler1 in VB.NET</span>
+<span style="color:#006699;font-weight:bold;">Imports</span> System
+
+<span style="color:#006699;font-weight:bold;">Public</span> <span style="color:#006699;font-weight:bold;">Module</span> modmain
+
+    <span style="color:#006699;font-weight:bold;">Function</span> Euler1 (size <span style="color:#000000;font-weight:bold;">As</span> <span style="color:#007788;font-weight:bold;">Integer</span>) <span style="color:#000000;font-weight:bold;">As</span> <span style="color:#007788;font-weight:bold;">Integer</span>
+        <span style="color:#006699;font-weight:bold;">For</span> i <span style="color:#000000;font-weight:bold;">As</span> <span style="color:#007788;font-weight:bold;">Integer</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span> <span style="color:#006699;font-weight:bold;">to</span> size
+            <span style="color:#006699;font-weight:bold;">If</span> (i <span style="color:#000000;font-weight:bold;">mod</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i <span style="color:#000000;font-weight:bold;">mod</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>) <span style="color:#006699;font-weight:bold;">Then</span>
+                Euler1 <span style="color:#555555;">=</span> Euler1 <span style="color:#555555;">+</span> i
+            <span style="color:#006699;font-weight:bold;">End</span> <span style="color:#006699;font-weight:bold;">If</span>
+        <span style="color:#006699;font-weight:bold;">Next</span>
+    <span style="color:#006699;font-weight:bold;">End</span> <span style="color:#006699;font-weight:bold;">Function</span>
+
+    <span style="color:#006699;font-weight:bold;">Sub</span> Main()
+        Console.WriteLine (Euler1(<span style="color:#ff6600;">999</span>))
+    <span style="color:#006699;font-weight:bold;">End</span> <span style="color:#006699;font-weight:bold;">Sub</span>
+
+<span style="color:#006699;font-weight:bold;">End</span> <span style="color:#006699;font-weight:bold;">Module</span></pre>
+</div>
+To compile this code, I simply used <a href="http://fedoraproject.org/wiki/Yum">Yum</a> to install <em><a href="http://joysofprogramming.com/install-mono-basic-fedora-rhel/">mono-basic</a></em>. Then, I compiled my code with <em><a href="http://webcache.googleusercontent.com/search?q=cache:ZdATrmWXi6oJ:linux.die.net/man/1/vbnc+&amp;cd=2&amp;hl=en&amp;ct=clnk&amp;gl=us">vbnc</a></em>. I couldn't find how to execute the resultant .exe, so I guessed and tried to execute it the same way I ran my <a title="C#" href="http://gdm9000.wordpress.com/2011/11/05/c-2/">C#</a> code - with the <em>mono</em> runtime. Success!
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">vbnc</span> <span style="color:#ffffff;">euler1.vb</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">mono</span> <span style="color:#ffffff;">euler1.exe</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

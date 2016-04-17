@@ -1,0 +1,60 @@
+# Euler1 in Algol 68 #
+
+PROC range = (INT size) [] INT: (
+    [1:size] INT ints;
+    FOR i FROM 1 TO size DO ints[i] := i OD;
+    ints
+);
+
+PROC size = ([] INT ints) INT: (
+    INT retval := 0;
+    FOR i FROM LWB ints TO UPB ints DO
+        retval +:= 1
+    OD;
+    retval
+);
+
+PROC map = ([] INT ints, PROC (INT) INT f) [] INT: (
+    [1:size(ints)] INT retval;
+    FOR i FROM LWB ints TO UPB ints DO
+        retval[i] := f(ints[i])
+    OD;
+    retval
+);
+
+PROC filter = ([] INT ints, PROC (INT) BOOL f) [] INT: (
+    INT size := 0;
+    FOR i FROM LWB ints TO UPB ints DO
+        IF f(ints[i]) = TRUE THEN size +:= 1 FI
+    OD;
+
+    [1:size] INT retval;
+    FOR i FROM LWB ints TO UPB ints DO
+        IF f(ints[i]) = TRUE THEN 
+            retval[size] := ints[i];
+            size -:= 1
+        FI
+    OD;
+    retval
+);
+
+PROC reduce = ([] INT ints, PROC (INT, INT) INT f) INT: (
+    INT retval := 0;
+    FOR i FROM LWB ints TO UPB ints DO
+        retval := f(retval, ints[i])
+    OD;
+    retval
+);
+
+
+PROC f_map    = (INT n) INT: n;
+PROC f_filter = (INT n) BOOL: IF n %* 3 = 0 OR n %* 5 = 0 THEN TRUE ELSE FALSE FI;
+PROC f_reduce = (INT x, y) INT: x+y;
+
+PROC mymap    = ([] INT ints) [] INT: map(ints, f_map);
+PROC myfilter = ([] INT ints) [] INT: filter(ints, f_filter);
+PROC myreduce = ([] INT ints) INT: reduce(ints, f_reduce);
+
+PROC euler1 = (INT size) INT: myreduce( myfilter( mymap( range(size))));
+
+print (euler1(999))

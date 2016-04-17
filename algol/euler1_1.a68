@@ -1,0 +1,15 @@
+# Euler1 in Algol 68 #
+
+PROC euler = (INT n, acc) INT: (
+	IF n = 1 THEN
+		acc
+	ELIF n %* 3 = 0 OR n %* 5 = 0 THEN
+		euler(n-1, acc+n)
+	ELSE
+		euler(n-1, acc)
+	FI
+);
+
+PROC euler1 = (INT n) INT: euler(n, 0);
+
+print (euler1(999))

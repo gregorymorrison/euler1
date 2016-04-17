@@ -1,0 +1,142 @@
+<a href="http://www.python.org/">Python</a> happens to be my favorite language. This language, introduced in 1991, is a simple, dynamic, strongly typed, multiparadigm language language known for its small syntax and large library. Although Python's philosophy is that <a href="http://programmers.stackexchange.com/questions/96411/concrete-examples-of-pythons-only-one-way-to-do-it-maxim">there should only be one way to do something</a>, the multiparadigm nature of the language allows us to write <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in lots of different ways.
+
+Python does straight <a href="http://en.wikipedia.org/wiki/Procedural_programming">Procedural</a> - the <a title="Missionary Position" href="http://4.bp.blogspot.com/_Q9XXt7GwWKU/TFY-gw1YLZI/AAAAAAAAEoY/DvXOvMBQzn0/s1600/cat_help.jpg">Missionary Position</a> of paradigms:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python </span>
+<span style="color:#0099ff;font-style:italic;"># Euler1 in Python</span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">euler1</span>(x):
+    result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> x<span style="color:#336666;">range</span>(x):
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>:
+            result <span style="color:#555555;">+=</span> i
+
+    <span style="color:#006699;font-weight:bold;">return</span> result
+
+<span style="color:#006699;font-weight:bold;">print</span> euler1(<span style="color:#ff6600;">1000</span>)</pre>
+</div>
+This can be made a little more elegant using Python's built-in support for iterators - <a href="http://wiki.python.org/moin/Generators">generators</a>:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python</span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">euler1</span>(n):
+    i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">while</span> i <span style="color:#555555;">&lt;</span> n:
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>:
+            <span style="color:#006699;font-weight:bold;">yield</span> i
+        i <span style="color:#555555;">+=</span> <span style="color:#ff6600;">1</span>
+
+<span style="color:#006699;font-weight:bold;">print</span> <span style="color:#336666;">sum</span>(euler1(<span style="color:#ff6600;">1000</span>))</pre>
+</div>
+Python gives you <a href="http://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>. Here's a somewhat contrived version in which I create a class with a constructor, a member variable, and a method. It's contrived because OOP is way overkill for so simple a problem:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python</span>
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span>:
+    <span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">__init__</span>(<span style="color:#336666;">self</span>, size):
+        <span style="color:#336666;">self</span><span style="color:#555555;">.</span>size <span style="color:#555555;">=</span> size
+
+    <span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">solve</span>(<span style="color:#336666;">self</span>):
+        <span style="color:#336666;">self</span><span style="color:#555555;">.</span>result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+        <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> <span style="color:#336666;">xrange</span>(<span style="color:#336666;">self</span><span style="color:#555555;">.</span>size):
+            <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>:
+                <span style="color:#336666;">self</span><span style="color:#555555;">.</span>result <span style="color:#555555;">+=</span> i
+
+euler1 <span style="color:#555555;">=</span> Euler1(<span style="color:#ff6600;">1000</span>)
+euler1<span style="color:#555555;">.</span>solve()
+<span style="color:#006699;font-weight:bold;">print</span> euler1<span style="color:#555555;">.</span>result</pre>
+</div>
+Python fully supports the <a href="http://en.wikipedia.org/wiki/Functional_programming">Functional</a> paradigm. Here's an example where the problem is decomposed into the canonical Lambda, Map, Filter, and Reduce. Obviously <em>myMap()</em> here does nothing - it merely returns what's passed in; it's just included for illustration. Notice one of the hallmarks of the Functional paradigm - no mutable state. There is no variable manipulation here - only declarations:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python</span>
+
+myMap <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">lambda</span> size: <span style="color:#336666;">map</span>(<span style="color:#006699;font-weight:bold;">lambda</span> x: x, x<span style="color:#336666;">range</span>(size))
+myFilter <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">lambda</span> ints: <span style="color:#336666;">filter</span>(<span style="color:#006699;font-weight:bold;">lambda</span> x: x<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> x<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>, ints)
+myReduce <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">lambda</span> filtered: <span style="color:#336666;">reduce</span>(<span style="color:#006699;font-weight:bold;">lambda</span> x,y: x<span style="color:#555555;">+</span>y, filtered)
+
+<span style="color:#006699;font-weight:bold;">print</span> myReduce(myFilter(myMap(<span style="color:#ff6600;">1000</span>)))</pre>
+</div>
+Here is another Functional construct in Python- <a href="http://www.secnetix.de/olli/Python/list_comprehensions.hawk">List Comprehension</a> - a loop, a condition, and an accumulator, all in one line - very nice! This is probably the most idiomatic Python (Pythonic) example here (even though <a title="Guido hates lambdas" href="http://www.artima.com/weblogs/viewpost.jsp?thread=98196">Guido hates lambdas</a>):
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python</span>
+
+euler1 <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">lambda</span> x: <span style="color:#336666;">sum</span>(i <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> x<span style="color:#336666;">range</span>(x) <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)
+
+<span style="color:#006699;font-weight:bold;">print</span> euler1(<span style="color:#ff6600;">1000</span>)</pre>
+</div>
+Python's extremely flexible nature even supports the <a href="http://en.wikipedia.org/wiki/Prototype-based_programming">Prototype</a> paradigm. Classes are actually containers that are modifiable at runtime. Check this out - our class is nothing more than a dictionary into which we can shove whatever we want:<!-- HTML generated using hilite.me -->
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python</span>
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span>:
+<span style="color:#006699;font-weight:bold;"> pass</span>
+euler1 <span style="color:#555555;">=</span> Euler1()
+
+euler1<span style="color:#555555;">.</span>range <span style="color:#555555;">=</span> <span style="color:#ff6600;">1000</span>
+euler1<span style="color:#555555;">.</span>solver <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">lambda</span> x: <span style="color:#336666;">sum</span>(i <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> x<span style="color:#336666;">range</span>(x) <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)
+euler1<span style="color:#555555;">.</span>result <span style="color:#555555;">=</span> euler1<span style="color:#555555;">.</span>solver(euler1<span style="color:#555555;">.</span>range)
+
+<span style="color:#006699;font-weight:bold;">print</span> euler1<span style="color:#555555;">.</span>result</pre>
+</div>
+To illustrate this, we can rewrite the last example using Python's built-in dictionary object. One limitation - Python's dictionary requires its objects to be fully resolved before being added, so I have to create temporary variables for <em>solver</em> and <em>result</em> before they get added:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python</span>
+
+euler1 <span style="color:#555555;">=</span> <span style="color:#336666;">dict</span>()
+
+euler1[<span style="color:#336666;">range</span>] <span style="color:#555555;">=</span> <span style="color:#ff6600;">1000</span>
+
+solver <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">lambda</span> x: <span style="color:#336666;">sum</span>(i <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#000000;font-weight:bold;">in</span> x<span style="color:#336666;">range</span>(x) <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)
+euler1[solver] <span style="color:#555555;">=</span> solver
+
+result <span style="color:#555555;">=</span> euler1[solver] (euler1[<span style="color:#336666;">range</span>])
+euler1[result] <span style="color:#555555;">=</span> result
+
+<span style="color:#006699;font-weight:bold;">print</span> euler1[result]</pre>
+</div>
+Python doesn't do tail recursion well, though. Apparently <a title="Tail recursion elimination" href="http://neopythonic.blogspot.com/2009/04/tail-recursion-elimination.html">Guido doesn't believe in it.</a> The following, while logically correct, only narrowly misses blowing the stack - Python's stack is only 1000 deep by default:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python </span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">Euler1</span>(n, acc<span style="color:#555555;">=</span><span style="color:#ff6600;">0</span>):
+    <span style="color:#006699;font-weight:bold;">if</span> n<span style="color:#555555;">==</span><span style="color:#ff6600;">1</span>: <span style="color:#006699;font-weight:bold;">return</span> acc
+
+    <span style="color:#006699;font-weight:bold;">if</span> n<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> n<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>:
+        <span style="color:#006699;font-weight:bold;">return</span> Euler1(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, acc<span style="color:#555555;">+</span>n)
+    <span style="color:#006699;font-weight:bold;">else</span>:
+        <span style="color:#006699;font-weight:bold;">return</span> Euler1(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, acc)
+
+<span style="color:#006699;font-weight:bold;">print</span> Euler1(<span style="color:#ff6600;">999</span>)</pre>
+</div>
+Let's try a variant based on <a title="Quicksort" href="http://rosettacode.org/wiki/Sorting_algorithms/Quicksort">QuickSort</a>! Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we'll filter the pivot value, converting it to 0 if it's not divisible. I was actually able to run this out to 60M places without blowing the stack:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">#!/usr/bin/python </span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">Euler1</span>(L):
+    <span style="color:#006699;font-weight:bold;">if</span> L <span style="color:#555555;">==</span> []: <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#ff6600;">0</span>
+
+    pivot <span style="color:#555555;">=</span> <span style="color:#336666;">len</span>(L)<span style="color:#555555;">/</span><span style="color:#ff6600;">2</span>
+    <span style="color:#006699;font-weight:bold;">return</span> (Euler1(L[:pivot])
+          <span style="color:#555555;">+</span> Euler1(L[pivot<span style="color:#555555;">+</span><span style="color:#ff6600;">1</span>:])
+          <span style="color:#555555;">+</span> ((L[pivot]<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> L[pivot]<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)  <span style="color:#000000;font-weight:bold;">and</span>  L[pivot]  <span style="color:#000000;font-weight:bold;">or</span>  <span style="color:#ff6600;">0</span>))
+
+<span style="color:#006699;font-weight:bold;">print</span> Euler1(<span style="color:#336666;">range</span>(<span style="color:#ff6600;">1</span>,<span style="color:#ff6600;">1000</span>))</pre>
+</div>
+One more example - I just found this elegant algorithm based on an observation by little Carl Friedrich Gauss here - <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. I tried it with 1 googol (1.0 × 10<sup>100)</sup>, and not only did Python actually handle this without choking, it took no measurable time to calculate! Don't sweat it if this seems inscrutable; click the blog link above for an explanation. Here is my version:
+<div style="background:white;margin-bottom:20px;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;"># Euler1 in Python</span>
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">mySum</span>(n, size):
+    <span style="color:#006699;font-weight:bold;">return</span> n <span style="color:#555555;">*</span> (((size<span style="color:#555555;">/</span>n)<span style="color:#555555;">**</span><span style="color:#ff6600;">2</span> <span style="color:#555555;">+</span> (size<span style="color:#555555;">/</span>n)) <span style="color:#555555;">/</span> <span style="color:#ff6600;">2</span>)
+
+<span style="color:#006699;font-weight:bold;">def</span> <span style="color:#cc00ff;">Euler1</span>(size):
+    <span style="color:#006699;font-weight:bold;">return</span> mySum(<span style="color:#ff6600;">3</span>,size) <span style="color:#555555;">+</span> mySum(<span style="color:#ff6600;">5</span>,size) <span style="color:#555555;">-</span> mySum(<span style="color:#ff6600;">15</span>,size)
+
+<span style="color:#006699;font-weight:bold;">print</span> Euler1(<span style="color:#ff6600;">999</span>)</pre>
+</div>
+Now, to execute our Python script, simply call it:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1.py</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

@@ -1,0 +1,27 @@
+class Subber( id )
+   id = id
+
+   init
+      subscribe( "process", self.subMe )
+   end
+
+   function subMe( requests )
+      // will I be taking the second step?
+      if random(10) < 5: requests += .[ self.callMe ]
+   end
+
+   function callMe()
+      > @"Subber $self.id was called back!"
+   end
+end
+
+// all the subbers
+subbers = []
+for i in [0:10]: subbers += Subber(i+1)
+
+// action they want us to do 
+requests = []
+broadcast( "process", requests )
+
+// do them
+for req in requests: req()

@@ -1,0 +1,81 @@
+When <a href="http://msdn.microsoft.com/en-us/vstudio/hh341490">C#</a> was originally introduced in 2001, it was criticized as a carbon-copy of <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a>. But since then, the C# camp has been marching right along in language development, adding all kinds of cool features such as the declarative-styled <a href="http://msdn.microsoft.com/en-us/library/bb397933.aspx">LINQ</a>.
+
+<!-- HTML generated using hilite.me -->I haven't worked with <a title=".NET" href="http://msdn.microsoft.com/en-us/netframework">.NET</a> before and expected a bit of a learning curve. To start off, I took a C# Hello World example and pasted in my <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java class</a>. I tried to compile it just to see what it would return. And wouldn't you know it, that sumbitch worked!
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><em><span style="color: #0099ff;">// Euler1 in C #</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> <span style="color: #00ccff; font-weight: bold;">System</span>;
+
+<span style="color: #006699; font-weight: bold;">class</span> <span style="color: #00aa88; font-weight: bold;">Euler1</span> {
+    <span style="color: #006699; font-weight: bold;">private</span> <span style="color: #007788; font-weight: bold;">int</span> size;
+    <span style="color: #006699; font-weight: bold;">private</span> <span style="color: #007788; font-weight: bold;">int</span> result;
+
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #cc00ff;">Euler1</span>(<span style="color: #007788; font-weight: bold;">int</span> size) {
+        <span style="color: #006699; font-weight: bold;">this</span>.size = size;
+    }
+
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #006699; font-weight: bold;">void</span> <span style="color: #cc00ff;">solve</span>() {
+        result = <span style="color: #ff6600;">0</span>;
+        <span style="color: #006699; font-weight: bold;">for</span> (<span style="color: #007788; font-weight: bold;">int</span> i=<span style="color: #ff6600;">0</span>; i&lt;size; i++) {
+            <span style="color: #006699; font-weight: bold;">if</span> (i%<span style="color: #ff6600;">3</span>==<span style="color: #ff6600;">0</span> || i%<span style="color: #ff6600;">5</span>==<span style="color: #ff6600;">0</span>) {
+                result += i;
+            }
+       }
+    }
+
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">getResult</span>() {
+        <span style="color: #006699; font-weight: bold;">return</span> result;
+    }
+
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #006699; font-weight: bold;">static</span> <span style="color: #006699; font-weight: bold;">void</span> <span style="color: #cc00ff;">Main</span>() {
+        Euler1 euler1 = <span style="color: #006699; font-weight: bold;">new</span> Euler1(<span style="color: #ff6600;">1000</span>);
+        euler1.solve();
+        Console.WriteLine(euler1.getResult());
+    }
+}</pre>
+</div>
+Really, C#? Is there still that little difference between you and your older brother, Java? No, as it turns out. C# has done a lot of modernizing. For instance, they've added a full complement of functional operations - behold, versions of Map, Filter, Fold, and Lambda!
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><em><span style="color: #0099ff;">// Euler1 in C #</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> <span style="color: #00ccff; font-weight: bold;">System</span>;
+<span style="color: #006699; font-weight: bold;">using</span> <span style="color: #00ccff; font-weight: bold;">System.Linq</span>;
+
+<span style="color: #006699; font-weight: bold;">class</span> <span style="color: #00aa88; font-weight: bold;">Euler1</span> {
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #006699; font-weight: bold;">static</span> <span style="color: #006699; font-weight: bold;">void</span> <span style="color: #cc00ff;">Main</span>() {
+
+        Func&lt;<span style="color: #007788; font-weight: bold;">int</span>, <span style="color: #007788; font-weight: bold;">int</span>&gt; euler1 = size =&gt; {
+            <span style="color: #006699; font-weight: bold;">return</span> Enumerable.Range(<span style="color: #ff6600;">1</span>, size)
+                .<span style="color: #800000;">Select</span>(i =&gt; i)
+                .<span style="color: #800000;">Where</span>(i =&gt; i%<span style="color: #ff6600;">3</span>==<span style="color: #ff6600;">0</span> || i%<span style="color: #ff6600;">5</span>==<span style="color: #ff6600;">0</span>)
+                .<span style="color: #800000;">Aggregate</span>(<span style="color: #ff6600;">0</span>, (i,acc) =&gt; i+acc);
+        };
+
+        Console.WriteLine(euler1(<span style="color: #ff6600;">999</span>));
+    }
+}</pre>
+</div>
+Select() here serves no purpose - it's just added here for illustration. C# even supports <a href="http://csharpindepth.com/Articles/Chapter5/Closures.aspx">closures</a>, yay! LINQ's syntax is really flexible - here's a SQL-flavored version:
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><em><span style="color: #0099ff;">// Euler1 in C #</span></em>
+<span style="color: #006699; font-weight: bold;">using</span> <span style="color: #00ccff; font-weight: bold;">System</span>;
+<span style="color: #006699; font-weight: bold;">using</span> <span style="color: #00ccff; font-weight: bold;">System.Linq</span>;
+
+<span style="color: #006699; font-weight: bold;">class</span> <span style="color: #00aa88; font-weight: bold;">Euler1</span> {
+    <span style="color: #006699; font-weight: bold;">public</span> <span style="color: #006699; font-weight: bold;">static</span> <span style="color: #006699; font-weight: bold;">void</span> <span style="color: #cc00ff;">Main</span>() {
+        var range = Enumerable.Range(<span style="color: #ff6600;">1</span>, <span style="color: #ff6600;">999</span>);
+
+        var result = (from n <span style="color: #006699; font-weight: bold;">in</span> range
+                     where n % <span style="color: #ff6600;">3</span> == <span style="color: #ff6600;">0</span> || n % <span style="color: #ff6600;">5</span> == <span style="color: #ff6600;">0</span>
+                     select n).Sum();
+
+        Console.WriteLine(result);
+    }
+}</pre>
+</div>
+It took me a few hours to write this code. Most of it was a pleasant experience - documentation is great and there is much to explore. Compiler messages seem adequate. Make sure you include the <em>System.Linq</em> declaration - I spent way too much time figuring that out because the many online tutorials I read omitted it, sigh.
+
+A couple blogs I read made me expect a difficult time with <a href="http://www.mono-project.com/Main_Page">Mono</a>. I found it to be a piece of cake, though. I simply used <a href="http://fedoraproject.org/wiki/Yum">Yum</a> to install <em>mono-basic</em>. Then, I compiled my code with <em>mcs</em> and executed it with <em>mono</em>:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">mcs</span> <span style="color: #ffffff;">euler1.cs</span>
+<span style="color: #ffffff;">$</span> <span style="color: #ffffff;">mono</span> <span style="color: #ffffff;">euler1.exe</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

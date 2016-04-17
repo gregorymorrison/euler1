@@ -1,5 +1,5 @@
 ! Euler1 in Fortran90
-
+ 
 program euler1
     integer :: euler
 
@@ -12,7 +12,7 @@ function euler(size)
 
     do i = 0, size
         if (modulo(i,3)==0 .or. modulo(i,5)==0) then
-             euler = euler + i
+            euler = euler + i
         end if
- end do
+    end do
 end

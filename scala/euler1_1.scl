@@ -1,0 +1,16 @@
+// Euler1 in Scala
+
+import scala.actors.Actor
+import scala.actors.Actor._
+
+object Euler1 extends Actor {
+	def act() {
+		for (i <- 1 to 10) {
+			println("Number: " + i)
+			Thread.sleep(1000)
+		}
+	}
+}
+
+Euler1.start()
+

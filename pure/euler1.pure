@@ -1,0 +1,9 @@
+// Euler1 in Pure
+using system;
+
+mySum [] = 0;
+mySum (x:xs) = x + mySum xs;
+
+euler1 n = mySum [x | x = 0..n; x mod 3 == 0 || x mod 5 == 0];
+
+printf "%d\n" (euler1 999);

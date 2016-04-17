@@ -1,4 +1,4 @@
-// Euler1 in Objective-C
+// Euler1 in Erlang
 #import <stdio.h>
 
 int euler(int n) {

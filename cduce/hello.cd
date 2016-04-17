@@ -1,0 +1,3 @@
+(* Hello World in CDuce *)
+
+let [] = print "Hello World!\n";;

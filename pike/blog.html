@@ -1,0 +1,176 @@
+<!-- HTML generated using hilite.me -->Introduced in 1994, <a title="Pike" href="http://pike.lysator.liu.se/">Pike</a> is a language in the <a title="C" href="http://en.wikipedia.org/wiki/C_(programming_language)">C</a>/<a title="C++" href="http://en.wikipedia.org/wiki/C%2B%2B">C++</a> family which was originally designed for the development of MUDs. It's interpreted, both statically and dynamically typed with strong typing, has garbage collection, and support for multiple language paradigms including <a title="FirstClassFunctions" href="http://en.wikipedia.org/wiki/First-class_function">first-class functions</a>, <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">object-orient</a><span style="text-decoration: underline;">ation</span>.
+
+Here's a standard iterative example of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Pike, which looks very much like C:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #009999;">#!/usr/bin/pike</span>
+<span style="color: #0099ff; font-style: italic;">// Euler1 in Pike
+</span>
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">euler1</span> (<span style="color: #007788; font-weight: bold;">int</span> size) {
+    <span style="color: #007788; font-weight: bold;">int</span> retval <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+    <span style="color: #006699; font-weight: bold;">for</span> (<span style="color: #007788; font-weight: bold;">int</span> i <span style="color: #555555;">=</span> <span style="color: #ff6600;">1</span>; i <span style="color: #555555;">&lt;</span> size; i<span style="color: #555555;">++</span>) {
+        <span style="color: #006699; font-weight: bold;">if</span> (i <span style="color: #555555;">%</span> <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i <span style="color: #555555;">%</span> <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+            retval +<span style="color: #555555;">=</span> i;
+        }
+    }
+    <span style="color: #006699; font-weight: bold;">return</span> retval;
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">main</span>() {
+    <span style="color: #007788; font-weight: bold;">int</span> euler <span style="color: #555555;">=</span> euler1(<span style="color: #ff6600;">1000</span>);
+    write (euler <span style="color: #555555;">+</span> <span style="color: #cc3300;">"</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>);
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #ff6600;">0</span>;
+}</pre>
+</div>
+Next is a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation – there are instead only functions which return values. The other main point is that this recursion uses tail call optimization – it’s written in such a way that an intelligent compiler can optimize its stack usage to be <a title="big o notation" href="http://en.wikipedia.org/wiki/Big_O_notation"><em>O(n)</em> instead of<em> O(n!)</em></a>. In English, this means that your program will probably not crash even for hugely recursive calls.
+<!-- HTML generated using hilite.me -->
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #009999;">#!/usr/bin/pike</span>
+<span style="color: #0099ff; font-style: italic;">// Euler1 in Pike</span>
+
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">euler</span> (<span style="color: #007788; font-weight: bold;">int</span> n, <span style="color: #007788; font-weight: bold;">int</span> acc) {
+    <span style="color: #006699; font-weight: bold;">if</span> (n <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) <span style="color: #006699; font-weight: bold;">return</span> acc;
+    <span style="color: #006699; font-weight: bold;">if</span> (n <span style="color: #555555;">%</span> <span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> n <span style="color: #555555;">%</span> <span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> euler (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc<span style="color: #555555;">+</span>n);
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> euler (n<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, acc);
+    }
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">euler1</span> (<span style="color: #007788; font-weight: bold;">int</span> size) {
+    <span style="color: #006699; font-weight: bold;">return</span> euler (size, <span style="color: #ff6600;">0</span>);
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">main</span>() {
+    write (euler1(<span style="color: #ff6600;">999</span>) <span style="color: #555555;">+</span> <span style="color: #cc3300;">"</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>);
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #ff6600;">0</span>;
+}</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, <em>euler() </em>returns <em>euler()</em> calculated on the half of the list before the pivot element, <em>euler()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together. Pike doesn't seem to have a range generator function, so we've written our own. Also note here <a title="array slicing" href="http://en.wikipedia.org/wiki/Array_slicing">array slicing</a>, which is welcome but verbose; Pike doesn't allow negative indices, unlike say <a title="Python" href="http://www.python.org/">Python</a>.
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #009999;">#!/usr/bin/pike</span>
+<span style="color: #0099ff; font-style: italic;">// Euler1 in Pike</span>
+
+array(<span style="color: #007788; font-weight: bold;">int</span>) myrange(<span style="color: #007788; font-weight: bold;">int</span> size) {
+    array(<span style="color: #007788; font-weight: bold;">int</span>) ints <span style="color: #555555;">=</span> allocate(size);
+    <span style="color: #006699; font-weight: bold;">for</span> (<span style="color: #007788; font-weight: bold;">int</span> i<span style="color: #555555;">=</span><span style="color: #ff6600;">0</span>; i<span style="color: #555555;">&lt;</span>size; i<span style="color: #555555;">++</span>) {
+        ints[i] <span style="color: #555555;">=</span> i<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span>;
+    }
+    <span style="color: #006699; font-weight: bold;">return</span> ints;
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> euler(array(<span style="color: #007788; font-weight: bold;">int</span>) ints) {
+    <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">sizeof</span>(ints) <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #ff6600;">0</span>;
+
+    <span style="color: #007788; font-weight: bold;">int</span> pivot <span style="color: #555555;">=</span> <span style="color: #006699; font-weight: bold;">sizeof</span>(ints) <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>;
+
+    <span style="color: #007788; font-weight: bold;">int</span> pivotval <span style="color: #555555;">=</span> ints[pivot];
+    <span style="color: #006699; font-weight: bold;">if</span> (pivotval <span style="color: #555555;">%</span> <span style="color: #ff6600;">3</span> <span style="color: #555555;">&gt;</span> <span style="color: #ff6600;">0</span>  <span style="color: #555555;">&amp;&amp;</span>  pivotval <span style="color: #555555;">%</span> <span style="color: #ff6600;">5</span> <span style="color: #555555;">&gt;</span> <span style="color: #ff6600;">0</span>)
+        pivotval <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+
+    <span style="color: #007788; font-weight: bold;">int</span> pre <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+    <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #ff6600;">0</span> <span style="color: #555555;">&lt;</span> pivot)
+        pre <span style="color: #555555;">=</span> euler( ints[<span style="color: #ff6600;">0.</span>.pivot<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>] );
+
+    <span style="color: #007788; font-weight: bold;">int</span> post <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+    <span style="color: #006699; font-weight: bold;">if</span> (pivot<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span> <span style="color: #555555;">&lt;</span> <span style="color: #006699; font-weight: bold;">sizeof</span>(ints))
+        post <span style="color: #555555;">=</span> euler( ints[pivot<span style="color: #555555;">+</span><span style="color: #ff6600;">1.</span>.<span style="color: #006699; font-weight: bold;">sizeof</span>(ints)<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>] );
+
+    <span style="color: #006699; font-weight: bold;">return</span> pre <span style="color: #555555;">+</span> pivotval <span style="color: #555555;">+</span> post;
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> euler1 (<span style="color: #007788; font-weight: bold;">int</span> size) {
+    <span style="color: #006699; font-weight: bold;">return</span> euler( myrange(size) );
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> main () {
+    write (euler1(<span style="color: #ff6600;">999</span>) <span style="color: #555555;">+</span> <span style="color: #cc3300;">"</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>);
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #ff6600;">0</span>;
+}</pre>
+</div>
+Does Pike support <a title="Functional" href="http://en.wikipedia.org/wiki/Functional_programming">Functional programming</a>? Well, it's built-in support is fairly weak; this is after all a language from the C family. It does support first-class functions and immutable objects using the <em>constant</em> keyword. There are no built-in <em>map/filter/reduce</em>, though we can try to write our own. A real Functional style requires <a title="Immutability" href="http://en.wikipedia.org/wiki/Immutability">immutability</a>, which we can accomplish through the use of <a title="recursion" href="http://en.wikipedia.org/wiki/Recursion_(computer_science)">recursion</a>. Notice that there is not a single assignment now, which guarantees that any multithreading will not step on each others' toes. And as you can see at the bottom with the calls made to <em>map/filter/reduce</em>, lambdas are defined as a code block surrounded by curly braces. Now, this might look like a lot of boilerplate, but the actual problem solution is now only a single elegant line (the italicized, bold line):
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #009999;">#!/usr/bin/pike</span>
+<span style="color: #0099ff; font-style: italic;">// Euler1 in Pike</span>
+
+array(<span style="color: #007788; font-weight: bold;">int</span>) _myrange(<span style="color: #007788; font-weight: bold;">int</span> size, array(<span style="color: #007788; font-weight: bold;">int</span>) ints) {
+    <span style="color: #006699; font-weight: bold;">if</span> (size <span style="color: #555555;">&gt;</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> _myrange(size<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>, ({size})<span style="color: #555555;">+</span>ints);
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> ints;
+    }
+}
+
+array(<span style="color: #007788; font-weight: bold;">int</span>) myrange(<span style="color: #007788; font-weight: bold;">int</span> size) {
+    <span style="color: #006699; font-weight: bold;">return</span> _myrange(size, ({}));
+}
+
+array(mixed) map (function f, array(mixed) objs) {
+    <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">sizeof</span>(objs) <span style="color: #555555;">==</span> <span style="color: #ff6600;">1</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> ({ f(objs[<span style="color: #ff6600;">0</span>]) });
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> ({ f(objs[<span style="color: #ff6600;">0</span>]) }) <span style="color: #555555;">+</span> objs[<span style="color: #ff6600;">1.</span>.<span style="color: #006699; font-weight: bold;">sizeof</span>(objs)];
+    }
+}
+
+array(mixed) filter (function f, array(mixed) objs) {
+    <span style="color: #006699; font-weight: bold;">if</span> (f(objs[<span style="color: #ff6600;">0</span>])) {
+        <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">sizeof</span>(objs) <span style="color: #555555;">==</span> <span style="color: #ff6600;">1</span>) {
+            <span style="color: #006699; font-weight: bold;">return</span> ({ objs[<span style="color: #ff6600;">0</span>] });
+        } <span style="color: #006699; font-weight: bold;">else</span> {
+            <span style="color: #006699; font-weight: bold;">return</span> ({ objs[<span style="color: #ff6600;">0</span>] }) <span style="color: #555555;">+</span> filter(f, objs[<span style="color: #ff6600;">1.</span>.<span style="color: #006699; font-weight: bold;">sizeof</span>(objs)]);
+        }
+    } <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">sizeof</span>(objs) <span style="color: #555555;">==</span> <span style="color: #ff6600;">1</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> ({});
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> filter(f, objs[<span style="color: #ff6600;">1.</span>.<span style="color: #006699; font-weight: bold;">sizeof</span>(objs)]);
+    }
+}
+
+mixed reduce(function f, mixed acc, array(mixed) objs) {
+    <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">sizeof</span>(objs) <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> acc;
+    } <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #006699; font-weight: bold;">sizeof</span>(objs) <span style="color: #555555;">==</span> <span style="color: #ff6600;">1</span>) {
+        <span style="color: #006699; font-weight: bold;">return</span> reduce(f, f(acc, objs[<span style="color: #ff6600;">0</span>]), ({}));
+    } <span style="color: #006699; font-weight: bold;">else</span> {
+        <span style="color: #006699; font-weight: bold;">return</span> reduce(f, f(acc, objs[<span style="color: #ff6600;">0</span>]), objs[<span style="color: #ff6600;">1.</span>.<span style="color: #006699; font-weight: bold;">sizeof</span>(objs)<span style="color: #555555;">-</span><span style="color: #ff6600;">1</span>]);
+    }
+}
+
+<span style="color: #0099ff; font-style: italic;">// now let's do our actual work //</span>
+
+<span style="color: #007788; font-weight: bold;">int</span> euler1(<span style="color: #007788; font-weight: bold;">int</span> size) {
+    <span style="color: #006699; font-weight: bold;">return</span> <em><strong>reduce(lambda(<span style="color: #007788;">int</span> x, <span style="color: #007788;">int</span> y) {<span style="color: #006699;">return</span> x<span style="color: #555555;">+</span>y;}, <span style="color: #ff6600;">0</span>,
+        filter(lambda(<span style="color: #007788;">int</span> x) {<span style="color: #006699;">return</span> x<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> x<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>;},
+            map(lambda(<span style="color: #007788;">int</span> x) {<span style="color: #006699;">return</span> x;},
+                myrange(size))));</strong></em>
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> main() {
+    write( euler1(<span style="color: #ff6600;">999</span>) <span style="color: #555555;">+</span> <span style="color: #cc3300;">"</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>);
+}</pre>
+</div>
+Another interesting characteristic of Pike is its use of types. They are mandatory, but you can specify a parameter to be a range of types. Above, we've declared <em>map/filter/reduce</em> to take an array of type <em>mixed</em>, Pike's base generic type, which guarantees that our <em>map/filter/reduce</em> are actually generic.
+
+<span style="line-height: 1.5em;">Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – </span><a style="line-height: 1.5em;" href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a><span style="line-height: 1.5em;">. It operates in </span><a style="line-height: 1.5em;" title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a><span style="line-height: 1.5em;">. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.</span>
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #009999;">#!/usr/bin/pike</span>
+<span style="color: #0099ff; font-style: italic;">// Euler1 in Pike</span>
+
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">mysum</span> (<span style="color: #007788; font-weight: bold;">int</span> n, <span style="color: #007788; font-weight: bold;">int</span> size) {
+    <span style="color: #006699; font-weight: bold;">return</span> (pow((size<span style="color: #555555;">/</span>n),<span style="color: #ff6600;">2</span>) <span style="color: #555555;">+</span> (size<span style="color: #555555;">/</span>n)) <span style="color: #555555;">*</span> n <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span>;
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">euler1</span> (<span style="color: #007788; font-weight: bold;">int</span> size) {
+    <span style="color: #006699; font-weight: bold;">return</span> mysum(<span style="color: #ff6600;">3</span>,size) <span style="color: #555555;">+</span> mysum(<span style="color: #ff6600;">5</span>,size) <span style="color: #555555;">-</span> mysum(<span style="color: #ff6600;">15</span>,size);
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> <span style="color: #cc00ff;">main</span> () {
+    write (euler1(<span style="color: #ff6600;">999</span>) <span style="color: #555555;">+</span> <span style="color: #cc3300;">"</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span>);
+}</pre>
+</div>
+My experience with this language was okay. It's documentation is not excellent but adequate, though I found its C-style syntax and learning curve to be quite easy. I didn't find a useful debugger, though its error messages are very good. <span style="line-height: 1.5em;">Pike can be installed on Debian by apt-get installing </span><em style="line-height: 1.5em;">pike</em><span style="line-height: 1.5em;">. Add a </span><a style="line-height: 1.5em;" title="shebang" href="http://en.wikipedia.org/wiki/Shebang_(Unix)">shebang</a><span style="line-height: 1.5em;"> to your code and you can execute your Pike program directly from the command line:</span>
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">euler1.pike</span>
+<span style="color: #0086f7; font-weight: bold;">233168
+<span style="color: #ffffff;">$</span></span></pre>
+</div>

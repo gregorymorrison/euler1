@@ -1,0 +1,13 @@
+// Euler1 in Pure
+using system;
+
+myMap    xs = map id xs;
+myFilter xs = filter (\x -> x mod 3 == 0 || x mod 5 == 0) xs;
+myFold   xs = foldl (+) 0 xs;
+
+euler1 n = euler [myMap,myFilter,myFold] (1..n) with
+	euler []     x  = x;
+	euler (f:fs) xs = euler fs (f xs);
+end;
+
+printf "%d\n" (euler1 999);

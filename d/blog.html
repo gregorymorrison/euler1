@@ -1,0 +1,36 @@
+<a href="http://www.digitalmars.com/d/2.0/index.html">D</a>, introduced in 2001, is a modernized <a title="C" href="http://gdm9000.wordpress.com/2011/10/18/c/">C</a>. All of C's good parts were kept - programming-to-the-metal including inline assembly, compiling to native code, etc. Its bad parts were tossed out - memory management, <a title="C++" href="http://en.wikipedia.org/wiki/C%2B%2B">C++</a> complexity, etc. And many modern language developments were added - garbage collection, lambdas, concurrency support, etc. D supports multiple paradigms - imperative, OOP, functional, concurrent, and metaprogramming (whatever that last one is).
+
+Since D is a superset of C, you can write plain-ass C code, which is just what I did for <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">// Euler1 in D</span>
+
+<span style="color: #006699; font-weight: bold;">import</span> std.stdio;
+
+<span style="color: #007788; font-weight: bold;">int</span> euler1(<span style="color: #007788; font-weight: bold;">int</span> n) {
+<span style="color: #007788; font-weight: bold;">    int</span> retval = <span style="color: #ff6600;">0</span>;
+
+<span style="color: #006699; font-weight: bold;">    for</span> (<span style="color: #007788; font-weight: bold;">int</span> i=<span style="color: #ff6600;">1</span>; i&lt;n; i++) {
+<span style="color: #006699; font-weight: bold;">        if</span> (i%<span style="color: #ff6600;">3</span> == <span style="color: #ff6600;">0</span> || i%<span style="color: #ff6600;">5</span> == <span style="color: #ff6600;">0</span>) {
+            retval += i;
+        }
+    }
+
+<span style="color: #006699; font-weight: bold;">    return</span> retval;
+}
+
+<span style="color: #007788; font-weight: bold;">int</span> main(<span style="color: #007788; font-weight: bold;">char</span>[][] args)
+{
+    writef( euler1(<span style="color: #ff6600;">1000</span>) );
+<span style="color: #006699; font-weight: bold;">    return</span> <span style="color: #ff6600;">0</span>;
+}</pre>
+</div>
+I tried using the <a href="http://www.dsource.org/projects/ldc">LDC</a> under Linux, but failed to get it to work. I did get the <a href="http://dgcc.sourceforge.net/">GDC</a> compiler to work, easily, under <a href="http://www.cygwin.com/">Cygwin</a>, but Cygwin only supports D 1.x, not the more recent D 2.x.
+
+I was very intrigued to explore D's additions of the functional and concurrent paradigms. Alas, these were added in D 2.x, so I didn't get to play with them. This language looks like it has a lot of potential, but my experience with D was that it still feels immature in its support, documentation, etc.
+
+To run your code under GDC, simply compile to an executable, then, um, execute:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">gdc</span> <span style="color: #ff9900;">euler.d</span> <span style="color: #ffffff;">-o</span> <span style="color: #ff9900;">euler1</span>
+<span style="color: #ffffff;">$</span> <span style="color: #ffffff;">./euler1</span>
+<span style="color: #0086f7; font-weight: bold;">233168</span></pre>
+</div>

@@ -1,0 +1,28 @@
+asdfg
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Haxe</span>
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span> {
+    <span style="color:#006699;font-weight:bold;">static</span> <span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">euler</span> (<span style="color:#003333;">size</span>:<span style="color:#00aa88;font-weight:bold;">Int</span>) : <span style="color:#00aa88;font-weight:bold;">Int</span> {
+        <span style="color:#006699;font-weight:bold;">var</span> <span style="color:#003333;">result</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+        <span style="color:#006699;font-weight:bold;">for</span>(i <span style="color:#006699;font-weight:bold;">in</span> <span style="color:#ff6600;">1</span><span style="color:#555555;">...</span>size) {
+            <span style="color:#006699;font-weight:bold;">if</span> (i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>)
+                result <span style="color:#555555;">+=</span> i;
+        }
+        <span style="color:#006699;font-weight:bold;">return</span> result;
+    }
+
+    <span style="color:#006699;font-weight:bold;">static</span> <span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">main</span>() {
+        neko<span style="color:#555555;">.</span>Lib<span style="color:#555555;">.</span>print( euler(<span style="color:#ff6600;">1000</span>)<span style="color:#555555;">+</span><span style="color:#cc3300;">"\n"</span> );
+    }
+}</pre>
+</div>
+Download and install the Linux installer and execute.
+
+<a href="http://sness.blogspot.com/2008/06/libpcreso3.html">http://sness.blogspot.com/2008/06/libpcreso3.html</a>
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$ haxe</span> <span style="color:#ffff00;">-main</span> <span style="color:#ffffff;">Euler1</span> <span style="color:#ffff00;">-neko</span> <span style="color:#ffffff;">Euler1.n</span>
+<span style="color:#ffffff;">$ neko</span> <span style="color:#ffffff;">Euler1.n</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>

@@ -1,0 +1,29 @@
+Does anyone still use <a href="http://en.wikipedia.org/wiki/Fortran">Fortran</a> anymore? This language was introduced in 1957, and I decided to kick its tires on a lark. Writing this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> was my first excursion into Fortran, and I hope it will be my last. One problem is that there are multiple incompatible standards - expect a lot of confusion and conflicting statements. Also, the type system is super-explicit - it's difficult to make it happy. I shouldn't dismiss this so readily, though, since this language has had a tremendous amount of modernization. And this compiler and executable felt screamingly fast.
+
+After maybe three hours of frustration I was able to turn out this version of Euler1:
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #0099ff; font-style: italic;">! Euler1 in Fortran90</span>
+
+<span style="color: #006699; font-weight: bold;">program </span><span style="color: #003333;">euler1</span>
+    <span style="color: #007788; font-weight: bold;">integer</span> <span style="color: #006699; font-weight: bold;">::</span> <span style="color: #003333;">euler</span>
+
+    <span style="color: #006699; font-weight: bold;">print</span><span style="color: #555555;">*</span>, <span style="color: #003333;">euler</span>(<span style="color: #ff6600;">999</span>)
+<span style="color: #006699; font-weight: bold;">end</span>
+
+<span style="color: #006699; font-weight: bold;">function </span><span style="color: #003333;">euler</span>(<span style="color: #003333;">size</span>)
+    <span style="color: #007788; font-weight: bold;">integer </span><span style="color: #003333;">euler</span>, <span style="color: #003333;">size</span>
+    <span style="color: #003333;">euler</span> <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>
+
+    <span style="color: #006699; font-weight: bold;">do </span><span style="color: #003333;">i</span> <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>, <span style="color: #003333;">size</span>
+        <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #336666;">modulo</span>(<span style="color: #003333;">i</span>,<span style="color: #ff6600;">3</span>)<span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #000000; font-weight: bold;">.or.</span> <span style="color: #336666;">modulo</span>(<span style="color: #003333;">i</span>,<span style="color: #ff6600;">5</span>)<span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>) <span style="color: #006699; font-weight: bold;">then</span>
+            <span style="color: #003333;"> euler</span> <span style="color: #555555;">=</span> <span style="color: #003333;">euler</span> <span style="color: #555555;">+</span> <span style="color: #003333;">i</span>
+        <span style="color: #006699; font-weight: bold;">end if</span>
+<span style="color: #006699; font-weight: bold;"> end do</span>
+<span style="color: #006699; font-weight: bold;">end</span></pre>
+</div>
+I used <a href="http://gcc.gnu.org/wiki/GFortran">gfortran</a> for this exercise. To run this code, compile and execute as below:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">gfortran</span> <span style="color: #ffffff;">-ffree-form</span> <span style="color: #ffffff;">euler1.f</span> <span style="color: #ffffff;">-o</span> <span style="color: #ffffff;">euler1.out</span>
+<span style="color: #ffffff;">$</span> <span style="color: #ffffff;">./euler1.out</span>
+<span style="color: #0086f7; font-weight: bold;"> 233168</span></pre>
+</div>

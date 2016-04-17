@@ -1,0 +1,24 @@
+sdfgh
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">-- Euler1 in Curry</span>
+
+<span style="color:#0099ff;font-style:italic;">-- write an integer:</span>
+<span style="color:#cc00ff;">putInt</span> n <span style="color:#000000;font-weight:bold;">=</span> <span style="color:#006699;font-weight:bold;">if</span> n<span style="color:#555555;">&lt;</span><span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">then</span> putChar <span style="color:#cc3300;">'-'</span> <span style="color:#555555;">&gt;&gt;</span> putInt (<span style="color:#555555;">-</span>n) <span style="color:#006699;font-weight:bold;">else</span>
+           <span style="color:#006699;font-weight:bold;">if</span> n<span style="color:#555555;">&lt;=</span><span style="color:#ff6600;">9</span> <span style="color:#006699;font-weight:bold;">then</span> putChar(chr(ord <span style="color:#cc3300;">'0'</span> <span style="color:#555555;">+</span> n))
+                   <span style="color:#006699;font-weight:bold;">else</span> putInt (n `div` <span style="color:#ff6600;">10</span>) <span style="color:#555555;">&gt;&gt;</span>
+                        putChar(chr(ord <span style="color:#cc3300;">'0'</span> <span style="color:#555555;">+</span> n `mod` <span style="color:#ff6600;">10</span>))
+
+<span style="color:#cc00ff;">euler1</span> <span style="color:#000000;font-weight:bold;">::</span> <span style="color:#007788;font-weight:bold;">Int</span> <span style="color:#000000;font-weight:bold;">-&gt;</span> <span style="color:#007788;font-weight:bold;">Int</span>
+<span style="color:#cc00ff;">euler1</span> n <span style="color:#000000;font-weight:bold;">=</span> foldr (<span style="color:#555555;">+</span>) <span style="color:#ff6600;">0</span> [x <span style="color:#555555;">|</span> x <span style="color:#000000;font-weight:bold;">&lt;-</span> [<span style="color:#ff6600;">0</span><span style="color:#555555;">..</span>n], x `mod` <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> x `mod` <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>]
+
+<span style="color:#cc00ff;">main</span> <span style="color:#000000;font-weight:bold;">=</span> putInt (euler1 <span style="color:#ff6600;">999</span>) <span style="color:#555555;">&gt;&gt;</span> putChar <span style="color:#cc3300;">'</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">'</span></pre>
+</div>
+Münster Curry Compiler
+http://danae.uni-muenster.de/~lux/curry/
+<!-- HTML generated using hilite.me -->
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">cyc</span> <span style="color:#ffffff;">-o</span> <span style="color:#ffffff;">euler1</span> <span style="color:#ffffff;">euler1.curry</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>

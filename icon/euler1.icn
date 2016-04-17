@@ -1,0 +1,15 @@
+# Euler1 in Icon
+
+procedure euler1(size)
+    retval := 0
+    every i := 1 to size do
+        if i % 3 = 0 then
+            retval := retval + i
+        else if i % 5 = 0 then
+            retval := retval + i
+    return retval
+end
+
+procedure main()
+    write(euler1(999))
+end

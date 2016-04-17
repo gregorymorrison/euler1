@@ -1,0 +1,10 @@
+interface euler1_3 where {
+import Prelude;
+hiding data Prelude.IO a;
+hiding data Prelude.Int;
+euler1 :: Prelude.Int -> Prelude.Int;
+main :: Prelude.IO ();
+myFilter :: [Prelude.Int] -> [Prelude.Int];
+myFold :: [Prelude.Int] -> Prelude.Int;
+myMap :: [a] -> [a]
+}

@@ -1,0 +1,27 @@
+<a href="http://en.wikipedia.org/wiki/Objective-C">Objective-C </a>is a superset of <a title="C" href="http://gdm9000.wordpress.com/2011/10/18/c/">C</a> introduced by Apple in 1983. On my first try with this language, I took my <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1.C</a> program and tried compiling it with the GNU Objective-C compiler, <a title="GCC" href="http://gcc.gnu.org/">gcc-objc</a>.  Presto - it worked!
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Objective-C</span>
+<span style="color:#009999;">#import &lt;stdio.h&gt;</span>
+
+<span style="color:#007788;font-weight:bold;">int</span> <span style="color:#cc00ff;">euler</span>(<span style="color:#007788;font-weight:bold;">int</span> n) {
+    <span style="color:#007788;font-weight:bold;">int</span> retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+    <span style="color:#006699;font-weight:bold;">for</span> (<span style="color:#007788;font-weight:bold;">int</span> i<span style="color:#555555;">=</span><span style="color:#ff6600;">0</span>; i<span style="color:#555555;">&lt;</span>n; i<span style="color:#555555;">++</span>) {
+        <span style="color:#006699;font-weight:bold;">if</span> ((i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>) <span style="color:#555555;">||</span> (i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>)) {
+            retval <span style="color:#555555;">+=</span> i;
+        }
+    }
+    <span style="color:#006699;font-weight:bold;">return</span> retval;
+}
+
+main() {
+    printf(<span style="color:#cc3300;">"%i</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span>, euler(<span style="color:#ff6600;">1000</span>));
+}</pre>
+</div>
+So what did we learn? Well, not much besides how to compile Objective C code. I still have not a clue what distinguishes this language. This language is yet another on my to-learn list.
+
+To install Objective-C in <a title="Fedora" href="http://fedoraproject.org/">Fedora</a>, install <em>gcc-objc, gnustep-base-devel, </em>and other assorted dependencies. Then compile and execute as follows. Warning - my <em>gcc-objc</em> did compile my code, but not without setting some arcane compatibility mode option:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">gcc</span> <span style="color:#ffffff;">-std=c99</span> <span style="color:#ffffff;">euler1.m</span> <span style="color:#ffffff;">-o</span> <span style="color:#ffffff;">euler1</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

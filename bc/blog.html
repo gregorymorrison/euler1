@@ -1,0 +1,62 @@
+<a title="BC" href="http://en.wikipedia.org/wiki/Bc_programming_language">bc</a>, introduced in 1975, is a calculator language for Unix. It's a simple <a title="Procedural" href="http://en.wikipedia.org/wiki/Procedural_programming">Procedural</a> language with syntax derived from <a title="C" href="http://gdm9000.wordpress.com/2011/10/18/c/">C</a> that allows you to script complex calculations. It's designed as a desktop calculator, not as a general-purpose language, so it's missing a lot of functionality such as objects, first-class functions, pointers - originally it didn't even have any IO routines. It is a <a title="TuringComplete" href="http://en.wikipedia.org/wiki/Turing_completeness">Turing-Complete</a> language though - just one that you won't want to write anything too complex in. bc has been modernized over the years, with GNU adding a print statement for scripting, rudimentary exception handling, etc.
+
+Here's a version of Euler1 in bc - surprise, it looks much like C:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#009999;">#!/usr/bin/bc --quiet</span>
+<span style="color:#0099ff;font-style:italic;">/* Euler1 in bc */</span>
+
+define <span style="color:#cc00ff;">euler1</span>(size) {
+    <span style="color:#006699;font-weight:bold;">auto</span> i, retval
+    retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">for</span> (i <span style="color:#555555;">=</span> <span style="color:#ff6600;">1</span>; i <span style="color:#555555;">&lt;</span> size; i<span style="color:#555555;">++</span>) {
+        <span style="color:#006699;font-weight:bold;">if</span> (i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>) { retval <span style="color:#555555;">+=</span> i }
+    }
+    <span style="color:#006699;font-weight:bold;">return</span> (retval)
+}
+
+print euler1(<span style="color:#ff6600;">1000</span>), <span style="color:#cc3300;">"</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span>
+quit</pre>
+</div>
+Here's a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler()</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> - it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation - there are instead only functions which return values. The other main point is that this recursion uses tail call optimization - it's written in such a way that an intelligent compiler can optimize its stack usage to be O(n) instead of O(n!). In English, this means that your program will probably not crash even for hugely recursive calls.
+<div style="background:white;overflow:auto;width:auto;margin-bottom:20px;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#009999;">#!/usr/bin/bc -q</span>
+<span style="color:#0099ff;font-style:italic;">/* Euler1 in bc */</span>
+
+define <span style="color:#cc00ff;">euler</span>(n, acc) {
+    <span style="color:#006699;font-weight:bold;">if</span> (n <span style="color:#555555;">==</span> <span style="color:#ff6600;">1</span>) <span style="color:#006699;font-weight:bold;">return</span> acc
+
+    <span style="color:#006699;font-weight:bold;">if</span> (n <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> n <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>) {
+        <span style="color:#006699;font-weight:bold;">return</span> euler(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, acc<span style="color:#555555;">+</span>n);
+    } <span style="color:#006699;font-weight:bold;">else</span> {
+        <span style="color:#006699;font-weight:bold;">return</span> (euler(n<span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, acc));
+    }
+}
+
+define <span style="color:#cc00ff;">euler1</span>(size) { <span style="color:#006699;font-weight:bold;">return</span> (euler(size,<span style="color:#ff6600;">0</span>)); }
+
+print euler1(<span style="color:#ff6600;">999</span>), <span style="color:#cc3300;">"</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span>
+quit</pre>
+</div>
+Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#009999;">#!/usr/bin/bc -q</span>
+<span style="color:#0099ff;font-style:italic;">/* Euler1 in bc */</span>
+
+define <span style="color:#cc00ff;">my_sum</span>(n, size) {
+    <span style="color:#006699;font-weight:bold;">return</span> (n <span style="color:#555555;">*</span> (((size<span style="color:#555555;">/</span>n)<span style="color:#555555;">^</span><span style="color:#ff6600;">2</span> <span style="color:#555555;">+</span> (size<span style="color:#555555;">/</span>n)) <span style="color:#555555;">/</span> <span style="color:#ff6600;">2</span>))
+}
+
+define <span style="color:#cc00ff;">euler1</span>(size) {
+    <span style="color:#006699;font-weight:bold;">return</span> (my_sum(<span style="color:#ff6600;">3</span>,size) <span style="color:#555555;">+</span> my_sum(<span style="color:#ff6600;">5</span>,size) <span style="color:#555555;">-</span> my_sum(<span style="color:#ff6600;">15</span>,size))
+}
+
+print euler1(<span style="color:#ff6600;">999</span>), <span style="color:#cc3300;">"</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span>
+quit</pre>
+</div>
+Your Linux distro probably already has bc installed. Simply add a shebang to the top of your script and execute it:
+<div style="background:black;overflow:auto;width:auto;color:white;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1.bc</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>

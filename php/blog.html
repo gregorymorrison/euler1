@@ -1,0 +1,27 @@
+I decided to try my hand at <a href="http://www.php.net/">PHP</a>, a web programming language introduced in 1995. I hadn't spent any significant with this language before although I have done <a title="ASP" href="http://en.wikipedia.org/wiki/Active_Server_Pages">ASP</a> and <a title="JSP" href="http://en.wikipedia.org/wiki/JavaServer_Pages">JSP</a>, so I figured it couldn't be that hard. I was right - this language is dead-simple. It took me five minutes to bang this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> out, including time to install.
+
+The following is what I believe is idiomatic PHP. The language seems to have no facility for the functional paradigm - just straight imperative, folks. I saved the solution into a local variable, <em>$result</em>, so that I could demonstrate variable substitution in PHP's templating engine.
+<div style="background: white; overflow: auto; width: auto; color: black; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;">#!/usr/bin/php -q
+<span style="color: #009999;">&lt;?php</span><span style="color: #0099ff; font-style: italic;">// Euler1 in PHP</span>
+
+<span style="color: #006699; font-weight: bold;">function</span> <span style="color: #cc00ff;">euler1</span>(<span style="color: #003333;">$n</span>) {
+    <span style="color: #003333;">$sum</span> <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span>;
+
+    <span style="color: #006699; font-weight: bold;">for</span> (<span style="color: #003333;">$i</span><span style="color: #555555;">=</span><span style="color: #ff6600;">0</span>; <span style="color: #003333;">$i</span><span style="color: #555555;">&lt;</span><span style="color: #003333;">$n</span>; <span style="color: #003333;">$i</span><span style="color: #555555;">++</span>) {
+        <span style="color: #006699; font-weight: bold;">if</span> (<span style="color: #003333;">$i</span><span style="color: #555555;">%</span><span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> <span style="color: #003333;">$i</span><span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span>) {
+            <span style="color: #003333;">$sum</span> <span style="color: #555555;">+=</span> <span style="color: #003333;">$i</span>;
+        }
+    }
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #003333;">$sum</span>;
+}
+
+<span style="color: #003333;">$result</span> <span style="color: #555555;">=</span> euler1(<span style="color: #ff6600;">1000</span>);
+<span style="color: #009999;">?&gt;</span>
+Euler1 = <span style="color: #009999;">&lt;?php</span> <span style="color: #006699; font-weight: bold;">echo</span> <span style="color: #003333;">$result</span> <span style="color: #555555;">.</span> <span style="color: #cc3300;">"</span><span style="color: #cc3300; font-weight: bold;">\n</span><span style="color: #cc3300;">"</span> <span style="color: #009999;">?&gt;</span></pre>
+</div>
+I thought I would have to set up a web server to test this code, but I was surprised to find that PHP has a <a href="http://www.ibm.com/developerworks/opensource/library/os-php-command/">command-line interpreter</a>. PHP can actually be used as a general-purpose scripting language if that floats your boat. To run this code, I simply installed PHP and then called my script:
+<div style="background: black; overflow: auto; width: auto; color: white; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="line-height: 125%; margin: 0;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">./euler1.php</span>
+<span style="color: #0086f7; font-weight: bold;">Euler1 = 233168</span></pre>
+</div>

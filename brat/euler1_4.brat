@@ -1,0 +1,9 @@
+# Euler1 in Brat
+
+map = [].map { x | x }
+select = [].select { x | x % 3 == 0 || x % 5 == 0 }
+reduce = [].reduce 0 :+
+
+euler1 = { size | reduce select map 1.to(size) }
+
+p euler1 999

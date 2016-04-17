@@ -1,0 +1,153 @@
+Introduced in 1997, <a title="XSLT" href="http://en.wikipedia.org/wiki/XSLT">XSLT</a> (Extensible Stylesheet Language Transformations) is a language for processing <a title="XML" href="http://en.wikipedia.org/wiki/XML">XML</a> and producing output. An XSLT template defines a transformation from an XML data into something else. The typical use case is to transform XML into HTML to create dynamic web pages. XSLT is itself an instance of XML - it's basically a program <del>mutilated into</del> encoded as a valid XML.
+
+Processing happens by passing both an XML and an XSL into a <a title="BlackBox" href="http://en.wikipedia.org/wiki/Black_box">black box</a> XSLT processor, which results in output. Because of this nature, your entire program has to be written as one document, and there is no stepping through it. It either processes successfully and produces output, or it fails and produces an error message. This type of language is <a title="Declarative" href="http://en.wikipedia.org/wiki/Declarative_programming">Declarative</a> - instead of telling the computer how to perform computation, you tell it what needs to be done and leave the details to it. The closest well-known analog would have to be the database query language <a title="SQL" href="http://en.wikipedia.org/wiki/SQL">SQL</a>.
+
+XSLT was designed with a very limited scope - to transform an XML data file into a different format, typically HTML. Given this, it has severe limitations - forget any built-in capacity for GUI work, file handling, threading, networking, etc; it doesn't even have any concept of looping! Like I said, <em>severe</em>. That said, the language <em>is</em> <a title="TuringComplete" href="http://en.wikipedia.org/wiki/Turing_completeness">Turing-complete</a>, so we <em>can</em> bend it to our will if we try <em>really</em> hard. For example, looping <em>can</em> be accomplished with recursion, as I'll illustrate shortly.
+
+So, what's XSLT like to work with? Well, like its big brother XML, it's horribly verbose. And debugging is done with print statements. There's a lot to not like, but it does get the job done.
+
+However, there's also a lot to like. For example. XSL can easily be used for <a title="Metaprogramming" href="http://en.wikipedia.org/wiki/Metaprogramming">metaprogramming</a>. Since XSL can produce any document type, it can be used to produce <em>XSL</em>, which can then be fed back into the XSLT processor to produce, well, other stuff. Yay, meta recursion! It can theoretically emit any source or even object code which can then be processed. Have fun, but if you do this heavy metaprogramming, expect to be kicked in the <a title="FrankAndBeans" href="http://movieclips.com/FHeyR-theres-something-about-mary-movie-frank-and-beans/">frank-and-beans</a> by your teammates... Here's a version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in XSLT, which took me a couple of hours to write:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin:0;line-height:125%;"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</pre>
+</td>
+<td>
+<pre style="margin:0;line-height:125%;"><span style="color:#009999;">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</span>
+<span style="color:#0099ff;font-style:italic;">&lt;!-- Euler1 in XSLT --&gt;</span>
+
+<span style="color:#006699;font-weight:bold;">&lt;xsl:stylesheet</span> <span style="color:#330099;">xmlns:xsl=</span><span style="color:#cc3300;">"http://www.w3.org/1999/XSL/Transform"</span> <span style="color:#330099;">version=</span><span style="color:#cc3300;">"1.0"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+
+  <span style="color:#006699;font-weight:bold;">&lt;xsl:template</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"euler1"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+    <span style="color:#0099ff;font-style:italic;">&lt;!-- define parameters with default values using the select keyword --&gt;</span>
+    <span style="color:#006699;font-weight:bold;">&lt;xsl:param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"startAt"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"1"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+    <span style="color:#006699;font-weight:bold;">&lt;xsl:param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"endAt"</span> <span style="color:#330099;font-weight:bold;">/&gt;</span>
+    <span style="color:#006699;font-weight:bold;">&lt;xsl:param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"result"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"0"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+
+    <span style="color:#006699;font-weight:bold;">&lt;xsl:choose</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+      <span style="color:#006699;font-weight:bold;">&lt;xsl:when</span> <span style="color:#330099;">test=</span><span style="color:#cc3300;">"$startAt &amp;lt; $endAt"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+
+        <span style="color:#0099ff;font-style:italic;">&lt;!-- call euler1 recursively --&gt;</span>
+        <span style="color:#006699;font-weight:bold;">&lt;xsl:choose</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+          <span style="color:#006699;font-weight:bold;">&lt;xsl:when</span> <span style="color:#330099;">test=</span><span style="color:#cc3300;">"$startAt mod 3 = 0 or $startAt mod 5 = 0"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+            <span style="color:#006699;font-weight:bold;">&lt;xsl:call-template</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"euler1"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+              <span style="color:#006699;font-weight:bold;">&lt;xsl:with-param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"startAt"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$startAt + 1"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+              <span style="color:#006699;font-weight:bold;">&lt;xsl:with-param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"endAt"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$endAt"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+              <span style="color:#0099ff;font-style:italic;">&lt;!-- either pass in result + startAt --&gt;</span>
+              <span style="color:#006699;font-weight:bold;">&lt;xsl:with-param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"result"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$result + $startAt"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+            <span style="color:#006699;font-weight:bold;">&lt;/xsl:call-template&gt;</span>
+          <span style="color:#006699;font-weight:bold;">&lt;/xsl:when&gt;</span>
+
+          <span style="color:#006699;font-weight:bold;">&lt;xsl:otherwise</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+            <span style="color:#006699;font-weight:bold;">&lt;xsl:call-template</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"euler1"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+              <span style="color:#006699;font-weight:bold;">&lt;xsl:with-param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"startAt"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$startAt + 1"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+              <span style="color:#006699;font-weight:bold;">&lt;xsl:with-param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"endAt"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$endAt"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+              <span style="color:#0099ff;font-style:italic;">&lt;!-- or pass in result --&gt;</span>
+              <span style="color:#006699;font-weight:bold;">&lt;xsl:with-param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"result"</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$result"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+            <span style="color:#006699;font-weight:bold;">&lt;/xsl:call-template&gt;</span>
+          <span style="color:#006699;font-weight:bold;">&lt;/xsl:otherwise&gt;</span>
+        <span style="color:#006699;font-weight:bold;">&lt;/xsl:choose&gt;</span>
+      <span style="color:#006699;font-weight:bold;">&lt;/xsl:when&gt;</span>
+
+      <span style="color:#006699;font-weight:bold;">&lt;xsl:otherwise</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+        <span style="color:#0099ff;font-style:italic;">&lt;!-- create return value --&gt;</span>
+        <span style="color:#006699;font-weight:bold;">&lt;xsl:value-of</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$result"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+      <span style="color:#006699;font-weight:bold;">&lt;/xsl:otherwise&gt;</span>
+    <span style="color:#006699;font-weight:bold;">&lt;/xsl:choose&gt;</span>
+
+  <span style="color:#006699;font-weight:bold;">&lt;/xsl:template&gt;</span>
+
+  <span style="color:#0099ff;font-style:italic;">&lt;!-- Main procedure --&gt;</span>
+  <span style="color:#006699;font-weight:bold;">&lt;xsl:template</span> <span style="color:#330099;">match=</span><span style="color:#cc3300;">"/"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+
+   <span style="color:#0099ff;font-style:italic;">&lt;!-- define variable to capture return value --&gt;</span>
+   <span style="color:#006699;font-weight:bold;">&lt;xsl:variable</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"result"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+      <span style="color:#006699;font-weight:bold;">&lt;xsl:call-template</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"euler1"</span><span style="color:#330099;font-weight:bold;">&gt;</span>
+        <span style="color:#006699;font-weight:bold;">&lt;xsl:with-param</span> <span style="color:#330099;">name=</span><span style="color:#cc3300;">"endAt"</span><span style="color:#330099;font-weight:bold;">&gt;</span>1000<span style="color:#006699;font-weight:bold;">&lt;/xsl:with-param&gt;</span>
+      <span style="color:#006699;font-weight:bold;">&lt;/xsl:call-template&gt;</span>
+    <span style="color:#006699;font-weight:bold;">&lt;/xsl:variable&gt;</span>
+
+    <span style="color:#0099ff;font-style:italic;">&lt;!-- print solution --&gt;</span>
+<span style="color:#006699;font-weight:bold;">&lt;xsl:value-of</span> <span style="color:#330099;">select=</span><span style="color:#cc3300;">"$result"</span><span style="color:#330099;font-weight:bold;">/&gt;</span>
+  <span style="color:#006699;font-weight:bold;">&lt;/xsl:template&gt;</span>
+
+<span style="color:#006699;font-weight:bold;">&lt;/xsl:stylesheet&gt;</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+The <em>value-of</em> directive is used to output values, in our case to console output at line 56. So what about line 39? We use the same directive to return a value from a function? I'm not an XSLT expert by any means, but it appears that the caller at line 50 captures the output and binds it to the variable declared at line 49. If it didn't, then we should see output for each <em>value-of</em>  statement, and yet there is only one line of output. Apparently XSLT  is more complex than it at first appears. This language <em>appears</em> trivial, but its Turing-completeness puts a <em>lot</em> of subtlety under its hood. My version here is XSLT version 1.0; version 2.0 adds a lot of new tricks, such as support for functions with typed return values.
+
+Now, XSLT requires an XML as input, so we need to make an empty XML: <!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#009999;">&lt;?xml version="1.0"?&gt;</span>
+<span style="color:#330099;font-weight:bold;">&lt;node&gt;</span>
+<span style="color:#330099;font-weight:bold;">&lt;/node&gt;</span></pre>
+</div>
+For this example, I used <a title="XSLTProc" href="http://xmlsoft.org/XSLT/xsltproc2.html">xsltproc</a>. <a title="yum" href="http://webcache.googleusercontent.com/search?q=cache:http://joysofprogramming.com/install-xslt-fedora-rhel/&amp;hl=en&amp;strip=1">Yum-install</a>, then invoke <em>xsltproc</em> with your XSL and dummy XML:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">xsltproc</span> <span style="color:#ffffff;">euler1.xsl</span> <span style="color:#ffffff;">_.xml</span>
+<span style="color:#ffffff;">&lt;?xml</span> <span style="color:#ffffff;">version=</span><span style="color:#0086d2;">"1.0"</span><span style="color:#ffffff;">?&gt;</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

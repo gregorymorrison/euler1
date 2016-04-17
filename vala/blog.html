@@ -1,0 +1,73 @@
+<a title="Vala" href="http://en.wikipedia.org/wiki/Vala_(programming_language)">Vala</a>, introduced in 2006, is a language designed to facilitate Linux GUI development. It's a modernized <a title="C" href="http://gdm9000.wordpress.com/tag/c/">C</a> with the <a title="GObject" href="http://en.wikipedia.org/wiki/GObject">GObject</a> system built in. Here's a simple iterative version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Vala</span>
+
+<span style="color:#007788;font-weight:bold;">int</span> euler1(<span style="color:#007788;font-weight:bold;">int</span> size) {
+    <span style="color:#007788;font-weight:bold;">int</span> result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+    <span style="color:#006699;font-weight:bold;">for</span> (<span style="color:#007788;font-weight:bold;">int</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>; i <span style="color:#555555;">&lt;</span> size; i<span style="color:#555555;">++</span>) {
+        <span style="color:#006699;font-weight:bold;">if</span> (i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>) {
+            result <span style="color:#555555;">+=</span> i;
+        }
+    }
+    <span style="color:#006699;font-weight:bold;">return</span> result;
+}
+
+<span style="color:#007788;font-weight:bold;">int</span> main() {
+    print(<span style="color:#cc3300;">"%i</span><span style="color:#cc3300;font-weight:bold;">\n</span><span style="color:#cc3300;">"</span>, euler1(<span style="color:#ff6600;">1000</span>));
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#ff6600;">0</span>;
+}</pre>
+</div>
+To grab your own copy for Fedora, <em>yum install vala, <em>vala-devel,</em> </em>and <em><em>gtk3-devel</em></em>. Vala comes with both a compiler and an interpreter. To use the compiler, call <em>valac</em> on your source, then execute the generated object file:
+<div style="background:black;margin-bottom:20px;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$ valac</span> <span style="color:#ffffff;">euler1.vala
+$ ./euler1</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>
+Or to use the interpreter, simply call <em>vala</em> with your source as an argument:
+<div style="background:black;margin-bottom:20px;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$ vala</span> <span style="color:#ffffff;">euler1.vala</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>
+But Vala's about making desktop apps with a UI - what's that like? Here's a trivial example using the GTK toolkit that simply puts the answer in a textbox:
+<div style="background:white;overflow:auto;width:auto;color:black;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Vala</span>
+
+<span style="color:#006699;font-weight:bold;">using</span> <span style="color:#00ccff;font-weight:bold;">Gtk</span>;
+
+<span style="color:#007788;font-weight:bold;">int</span> euler1(<span style="color:#007788;font-weight:bold;">int</span> size) {
+    <span style="color:#007788;font-weight:bold;">int</span> result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+    <span style="color:#006699;font-weight:bold;">for</span> (<span style="color:#007788;font-weight:bold;">int</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>; i <span style="color:#555555;">&lt;</span> size; i<span style="color:#555555;">++</span>) {
+        <span style="color:#006699;font-weight:bold;">if</span> (i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>) {
+            result <span style="color:#555555;">+=</span> i;
+        }
+    }
+    <span style="color:#006699;font-weight:bold;">return</span> result;
+}
+
+<span style="color:#007788;font-weight:bold;">int</span> main (<span style="color:#007788;font-weight:bold;">string</span>[] args) {
+    Gtk.init (<span style="color:#006699;font-weight:bold;">ref</span> args);
+
+    <span style="color:#006699;font-weight:bold;">var</span> window <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">new</span> Window ();
+    window.title <span style="color:#555555;">=</span> <span style="color:#cc3300;">"Euler1 in Vala"</span>;
+    window.border_width <span style="color:#555555;">=</span> <span style="color:#ff6600;">10</span>;
+    window.window_position <span style="color:#555555;">=</span> WindowPosition.CENTER;
+    window.set_default_size (<span style="color:#ff6600;">350</span>, <span style="color:#ff6600;">70</span>);
+    <span style="color:#006699;font-weight:bold;">var</span> entry <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">new</span> Entry ();
+    entry.text <span style="color:#555555;">=</span> euler1(<span style="color:#ff6600;">1000</span>).to_string();
+    window.add (entry);
+    window.destroy.connect (Gtk.main_quit);
+    window.show_all ();
+
+    Gtk.main ();
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#ff6600;">0</span>;
+}</pre>
+</div>
+To compile this code, include the GTK library:
+<div style="background:black;margin-bottom:20px;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$ valac --pkg gtk+-3.0</span> <span style="color:#ffffff;">euler1.vala
+$ ./euler1</span></pre>
+</div>
+And here's the result:
+<a href="http://gdm9000.files.wordpress.com/2012/07/untitled2.png"><img class="size-medium wp-image-1252 aligncenter" title="untitled" alt="" src="http://gdm9000.files.wordpress.com/2012/07/untitled2.png?w=300" height="90" width="302" /></a>

@@ -1,0 +1,112 @@
+<a href="http://www.erlang.org/">Erlang</a>, introduced in 1986, is a language that you should learn because they've solved the concurrency problem. Whereas in other languages like <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a> or, God forbid, <a title="Python" href="http://gdm9000.wordpress.com/2011/10/15/python/">Python</a>, concurrency is difficult if not, well, very difficult, in Erlang it's a breeze. Erlang programs are constructed of a bunch of independent actors that pass messages between each other.
+
+Now, since <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> is a trivial problem, it didn't require any usage of Erlang's facilities for concurrency. Here I just define a simple recursive function and call it:
+<div style="overflow:auto;width:auto;color:black;margin-bottom:20px;background:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">% Euler1 in Erlang</span>
+
+-<span style="color:#999999;font-weight:bold;">module</span> (euler1).
+-<span style="color:#999999;font-weight:bold;">export</span> ([euler<span style="color:#555555;">/</span><span style="color:#ff6600;">0</span>]).
+
+<span style="color:#cc00ff;">euler</span>() <span style="color:#555555;">-&gt;</span><span style="color:#00ccff;font-weight:bold;">io</span>:format( <span style="color:#cc3300;">"</span><span style="color:#aa0000;">~w~n</span><span style="color:#cc3300;">"</span>, [euler(<span style="color:#ff6600;">999</span>, <span style="color:#ff6600;">0</span>)] ).
+
+<span style="color:#cc00ff;">euler</span>(<span style="color:#ff6600;">0</span>, <span style="color:#003333;">Acc</span>) <span style="color:#555555;">-&gt;</span> <span style="color:#003333;">Acc</span>;
+<span style="color:#cc00ff;">euler</span>(<span style="color:#003333;">X</span>, <span style="color:#003333;">Acc</span>) <span style="color:#006699;font-weight:bold;">when</span> <span style="color:#003333;">X</span> <span style="color:#000000;font-weight:bold;">rem</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>; <span style="color:#003333;">X</span> <span style="color:#000000;font-weight:bold;">rem</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">-&gt;</span>
+	euler(<span style="color:#003333;">X</span><span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, <span style="color:#003333;">Acc</span><span style="color:#555555;">+</span><span style="color:#003333;">X</span>);
+<span style="color:#cc00ff;">euler</span>(<span style="color:#003333;">X</span>, <span style="color:#003333;">Acc</span>) <span style="color:#555555;">-&gt;</span> euler(<span style="color:#003333;">X</span><span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, <span style="color:#003333;">Acc</span>).</pre>
+</div>
+Notice the <a title="Haskell" href="http://gdm9000.wordpress.com/2011/10/15/haskell/">Haskell</a>-style pattern-matching? Function <em>euler()</em> is defined four times, three having the same datatypes. I've given all my functions the same name for illustration. Erlang distinguishes them by starting at the top and working its way down, executing the first signature that matches its arguments.
+<ul>
+	<li>The first <em>euler()</em> with no arguments is the entry point, defined at the top.</li>
+	<li>The second <em>euler()</em> will match any method call where the first argument is <span class="Apple-style-span" style="font-family:Consolas, Monaco, monospace;font-size:12px;line-height:18px;white-space:pre;">0</span>.</li>
+	<li>The third and fourth definitions of <em>euler()</em> only differ by a guard - checking if X is divisible by 3 or 5.</li>
+</ul>
+It took me about a day to write this simple example. Erlang doesn't have the greatest debugging facilities, and one issue that bit me hard is that variables must be uppercase (really, Erlang?)
+
+<!-- HTML generated using hilite.me -->But really, what is an exploration of Erlang without concurrency? I've rewritten Euler1 as a set of simple concurrent processes - <em>euler</em>, which provides the solution, and <em>caller</em>, the shell that gets the solution and outputs it:
+<ol>
+	<li>lines 7-8 -<em> main</em> starts up the processes <em>caller</em> and <em>euler.</em> <em>main</em> gets the processID of <em><em>euler</em></em> and passes it to <em>caller</em>. Notice that<em> main</em> doesn't get the processID of <em>caller</em> - it doesn't care because it actually does nothing after this point. Remember, this is decentralized code - no central coordination.</li>
+	<li>line 16 - <em>euler</em>'s first instruction is to listen, so it initially takes no action.</li>
+	<li>lines 22-23 -<em> caller</em> messages <em>euler</em>, sending it an integer and its own process ID. <em>caller</em> then sits and listens.</li>
+	<li><em>euler</em> gets the message from <em>caller</em> and wakes up. Upon getting a message, it<em></em></li>
+	<li>    a) line 17 - gets the solution from <em>euler1</em> (a simple recursive function, not a process).</li>
+	<li>    b) line 18 - messages <em>caller</em>, sending it the results</li>
+	<li>line 19 -<em> euler</em> terminates.</li>
+	<li>lines 23-24 -<em> caller</em> gets the message from <em>euler</em> and wakes up. Upon getting a message, it displays the results.</li>
+	<li>line 25 -<em> caller</em> terminates.</li>
+</ol>
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="line-height:125%;margin:0;"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre style="line-height:125%;margin:0;"><span style="color:#0099ff;font-style:italic;">% Euler1 in Erlang</span>
+
+-<span style="color:#999999;font-weight:bold;">module</span>(foo).
+-<span style="color:#999999;font-weight:bold;">export</span>([main<span style="color:#555555;">/</span><span style="color:#ff6600;">0</span>, caller<span style="color:#555555;">/</span><span style="color:#ff6600;">1</span>, euler<span style="color:#555555;">/</span><span style="color:#ff6600;">0</span>]).
+
+<span style="color:#cc00ff;">main</span>() <span style="color:#555555;">-&gt;</span>
+    <span style="color:#003333;">Euler_PID</span> <span style="color:#555555;">=</span> <span style="color:#336666;">spawn</span>(foo, euler, []),
+    <span style="color:#336666;">spawn</span>(foo, caller, [<span style="color:#003333;">Euler_PID</span>]).
+
+<span style="color:#cc00ff;">euler1</span>(<span style="color:#ff6600;">0</span>, <span style="color:#003333;">Acc</span>) <span style="color:#555555;">-&gt;</span> <span style="color:#003333;">Acc</span>;
+<span style="color:#cc00ff;">euler1</span>(<span style="color:#003333;">X</span>, <span style="color:#003333;">Acc</span>) <span style="color:#006699;font-weight:bold;">when</span> <span style="color:#003333;">X</span> <span style="color:#000000;font-weight:bold;">rem</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>; <span style="color:#003333;">X</span> <span style="color:#000000;font-weight:bold;">rem</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">-&gt;</span>
+    euler1(<span style="color:#003333;">X</span><span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, <span style="color:#003333;">Acc</span><span style="color:#555555;">+</span><span style="color:#003333;">X</span>);
+<span style="color:#cc00ff;">euler1</span>(<span style="color:#003333;">X</span>, <span style="color:#003333;">Acc</span>) <span style="color:#555555;">-&gt;</span> euler1(<span style="color:#003333;">X</span><span style="color:#555555;">-</span><span style="color:#ff6600;">1</span>, <span style="color:#003333;">Acc</span>).
+
+<span style="color:#cc00ff;">euler</span>() <span style="color:#555555;">-&gt;</span>
+    <span style="color:#006699;font-weight:bold;">receive</span> {<span style="color:#003333;">N</span>, <span style="color:#003333;">Caller_PID</span>} <span style="color:#555555;">-&gt;</span>
+        <span style="color:#003333;">Result</span> <span style="color:#555555;">=</span> euler1(<span style="color:#003333;">N</span>, <span style="color:#ff6600;">0</span>),
+        <span style="color:#003333;">Caller_PID</span> <span style="color:#555555;">!</span> {result, <span style="color:#003333;">Result</span>}
+    <span style="color:#006699;font-weight:bold;">end</span>.
+
+<span style="color:#cc00ff;">caller</span>(<span style="color:#003333;">Euler_PID</span>) <span style="color:#555555;">-&gt;</span>
+    <span style="color:#003333;">Euler_PID</span> <span style="color:#555555;">!</span> {<span style="color:#ff6600;">999</span>, self()},
+    <span style="color:#006699;font-weight:bold;">receive</span> {result, <span style="color:#003333;">Result</span>} <span style="color:#555555;">-&gt;</span>
+        <span style="color:#00ccff;font-weight:bold;">io</span>:format(<span style="color:#cc3300;">"</span><span style="color:#aa0000;">~p~n</span><span style="color:#cc3300;">"</span>, [<span style="color:#003333;">Result</span>])
+    <span style="color:#006699;font-weight:bold;">end</span>.</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+I'll be honest - it took me days to write this simple example. I had to deconstruct a lot of Erlang HelloWorlds to figure out how this language works. Be prepared for a very steep learning curve. One of the things that really tripped me up is that a process can receive messages with multiple signatures. The arguments listed for the process are its constructor arguments, but a process is blocked at <em>receive </em>can accept a completely different set of arguments. Notice that line 7 calls <em>euler's </em>constructor with no arguments; then line 22 calls <em>euler</em>, blocked at line 16, with 2 arguments.
+
+It also took me a while to figure out how to execute Erlang code. Erlang is usually run in an interactive shell; to simply execute a Hello World, you need to invoke and then terminate the shell. The following will execute the first version here, with the entry point being <em>euler()</em>:
+<div style="background:black;overflow:auto;margin-bottom:20px;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">erl</span> <span style="color:#ffffff;">-compile</span> <span style="color:#ffffff;">euler1</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">erl</span> <span style="color:#ffffff;">-noshell</span> <span style="color:#ffffff;">-s</span> <span style="color:#ffffff;">euler1</span> <span style="color:#ffffff;">euler</span> <span style="color:#ffffff;">-s</span> <span style="color:#ffffff;">init</span> <span style="color:#ffffff;">stop</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>
+The following will execute the other version, with the entry point being <em>main()</em>:
+<div style="background:black;overflow:auto;margin-bottom:20px;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">erl</span> <span style="color:#ffffff;">-compile</span> <span style="color:#ffffff;">euler1</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">erl</span> <span style="color:#ffffff;">-noshell</span> <span style="color:#ffffff;">-s</span> <span style="color:#ffffff;">euler1</span> main <span style="color:#ffffff;">-s</span> <span style="color:#ffffff;">init</span> <span style="color:#ffffff;">stop</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
+</div>

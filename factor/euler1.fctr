@@ -1,0 +1,13 @@
+#! /home/greg/dev/factor/factor
+! Euler1 in factor
+
+USING: math kernel io math.ranges ;
+
+IN: euler1
+: fizz ( n -- str ) 3 divisor? "Fizz" "" ? ;
+: buzz ( n -- str ) 5 divisor? "Buzz" "" ? ;
+: euler1 ( n -- str ) dup [ fizz ] [ buzz ] bi append [ number->string ] [ nip ] if-empty ;
+
+: euler ( -- ) 100 [1,b] [ euler1 print ] each ;
+
+euler

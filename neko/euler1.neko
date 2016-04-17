@@ -1,0 +1,15 @@
+// Euler1 in Neko
+
+var euler1 = function(size) {
+    result = 0;
+
+    do {
+        if size % 3 == 0 || size % 5 == 0
+            result = result + size;
+        size = size - 1;
+    } while size > 0
+
+    result;
+}
+
+$print(euler1(999) + "\n");

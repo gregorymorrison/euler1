@@ -1,12 +1,13 @@
 // Euler1 in Scala
 
 object euler1 {
-    def calc(x: Int): Int = {
-        val ints = (1 to x).filter(i => i%3==0 || i%5==0)
-        return ints.foldLeft(0) { (total,n) => total+n }
-    }
-
-    def main(args: Array[String]) = {
-        Console.println( calc(999) )
-    }
+	def calc(x: Int): Int = {
+		val ints = (1 to x).filter(i => i%3==0 || i%5==0)
+		return ints.foldLeft(0) { (total,n) => total+n }  
+	}
+	
+	def main(args: Array[String]) = {
+		Console.println( calc(999) )
+	}
 }
+

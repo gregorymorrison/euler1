@@ -1,0 +1,27 @@
+<!-- HTML generated using hilite.me -->asdf
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">// Euler1 in Kaya</span>
+program euler1;
+
+Int euler1(Int size) {
+    retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>;
+    <span style="color:#006699;font-weight:bold;">for</span> i in [<span style="color:#ff6600;">1.</span>.size] {
+        <span style="color:#006699;font-weight:bold;">if</span> (i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#555555;">||</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>) {
+            retval <span style="color:#555555;">+=</span> i;
+        }
+    }
+    <span style="color:#006699;font-weight:bold;">return</span> retval;
+}
+
+Void main() {
+    putStrLn( string(euler1(<span style="color:#ff6600;">999</span>)) );
+}</pre>
+</div>
+yum install kaya, gc, gc-devel
+<div style="background:black;overflow:auto;width:auto;color:white;margin-bottom:20px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">kayac</span> <span style="color:#ffffff;">euler1.k</span>
+<span style="color:#0086f7;">Compiling program euler1</span>
+<span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1</span>
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+<span style="color:#ffffff;">$</span></pre>
+</div>

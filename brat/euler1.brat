@@ -1,0 +1,8 @@
+# Euler1 in Brat
+
+euler1 = { size |
+    ints = 1.to(size).select { x | x % 3 == 0 || x % 5 == 0 }
+    ints.reduce :+
+}
+
+p euler1 999

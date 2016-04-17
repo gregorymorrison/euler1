@@ -1,0 +1,208 @@
+<a href="http://en.wikipedia.org/wiki/Lisp_(programming_language)">Lisp</a>, introduced in 1958, is one of the oldest programming languages still in common use. It's a <a title="Functional" href="http://en.wikipedia.org/wiki/Functional_programming">functional</a> language, and if you've never explored functional languages before, I would highly encourage you to. They use a completely different computational model than the standard <a title="Von Neumann architecture" href="http://en.wikipedia.org/wiki/Von_Neumann_architecture">Von Neumann</a> model used by imperative and <a title="OOP" href="http://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented</a> languages - they use <a title="Alonzo Church" href="http://en.wikipedia.org/wiki/Alonzo_Church">Church</a>'s <a title="Lambda calculus" href="http://en.wikipedia.org/wiki/Lambda_calculus">Lambda calculus</a> instead. Instead of Von Neumann's model of writing a list of discrete steps for the machine to follow, in Lambda calculus you write your program more as theoretical formulas. Here is a version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Lisp using Lisp's variant of <a title="ListComprehensions" href="http://en.wikipedia.org/wiki/List_comprehension#Common_Lisp">list comprehensions</a>:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Lisp</span>
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">euler1</span> (<span style="color:#003333;">x</span>)
+    (<span style="color:#336666;">reduce</span> <span style="color:#cc00ff;">#'</span><span style="color:#336666;">+</span>
+        (<span style="color:#336666;">loop</span> <span style="color:#003333;">for</span> <span style="color:#003333;">y</span> <span style="color:#003333;">from</span> <span style="color:#ff6600;">0</span> <span style="color:#003333;">to</span> <span style="color:#003333;">x</span>
+            <span style="color:#006699;font-weight:bold;">if</span> (<span style="color:#336666;">or</span> (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">y</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">y</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>))
+            <span style="color:#003333;">collect</span> <span style="color:#003333;">y</span>)))
+
+(<span style="color:#336666;">print</span> (<span style="color:#003333;">euler1</span> <span style="color:#ff6600;">999</span>))</pre>
+</div>
+Not the shortest version of our program, but not too bad. Yes, it's prefix notation with lots of parens, but suck it up, sweet pea, it's good for you. There is a compelling reason for this, which will slowly become apparent as you begin to explore the language (hint - read up on <a title="S-Expressions" href="http://en.wikipedia.org/wiki/S-expression">s-expressions</a>).
+
+Here’s a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler()</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation – there are instead only functions which return values. The other main point is that this recursion uses tail call optimization – it’s written in such a way that an intelligent compiler can optimize its stack usage to be <em>O(n)</em> instead of<em> O(n!)</em>. In English, this means that your program will probably not crash even for hugely recursive calls.
+<!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in lisp</span>
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">euler</span> (<span style="color:#003333;">n</span> <span style="color:#003333;">acc</span>)
+    (<span style="color:#006699;font-weight:bold;">if</span> (<span style="color:#336666;">=</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">0</span>)
+        <span style="color:#003333;">acc</span>
+        (<span style="color:#006699;font-weight:bold;">if</span> (<span style="color:#336666;">or</span> (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>))
+            (<span style="color:#003333;">euler</span> (1<span style="color:#336666;">-</span> <span style="color:#003333;">n</span>) (<span style="color:#336666;">+</span> <span style="color:#003333;">acc</span> <span style="color:#003333;">n</span>))
+            (<span style="color:#003333;">euler</span> (1<span style="color:#336666;">-</span> <span style="color:#003333;">n</span>) <span style="color:#003333;">acc</span>))))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">euler1</span> (<span style="color:#003333;">n</span>)
+    (<span style="color:#003333;">euler</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">0</span>))
+
+(<span style="color:#336666;">print</span> (<span style="color:#003333;">euler1</span> <span style="color:#ff6600;">999</span>))</pre>
+</div>
+Although Lisp is a functional language, and that last version is idiomatic of functional languages like <a title="StandardML" href="http://gdm9000.wordpress.com/2011/11/23/standard-ml/">Standard ML</a> - no mutability, it's not really idiomatic of Lisp. Lisp is all about lists. Here's a more idiomatic version in which we pass around a list generated up front, peeling off and using the first value in each recursive call. It also shows the use of optional parameters. You'd think Lisp would have a built-in range function, but I couldn't find one:
+
+<!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in lisp</span>
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">_range</span> (<span style="color:#003333;">m</span> <span style="color:#003333;">n</span>)
+    (<span style="color:#336666;">loop</span> <span style="color:#003333;">for</span> <span style="color:#003333;">i</span> <span style="color:#003333;">from</span> <span style="color:#003333;">m</span> <span style="color:#003333;">to</span> <span style="color:#003333;">n</span> <span style="color:#003333;">collect</span> <span style="color:#003333;">i</span>))
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">range</span> (<span style="color:#003333;">m</span> <span style="color:#006699;font-weight:bold;">&amp;optional</span> (<span style="color:#003333;">n</span> <span style="color:#ff6600;">0</span>))
+    (<span style="color:#006699;font-weight:bold;">if</span> (<span style="color:#336666;">=</span> <span style="color:#ff6600;">0</span> <span style="color:#003333;">n</span>)
+    	(<span style="color:#003333;">_range</span> <span style="color:#ff6600;">0</span> <span style="color:#003333;">m</span>)
+    	(<span style="color:#003333;">_range</span> <span style="color:#003333;">m</span> <span style="color:#003333;">n</span>)))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">mod-3-5</span> (<span style="color:#003333;">n</span>)
+    (<span style="color:#006699;font-weight:bold;">if</span> (<span style="color:#336666;">or</span> (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>)) <span style="color:#003333;">n</span> <span style="color:#ff6600;">0</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">Euler</span> (<span style="color:#003333;">lst</span> <span style="color:#003333;">acc</span>)
+    (<span style="color:#006699;font-weight:bold;">if</span> <span style="color:#003333;">lst</span>
+        (<span style="color:#003333;">Euler</span> (<span style="color:#336666;">cdr</span> <span style="color:#003333;">lst</span>) (<span style="color:#336666;">+</span> <span style="color:#003333;">acc</span> (<span style="color:#003333;">mod-3-5</span> (<span style="color:#336666;">car</span> <span style="color:#003333;">lst</span>))))
+        <span style="color:#003333;">acc</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">Euler1</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#003333;">Euler</span> <span style="color:#003333;">lst</span> <span style="color:#ff6600;">0</span>))
+
+(<span style="color:#336666;">print</span> (<span style="color:#003333;">Euler1</span> (<span style="color:#003333;">range</span> <span style="color:#ff6600;">999</span>)))</pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, <em>Euler1() </em>returns <em>Euler1</em><em>()</em> calculated on the half of the list before the pivot element, <em>Euler1</em><em>()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in Lisp</span>
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">range</span> (<span style="color:#003333;">n</span> <span style="color:#003333;">m</span>)
+    (<span style="color:#336666;">loop</span> <span style="color:#003333;">for</span> <span style="color:#003333;">i</span> <span style="color:#003333;">from</span> <span style="color:#003333;">n</span> <span style="color:#003333;">to</span> <span style="color:#003333;">m</span> <span style="color:#003333;">collect</span> <span style="color:#003333;">i</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">mod-3-5</span> (<span style="color:#003333;">n</span>)
+    (<span style="color:#006699;font-weight:bold;">if</span> (<span style="color:#336666;">or</span> (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>)) <span style="color:#003333;">n</span> <span style="color:#ff6600;">0</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">Euler1</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#006699;font-weight:bold;">if</span> <span style="color:#003333;">lst</span>
+        <span style="color:#0099ff;font-style:italic;">; find the midpoint of the list</span>
+        (<span style="color:#006699;font-weight:bold;">let</span> ((<span style="color:#003333;">pivot</span> (<span style="color:#336666;">ceiling</span> (<span style="color:#336666;">/</span> (<span style="color:#336666;">length</span> <span style="color:#003333;">lst</span>) <span style="color:#ff6600;">2</span>))))
+            (<span style="color:#336666;">+</span>
+                <span style="color:#0099ff;font-style:italic;">; return a value for the middle element</span>
+                (<span style="color:#003333;">mod-3-5</span> (<span style="color:#336666;">nth</span> (<span style="color:#336666;">1-</span> <span style="color:#003333;">pivot</span>) <span style="color:#003333;">lst</span>))
+                <span style="color:#0099ff;font-style:italic;">; plus Euler1 on the first half of the list</span>
+                (<span style="color:#003333;">Euler1</span> (<span style="color:#336666;">subseq</span> <span style="color:#003333;">lst</span> <span style="color:#ff6600;">0</span> (<span style="color:#336666;">1-</span> <span style="color:#003333;">pivot</span>)))
+                <span style="color:#0099ff;font-style:italic;">; plus Euler1 on the last half of the list</span>
+                (<span style="color:#003333;">Euler1</span> (<span style="color:#336666;">subseq</span> <span style="color:#003333;">lst</span> <span style="color:#003333;">pivot</span>))))
+        <span style="color:#ff6600;">0</span> <span style="color:#0099ff;font-style:italic;">; else return 0</span>
+    )
+)
+
+(<span style="color:#336666;">print</span> (<span style="color:#003333;">Euler1</span> (<span style="color:#003333;">range</span> <span style="color:#ff6600;">1</span> <span style="color:#ff6600;">999</span>)))</pre>
+</div>
+Here's a version in which I define my own <em>map/filter/reduce</em> functions using lambdas, and then simply apply them. Map's only purpose here is for illustration, since it returns itself. Note that there is no recursion or looping involved (except for the initial range generation):
+<!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in lisp</span>
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">myMap</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#336666;">mapcar</span> (<span style="color:#006699;font-weight:bold;">lambda</span> (<span style="color:#003333;">x</span>) <span style="color:#003333;">x</span>) <span style="color:#003333;">lst</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">myFilter</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#336666;">remove-if-not</span>
+        (<span style="color:#006699;font-weight:bold;">lambda</span> (<span style="color:#003333;">n</span>) (<span style="color:#336666;">or</span> (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>)))
+        <span style="color:#003333;">lst</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">myReduce</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#336666;">reduce</span> <span style="color:#cc00ff;">#'</span><span style="color:#336666;">+</span> <span style="color:#003333;">lst</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">range</span> (<span style="color:#003333;">n</span> <span style="color:#003333;">m</span>)
+    (<span style="color:#336666;">loop</span> <span style="color:#003333;">for</span> <span style="color:#003333;">i</span> <span style="color:#003333;">from</span> <span style="color:#003333;">n</span> <span style="color:#003333;">to</span> <span style="color:#003333;">m</span> <span style="color:#003333;">collect</span> <span style="color:#003333;">i</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">Euler1</span>(<span style="color:#003333;">lst</span>)
+    (<span style="color:#003333;">myReduce</span> (<span style="color:#003333;">myFilter</span> (<span style="color:#003333;">myMap</span> <span style="color:#003333;">lst</span>))))
+
+(<span style="color:#336666;">print</span> (<span style="color:#003333;">Euler1</span> (<span style="color:#003333;">range</span> <span style="color:#ff6600;">1</span> <span style="color:#ff6600;">999</span>)))</pre>
+</div>
+Functions in Lisp are <a title="FirstClassFunctions" href="http://en.wikipedia.org/wiki/First-class_function">first-class</a>, meaning they are as easy to manipulate as data. Let's build off the previous example, but this time we'll store our <em>map/filter/reduce</em> functions in a list. We'll pass the functions and the integers into <em>Euler1()</em>, and recursively apply the first function to the integers until the function list is empty:
+<!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in lisp</span>
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">range</span> (<span style="color:#003333;">n</span> <span style="color:#003333;">m</span>)
+    (<span style="color:#336666;">loop</span> <span style="color:#003333;">for</span> <span style="color:#003333;">i</span> <span style="color:#003333;">from</span> <span style="color:#003333;">n</span> <span style="color:#003333;">to</span> <span style="color:#003333;">m</span> <span style="color:#003333;">collect</span> <span style="color:#003333;">i</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">myMap</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#336666;">mapcar</span> (<span style="color:#006699;font-weight:bold;">lambda</span> (<span style="color:#003333;">x</span>) <span style="color:#003333;">x</span>) <span style="color:#003333;">lst</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">myFilter</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#336666;">remove-if-not</span>
+        (<span style="color:#006699;font-weight:bold;">lambda</span> (<span style="color:#003333;">n</span>) (<span style="color:#336666;">or</span> (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>)))
+        <span style="color:#003333;">lst</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">myReduce</span> (<span style="color:#003333;">lst</span>)
+    (<span style="color:#336666;">reduce</span> <span style="color:#cc00ff;">#'</span><span style="color:#336666;">+</span> <span style="color:#003333;">lst</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">Euler1</span> (<span style="color:#003333;">fns</span> <span style="color:#003333;">data</span>)
+    (<span style="color:#006699;font-weight:bold;">if</span> <span style="color:#003333;">fns</span>
+        (<span style="color:#003333;">Euler1</span> (<span style="color:#336666;">cdr</span> <span style="color:#003333;">fns</span>) (<span style="color:#336666;">funcall</span> (<span style="color:#336666;">car</span> <span style="color:#003333;">fns</span>) <span style="color:#003333;">data</span>))
+        <span style="color:#003333;">data</span>))
+
+(<span style="color:#336666;">print</span> (<span style="color:#003333;">Euler1</span> <span style="color:#555555;">'</span>(<span style="color:#003333;">myMap</span> <span style="color:#003333;">myFilter</span> <span style="color:#003333;">myReduce</span>) (<span style="color:#003333;">range</span> <span style="color:#ff6600;">1</span> <span style="color:#ff6600;">999</span>)))</pre>
+</div>
+Here’s one more - an elegant algorithm based on an observation by little Carl Friedrich Gauss - <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation. Lisp seems to suck at making long math expressions legible, so I've attempted to clarify it with indentation:
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in lisp</span>
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">mySum</span> (<span style="color:#003333;">n</span> <span style="color:#003333;">size</span>)
+  (<span style="color:#336666;">*</span> <span style="color:#003333;">n</span>
+    (<span style="color:#336666;">floor</span>
+      (<span style="color:#336666;">/</span>
+        (<span style="color:#336666;">+</span>
+          (<span style="color:#336666;">expt</span> (<span style="color:#336666;">floor</span> (<span style="color:#336666;">/</span> <span style="color:#003333;">size</span> <span style="color:#003333;">n</span>)) <span style="color:#ff6600;">2</span>)
+          (<span style="color:#336666;">floor</span> (<span style="color:#336666;">/</span> <span style="color:#003333;">size</span> <span style="color:#003333;">n</span>)))
+        <span style="color:#ff6600;">2</span>))))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">euler1</span> (<span style="color:#003333;">size</span>)
+  (<span style="color:#336666;">-</span> (<span style="color:#336666;">+</span> (<span style="color:#003333;">mySum</span> <span style="color:#ff6600;">3</span> <span style="color:#003333;">size</span>) (<span style="color:#003333;">mySum</span> <span style="color:#ff6600;">5</span> <span style="color:#003333;">size</span>)) (<span style="color:#003333;">mySum</span> <span style="color:#ff6600;">15</span> <span style="color:#003333;">size</span>)))
+
+(<span style="color:#336666;">print</span> (<span style="color:#003333;">euler1</span> <span style="color:#ff6600;">999</span>))</pre>
+</div>
+One of Lisp's greatest claims to fame is its regular syntax. It may appear illegible at first, but Lisp is not designed for <em>human-readability</em> - it's designed for <em>machine-readability</em>. Unlike other languages where your code is written as a bunch of text, Lisp is written as collection of syntax symbols having a regular grammar. Lisp also has a precompilation stage called <a title="Macros" href="http://www.apl.jhu.edu/~hall/Lisp-Notes/Macros.html">macros</a> which generate and substitute code using user-defined routines, allowing you to extend the language arbitrarily. What does all this mean? Since I'm a macro novice myself, I'll borrow some material from <a title="LispMacros" href="http://stackoverflow.com/a/4621882/105101">this StackOverflow answer</a>. Let's say you're fond of the <a title="PythonListComprehension" href="http://en.wikipedia.org/wiki/List_comprehension#Python">Python lisp comprehension</a> syntax:
+<pre>    S = [x for x in range(1000) if x%3==0 or x%5==0]</pre>
+Well, Lisp doesn't have anything like that, but don't despair - Lisp lets you roll your own! The macro stage takes source tokens as input, transforms it, and then returns syntax that replaces the original tokens. I've colored the function parameters and arguments passed in for ease of illustration. Notice we do nothing with the tokens <em>for</em> and <em>in </em>- they exist merely as part of our list comprehension's grammar:
+<!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;margin-bottom:20px;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;"><span style="color:#003333;">#!/usr/bin/clisp</span></pre>
+<pre style="margin:0;line-height:125%;"><span style="color:#0099ff;font-style:italic;">; Euler1 in lisp </span>
+
+(<span style="color:#336666;">defmacro</span> <strong><span style="color:#003333;">lcomp</span></strong><span style="color:#ff0000;"><span style="color:#000000;"> (</span><strong>expression</strong></span> <strong><span style="color:#ff9900;">for</span> <span style="color:#99cc00;">var</span> <span style="color:#993300;">in</span> <span style="color:#008000;">list</span> <span style="color:#0000ff;">conditional</span> <span style="color:#800080;">conditional-test</span></strong>)
+  <span style="color:#0099ff;font-style:italic;">;; create a unique variable name for the result</span>
+  (<span style="color:#006699;font-weight:bold;">let</span> ((<span style="color:#003333;">result</span> (<span style="color:#336666;">gensym</span>)))
+    <span style="color:#0099ff;font-style:italic;">;; the arguments are really code so we can substitute them </span>
+    <span style="color:#0099ff;font-style:italic;">;; store nil in the unique variable name generated above</span>
+    <span style="color:#555555;">`</span>(<span style="color:#006699;font-weight:bold;">let</span> ((<span style="color:#555555;">,</span><span style="color:#003333;">result</span> <span style="color:#336600;">nil</span>))
+       <span style="color:#0099ff;font-style:italic;">;; var is a variable name</span>
+       <span style="color:#0099ff;font-style:italic;">;; list is the list literal we are suppose to iterate over</span>
+       (<span style="color:#336666;">loop</span> <span style="color:#003333;">for</span> <span style="color:#555555;">,</span><strong><span style="color:#99cc00;">var</span></strong> <span style="color:#003333;">in</span> <span style="color:#555555;">,</span><strong><span style="color:#008000;">list</span></strong>
+            <span style="color:#0099ff;font-style:italic;">;; conditional is if or unless</span>
+            <span style="color:#0099ff;font-style:italic;">;; conditional-test is (= (mod x 2) 0) in our examples</span>
+            <span style="color:#555555;">,</span><strong><span style="color:#0000ff;">conditional</span></strong> <span style="color:#555555;">,</span><strong><span style="color:#800080;">conditional-test</span></strong>
+            <span style="color:#0099ff;font-style:italic;">;; and this is the action from the earlier lisp example</span>
+            <span style="color:#0099ff;font-style:italic;">;; result = result + [x] in python</span>
+            <span style="color:#336666;">do</span> (<span style="color:#006699;font-weight:bold;">setq</span> <span style="color:#555555;">,</span><span style="color:#003333;">result</span> (<span style="color:#336666;">append</span> <span style="color:#555555;">,</span><span style="color:#003333;">result</span> (<span style="color:#333333;">list</span> <span style="color:#555555;">,</span><strong><span style="color:#ff0000;">expression</span></strong>))))
+       <span style="color:#0099ff;font-style:italic;">;; return the result </span>
+       <span style="color:#555555;">,</span><span style="color:#003333;">result</span>)))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">range</span> (<span style="color:#003333;">n</span> <span style="color:#003333;">m</span>)
+    (<span style="color:#336666;">loop</span> <span style="color:#003333;">for</span> <span style="color:#003333;">i</span> <span style="color:#003333;">from</span> <span style="color:#003333;">n</span> <span style="color:#003333;">to</span> <span style="color:#003333;">m</span> <span style="color:#003333;">collect</span> <span style="color:#003333;">i</span>))
+
+(<span style="color:#336666;">defun</span> <span style="color:#003333;">mod-3-5</span> (<span style="color:#003333;">n</span>)
+    (<span style="color:#336666;">or</span> (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">3</span>) <span style="color:#ff6600;">0</span>) (<span style="color:#336666;">=</span> (<span style="color:#336666;">mod</span> <span style="color:#003333;">n</span> <span style="color:#ff6600;">5</span>) <span style="color:#ff6600;">0</span>)))
+
+(<span style="color:#336666;">print</span> (<span style="color:#336666;">reduce</span> <strong><span style="color:#cc00ff;">#'</span><span style="color:#336666;">+</span> </strong>(<strong><span style="color:#003333;">lcomp</span> <span style="color:#ff0000;">x</span></strong> <strong><span style="color:#ff9900;">for</span> <span style="color:#99cc00;">x</span> <span style="color:#993300;">in</span> <span style="color:#008000;">(range 1 999)</span> <span style="color:#0000ff;">if</span> <span style="color:#800080;">(mod-3-5 x)</span></strong>)))</pre>
+</div>
+The following code is what is generated in my environment, returned by the macro and substituted for the original tokens:
+<pre style="padding-left:30px;">(LET ((#:G2909 NIL))
+ (LOOP FOR X IN (RANGE 1 999) IF (MOD-3-5 X) DO
+  (SETQ #:G2909 (APPEND #:G2909 (LIST X))))
+ #:G2909)</pre>
+Lisp also has other claims to fame, such as introducing the world to the fantastic concepts of the <a title="REPL" href="http://en.wikipedia.org/wiki/Lisp_%28programming_language%29#Evaluation_and_the_read.E2.80.93eval.E2.80.93print_loop">REPL </a>and <a title="GarbageCollection" href="http://www.drdobbs.com/jvm/g1-javas-garbage-first-garbage-collector/219401061">garbage collection</a>. My belated thanks to <a title="John McCarthy" href="http://en.wikipedia.org/wiki/John_McCarthy_%28computer_scientist%29">John McCarthy</a> for giving us such a well-designed and elegant language.
+
+There are a lot of lisp variants; I chose to use <a href="http://www.clisp.org/">GNU CLisp</a>. Simply add the shebang to the top of your file and execute it:
+<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="margin:0;line-height:125%;">$ .<span style="color:#ffffff;">/euler1.lsp</span>
+
+<span style="color:#0086f7;font-weight:bold;">233168</span>
+
+$</pre>
+</div>

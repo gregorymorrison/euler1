@@ -1,12 +1,13 @@
-#!/bin/awk -f
+#!/bin/awk -We
 # Euler1 in AWK
+# echo . | euler1.awk
 
-BEGIN {sum = 0}
+BEGIN {a = 0}
 {
-    for (i = 1; i<1000; i++) {
-        if (i%3==0 || i%5==0) {
-            sum+= i;
-        }
-    }
+	for (i = 1; i<1000; i++) {
+		if (i%3==0 || i%5==0) {
+			retval += i;
+		}
+	}
 }
-END {print sum}
+END {print retval}

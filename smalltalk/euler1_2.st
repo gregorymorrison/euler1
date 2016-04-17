@@ -1,17 +1,13 @@
 "Euler1 in Smalltalk"
 
-|result|
-
-Euler1 := [ :size |
-    result := 0.
-
-    0 to: size do: [:i |
-        (i \\ 3 = 0 or: [i \\ 5 = 0])
-        ifTrue:
-            [result := result + i].
-    ].
+mySum := [ :n :size | 
+    (((size//n) raisedTo: 2) + (size//n)) * n // 2
 ].
 
-Euler1 value: 999.
+Euler1 := [ :size |
+    (mySum value:  3 value: size) +
+    (mySum value:  5 value: size) -
+    (mySum value: 15 value: size)
+].
 
-(result) displayNl
+(Euler1 value: 999) displayNl

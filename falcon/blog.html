@@ -1,0 +1,153 @@
+The <a title="Falcon" href="http://www.falconpl.org">Falcon</a> programming language, introduced in 2003, claims to support six different paradigms - procedural, object oriented, prototype, functional, tabular, and message oriented. It comes with an interpretive shell, and also a tool to easily bundle the runtime with your script for distribution. So, let's jump in.
+
+I found procedural programming in Falcon immediately intuitive. It took me maybe five minutes to churn out this version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> on my first time looking at the language. It looks to have borrowed from <a title="Python" href="http://python.org/">Python</a> quite heavily:
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#3366ff;"><em>#!/usr/bin/falcon</em></span>
+<span style="color:#3366ff;"><em>// Euler1 in Falcon</em></span>
+
+<span style="color:#006699;font-weight:bold;">function</span> <span style="color:#008000;">Euler1</span><span style="font-weight:bold;">(</span>n<span style="font-weight:bold;">)</span>
+    <span style="color:#800000;">retval</span> <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+
+    <span style="color:#006699;font-weight:bold;">for</span> <span style="color:#003333;">i</span> <span style="color:#336666;">in</span> <span style="font-weight:bold;">[</span><span style="color:#ff6600;">1</span> <span style="color:#003300;font-weight:bold;">:</span> <span style="color:#003333;">n</span><span style="font-weight:bold;">]</span>
+        <span style="color:#336666;">if</span> <span style="color:#003333;">i%3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#555555;">or</span> <span style="color:#003333;">i%5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+            <span style="color:#800000;">retval</span> <span style="color:#003333;">+=</span> <span style="color:#003333;">i</span>
+        <span style="color:#003333;">end</span>
+    <span style="color:#003333;">end</span>
+
+    <span style="color:#cc0000;font-weight:bold;">return</span> <span style="color:#800000;">retval</span>
+<span style="color:#003333;">end</span>
+
+<span style="color:#555555;">printl(</span> <span style="color:#008000;">Euler1</span><span style="font-weight:bold;">(</span><span style="color:#ff6600;">1000</span><span style="font-weight:bold;">) )</span></pre>
+</div>
+Falcon has a full complement of <a title="Functional Programming" href="http://falconpl.org/index.ftd?page_id=sitewiki&amp;prj_id=_falcon_site&amp;sid=wiki&amp;pwid=Survival%20Guide&amp;wid=Survival%3AFunctional+programming">functional constructs</a>. It has versions of Map, Filter, Reduce, Lambda. There's actually a lot that's interesting here. Interestingly, I could not get map() to work here, though I found its list comprehensions a suitable replacement:
+<div style="background:white;overflow:auto;width:auto;margin-bottom:20px;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#003333;">myMap</span> <span style="color:#555555;">=</span> {<span style="color:#003333;">x</span> <span style="color:#555555;">=&gt;</span> <span style="color:#003333;">x</span>}
+<span style="color:#003333;">myFilter</span> <span style="color:#555555;">=</span> {<span style="color:#003333;">x</span> <span style="color:#555555;">=&gt;</span> <span style="color:#003333;">x</span><span style="color:#555555;">%</span><span style="color:#ff6600;">3</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span> <span style="color:#003333;">or</span> <span style="color:#003333;">x</span><span style="color:#555555;">%</span><span style="color:#ff6600;">5</span><span style="color:#555555;">==</span><span style="color:#ff6600;">0</span>}
+<span style="color:#003333;">mySum</span> <span style="color:#555555;">=</span> {<span style="color:#003333;">x</span>,<span style="color:#003333;">y</span> <span style="color:#555555;">=&gt;</span> <span style="color:#003333;">x</span><span style="color:#555555;">+</span><span style="color:#003333;">y</span>}
+
+<span style="color:#003333;">function</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span>(<span style="color:#003333;">n</span>)
+    <span style="color:#003333;">mapped</span> <span style="color:#555555;">=</span> []<span style="color:#555555;">.</span><span style="color:#cc00ff;">comp</span>( [<span style="color:#ff6600;">1</span>:<span style="color:#003333;">n</span>], <span style="color:#003333;">myMap </span>)
+    <span style="color:#003333;">filtered</span> <span style="color:#555555;">=</span> <span style="color:#cc00ff;">filter</span>(<span style="color:#003333;"> myFilter</span>, <span style="color:#003333;">mapped</span> )
+    <span style="color:#006699;font-weight:bold;">return</span> <span style="color:#cc00ff;">reduce</span>(<span style="color:#003333;"> mySum</span>, <span style="color:#003333;">filtered</span> )
+<span style="color:#003333;">end</span>
+
+<span style="color:#555555;">&gt;</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span>(<span style="color:#ff6600;">1000</span>)</pre>
+</div>
+Here's an <a title="OOP" href="http://falconpl.org/index.ftd?page_id=sitewiki&amp;prj_id=_falcon_site&amp;sid=wiki&amp;pwid=Survival%20Guide&amp;wid=Survival%3AObjects+and+classes">OOP</a> version. Falcon has a rich OO implementation including multiple inheritance, static methods, and some odd concept called states, which allow you to dynamically choose a method from a collection based on the instance's current state. Oddly, constructor arguments are defined in the class, which seems to be a rather inflexible design. Falcon classes do have a init method which is not quite a constructor - parameter binding is actually done first:
+<!-- HTML generated using hilite.me -->
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#006699;font-weight:bold;">class</span> <span style="font-weight:bold;color:#008000;">Euler1</span>(size)
+    size <span style="color:#555555;">=</span> size
+    result <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">nil</span></pre>
+<pre style="line-height:125%;margin:0;">    init
+        <span style="color:#3366ff;">// do setup operations here</span>
+    end</pre>
+<pre style="line-height:125%;margin:0;">    <span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">solve</span>()
+        self.result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+        <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> [<span style="color:#ff6600;">1</span> : self.size]
+            <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+                self.result <span style="color:#555555;">+=</span> i
+            <span style="color:#006699;font-weight:bold;">end</span>
+        <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+<span style="color:#006699;font-weight:bold;">end</span>
+
+euler1 <span style="color:#555555;">=</span> <span style="color:#008000;">Euler1</span>(<span style="color:#ff6600;">1000</span>)
+euler1.solve()
+<span style="color:#555555;">&gt;</span> euler1.result</pre>
+</div>
+Here's a <a title="Prototype Language" href="http://falconpl.org/index.ftd?page_id=sitewiki&amp;prj_id=_falcon_site&amp;sid=wiki&amp;pwid=Survival%20Guide&amp;wid=Survival%3APrototype+based+OOP">Prototype</a> example. In this paradigm, objects are just dictionaries, modifiable at runtime. In this example, I create an object with a couple properties, then for illustration I add a new method at runtime:
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;">euler1 <span style="color:#555555;">=</span> bless([
+    <span style="color:#cc3300;">"size"</span> <span style="color:#555555;">=&gt;</span> <span style="color:#ff6600;">0</span>,
+    <span style="color:#cc3300;">"result"</span> <span style="color:#555555;">=&gt;</span> <span style="color:#ff6600;">0</span>
+])
+
+euler1.size <span style="color:#555555;">=</span> <span style="color:#ff6600;">1000</span>
+
+euler1[<span style="color:#cc3300;">"solve"</span>] <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">function</span> ()
+    self.result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> [<span style="color:#ff6600;">1</span> : self.size]
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+            self.result <span style="color:#555555;">+=</span> i
+        <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+<span style="color:#006699;font-weight:bold;">end</span>
+
+euler1.solve()</pre>
+<pre style="line-height:125%;margin:0;"><span style="color:#555555;">&gt;</span> euler1.result</pre>
+</div>
+Falcon has support for <a title="Message Passing" href="http://falconpl.org/index.ftd?page_id=sitewiki&amp;prj_id=_falcon_site&amp;sid=wiki&amp;pwid=Survival%20Guide&amp;wid=Survival%3AMessage+oriented+programming">message passing</a>. The <em>subscribe()</em> method lets objects register a message listener, and <em>broadcast() </em>is used to publish a message. Messages can be any type of object, and are marshaled automatically for you. Messages in Falcon are synchronous, though there is an async variant. Here is an admittedly contrived effort, with an object to marshal and a class to subscribe, and a callback function for illustration:
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Request</span> (size)
+    value <span style="color:#555555;">=</span> size
+    callback <span style="color:#555555;">=</span> {<span style="color:#555555;">=&gt;</span> <span style="color:#006699;font-weight:bold;">nil</span>}
+<span style="color:#006699;font-weight:bold;">end</span>
+
+<span style="color:#006699;font-weight:bold;">class</span> <span style="color:#00aa88;font-weight:bold;">Euler1</span>()
+    result <span style="color:#555555;">=</span> <span style="color:#006699;font-weight:bold;">nil</span>
+
+    init
+        subscribe( <span style="color:#cc3300;">"process"</span>, self.subMe )
+    <span style="color:#006699;font-weight:bold;">end</span>
+
+    <span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">solve</span>(size)
+        self.result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+        <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> [<span style="color:#ff6600;">1</span> : size]
+            <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+                self.result <span style="color:#555555;">+=</span> i
+            <span style="color:#006699;font-weight:bold;">end</span>
+        <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+
+    <span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">subMe</span>(request)
+        self.solve(request.value)
+        request.callback <span style="color:#555555;">=</span> self.callMe
+    <span style="color:#006699;font-weight:bold;">end</span>
+
+    <span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">callMe</span>()
+        <span style="color:#555555;">&gt;</span> <span style="color:#aa0000;">@</span><span style="color:#cc3300;">"$self.result"</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+<span style="color:#006699;font-weight:bold;">end</span>
+
+euler1 <span style="color:#555555;">=</span> Euler1()
+
+request <span style="color:#555555;">=</span> <span style="color:#339966;">Request</span>(<span style="color:#ff6600;">1000</span>)
+broadcast( <span style="color:#cc3300;">"process"</span>, request )
+
+request.callback()</pre>
+</div>
+Falcon also touts <a title="Tabular Programming" href="http://falconpl.org/index.ftd?page_id=sitewiki&amp;prj_id=_falcon_site&amp;sid=wiki&amp;pwid=Survival%20Guide&amp;wid=Survival%3ATabular+programming">tabular programming</a>, which presents a table-centric way to store and interact with your data and business rules. The <em>Table </em>class allows you to update cells, iterate through rows, access cells by index or name, and stores heterogeneous content. In the following slightly contrived example, I've defined a formula table, which has columns for a string, a function object, a parameter, and a return value. I add two functions, <em>euler1()</em> and <em>foo()</em>, and then have some minor interaction with the table and a row:
+<div style="background:white;overflow:auto;margin-bottom:20px;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">euler1</span>()
+    result <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
+    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#006699;font-weight:bold;">in</span> [<span style="color:#ff6600;">1</span> : self.size]
+        <span style="color:#006699;font-weight:bold;">if</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i<span style="color:#555555;">%</span><span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span>
+            self.result <span style="color:#555555;">+=</span> i
+        <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">end</span>
+    <span style="color:#006699;font-weight:bold;">return</span> result
+<span style="color:#006699;font-weight:bold;">end</span>
+
+<span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">foo</span>()
+   self.result <span style="color:#555555;">=</span> self.size <span style="color:#555555;">*</span> <span style="color:#ff6600;">2</span>
+<span style="color:#006699;font-weight:bold;">end</span>
+
+funcs <span style="color:#555555;">=</span> Table (
+    .[<span style="color:#cc3300;">'name'</span>, <span style="color:#cc3300;">'func'</span>, <span style="color:#cc3300;">'size'</span>, <span style="color:#cc3300;">'result'</span>],
+    .[<span style="color:#cc3300;">'euler1'</span>, euler1, <span style="color:#ff6600;">0</span>, <span style="color:#ff6600;">0</span>],
+    .[<span style="color:#cc3300;">'foo'</span>, foo, <span style="color:#ff6600;">0</span>, <span style="color:#ff6600;">0</span>] )
+
+row <span style="color:#555555;">=</span> funcs.find(<span style="color:#cc3300;">'name'</span>, <span style="color:#cc3300;">'euler1'</span>)
+row.size <span style="color:#555555;">=</span> <span style="color:#ff6600;">1000</span>
+row.func()
+
+<span style="color:#555555;">&gt;</span> row.result</pre>
+</div>
+Overall, I've been finding Falcon a fun language, with lots of new-to-me concepts that make it worth my exploration. I felt that both its  syntax and compiler messages were reasonably intuitive enough to get out of my way and let me just write, even with little experience with the language. I'm not sure what kind of support it enjoys in the industry, but I look forward to working with it more in the future.
+
+Falcon seems to come with only one executable that serves as both compiler and runtime. When you run your code, Falcon will compile it on the fly for you if you haven't earlier. Compilation and execution time feel very fast. To run, simply call <em>falcon</em>, passing it your program as an argument:
+<div style="background:black;overflow:auto;margin-bottom:20px;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$ falcon </span>euler1.fal
+<span style="color:#00ccff;">233168</span></pre>
+</div>

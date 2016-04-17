@@ -1,13 +1,14 @@
-#!/usr/bin/python 
 # Euler1 in Python
 
-def euler1(x):
-    result = 0
+def mySum(n, size):
+	return n * (((size/n)**2 + (size/n)) / 2)
 
-    for i in xrange(x):
-        if i%3==0 or i%5==0:
-            result += i
+def Euler1(size):
+	return mySum(3,size) + mySum(5,size) - mySum(15,size)
 
-    return result
-
-print euler1(1000)
+import datetime
+start = datetime.datetime.now()
+print Euler1(1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+end = datetime.datetime.now()
+print start
+print end

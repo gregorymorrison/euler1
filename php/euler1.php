@@ -1,5 +1,6 @@
 #!/usr/bin/php -q
-<?php// Euler1 in PHP
+<?php
+// Euler1 in PHP
 
 function euler1($n) {
     $sum = 0;

@@ -1,0 +1,15 @@
+#!/usr/bin/bc --quiet
+/* Euler1 in bc */
+
+define euler(size) {
+    auto i, retval
+    retval = 0
+
+    for (i = 1; i < size; i++) {
+        if (i % 3 == 0 || i % 5 == 0) { retval += i }
+    }
+    return (retval)
+}
+
+print euler(1000), "\n"
+quit

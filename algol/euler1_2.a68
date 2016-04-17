@@ -1,0 +1,38 @@
+# Euler1 in Algol 68 #
+
+PROC range = (INT size) [] INT: (
+    [1:size] INT ints;
+    FOR i FROM 1 TO size DO
+        ints[i] := i
+    OD;
+    ints
+);
+
+PROC size = ([] INT ints) INT: (
+    INT retval := 0;
+    FOR i FROM LWB ints TO UPB ints DO
+        retval +:= 1
+    OD;
+    retval
+);
+
+PROC euler = ([] INT ints) INT: (
+    INT retval := 0;
+
+    INT len := size(ints);
+    IF len > 0 THEN
+        INT pivot := ENTIER( len/2 + 1 );
+
+        INT pivotval := 0;
+        IF ints[pivot] %* 3 = 0 OR ints[pivot] %* 5 = 0 THEN
+            pivotval := ints[pivot]
+        FI;
+
+        retval := euler(ints[1:pivot-1]) + pivotval + euler(ints[pivot+1:len])
+    FI;
+    retval
+);
+
+PROC euler1 = (INT n) INT: euler(range(n));
+
+print (euler1(999))
