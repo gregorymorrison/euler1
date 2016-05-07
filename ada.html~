@@ -59,7 +59,6 @@ procedure <span style="color:#336600;">Euler</span> is
     <span style="color:#336600;">Ada</span><span style="color:#555555;">.</span>Integer_Text_IO<span style="color:#555555;">.</span>Put (<span style="color:#336666;">Integer</span>( <span style="color:#336600;">Euler1</span>(<span style="color:#ff6600;">1000</span>) ));
 <span style="color:#006699;font-weight:bold;">end</span> <span style="color:#336600;">Euler</span>;</pre>
 </div>
-
 <p></p>
 <p>If you haven't tried this language before, it's worth giving it a chance. It produces very robust code, and has some great modern features like concurrency support. And it runs screamingly fast. I used the <a href="http://en.wikipedia.org/wiki/GNAT">GNAT</a> compiler to run this code, which also runs screamingly fast on this code. Just compile and execute:</p>
 
