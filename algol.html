@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Euler1 by gdm9000</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Euler1</h1>
+        <p></p>
+
+        <p class="view"><a href="https://github.com/gdm9000/euler1">View the Project on GitHub <small>gdm9000/euler1</small></a></p>
+
+        <ul>
+          <li><a href="https://github.com/gdm9000/euler1/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/gdm9000/euler1/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/gdm9000/euler1">View On <strong>GitHub</strong></a></li>
+        </ul>
+      
+	<p>
+	  <a href='index.html'>Home</a><br></br>
+	  <a href='ada.html'>Ada</a><br></br>
+	  <a href='algol.html'>Algol 68</a><br></br>
+	</p>
+      </header>
+      <section>
+        <h3>
+<a id="welcome-to-euler-1" class="anchor" href="#welcome-to-euler-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Algol 68</h3>
+
+<p>
+<a title="algol68" href="http://en.wikipedia.org/wiki/ALGOL_68">Algol 68</a>, introduced in, um, 1968, is one of the formative languages that helped to define modern Computer Science. Along with <a title="fortran" href="http://en.wikipedia.org/wiki/Fortran">Fortran</a>, <a title="cobol" href="http://en.wikipedia.org/wiki/Cobol">COBOL</a>, <a title="lisp" href="http://en.wikipedia.org/wiki/Lisp">Lisp</a>, etc., the Algol family was instrumental in shaping how we interact with our machines. Algol 68 had lots of modern features - user-defined structures, operator overloading, pointers, threading, garbage collection, It's also missing many features we expect today, such as OOP, exception handling, block comments.
+
+So what does it look like? Here is a simple iterative example of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a>:
+</p>
+
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in Algol 68 #</span>
+
+<span style="color: #336666;">PROC</span> euler1 = (INT <span style="color: #008080;"><strong>n</strong></span>) INT: (
+    <span style="color: #336666;">INT</span> retval := <span style="color: #ff6600;">0</span>;
+
+    <span style="color: #336666;">FOR</span> i FROM <span style="color: #ff6600;">1</span> TO <span style="color: #008080;"><strong>n</strong></span>-1 DO
+        <span style="color: #336666;">IF</span> i %* <span style="color: #ff6600;">3</span> = <span style="color: #ff6600;">0</span> OR i %* <span style="color: #ff6600;">5</span> = <span style="color: #ff6600;">0</span> THEN
+            <span style="color: #336666;">retval</span> +:= i
+        <span style="color: #336666;">FI</span>
+    OD;
+    <span style="color: #336666;">retval</span>
+);
+print (euler1(<span style="color: #ff6600;">1000</span>))</pre>
+</div>
+
+<p>
+Next is a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> - it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation - there are instead only functions which return values. The other main point is that this recursion uses tail call optimization - it's written in such a way that an intelligent compiler can optimize its stack usage to be <a title="big o notation" href="http://en.wikipedia.org/wiki/Big_O_notation"><em>O(n)</em> instead of<em> O(n!)</em></a>. In English, this means that your program will probably not crash even for hugely recursive calls.
+</p>
+
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;"># Euler1 in Algol 68 #</span>
+
+PROC euler = (INT <span style="color: #006699; font-weight: bold;">n</span>, <span style="color: #008080;"><strong>acc</strong></span>) INT: (
+    IF <span style="color: #006699; font-weight: bold;">n</span> = <span style="color: #ff6600;">1</span> THEN
+        acc
+    ELIF <span style="color: #006699; font-weight: bold;">n</span> %* <span style="color: #ff6600;">3</span> = <span style="color: #ff6600;">0</span> OR <span style="color: #006699; font-weight: bold;">n</span> %* <span style="color: #ff6600;">5</span> = <span style="color: #ff6600;">0</span> THEN
+        euler(<span style="color: #006699; font-weight: bold;">n</span><span style="color: #ff6600;">-1</span>, <strong><span style="color: #008080;">acc</span></strong>+<span style="color: #006699; font-weight: bold;">n</span>)
+    ELSE
+        euler(<span style="color: #006699; font-weight: bold;">n</span><span style="color: #ff6600;">-1</span>, <strong><span style="color: #008080;">acc</span></strong>)
+    FI
+);
+
+PROC euler1 = (INT <span style="color: #006699; font-weight: bold;">n</span>) INT: euler(<span style="color: #006699; font-weight: bold;">n</span>, <span style="color: #ff6600;">0</span>);
+
+print (euler1(<span style="color: #ff6600;">999</span>))</pre>
+</div>
+
+<p>
+Here's another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we'll filter the pivot value, converting it to 0 if it's not divisible. Here, e<em>uler() </em>returns e<em>uler</em><em>()</em> calculated on the half of the list before the pivot element, e<em>uler</em><em>()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together:
+</p>
+
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #00ccff;"><em># Euler1 <span style="font-weight: bold;">in</span> Algol 68 #</em></span>
+
+PROC range = (INT <strong><span style="color: #008080;">size</span></strong>) [] INT: (
+    [<span style="color: #ff6600;">1</span>:<span style="color: #008080;"><strong>size</strong></span>] INT ints;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM <span style="color: #ff6600;">1</span> TO <span style="color: #008080;"><strong>size</strong> </span>DO
+        ints[<span style="color: #006699; font-weight: bold;">i</span>] := <span style="color: #006699; font-weight: bold;">i</span>
+    OD;
+    ints
+);
+
+PROC size = ([] INT <span style="color: #008080;"><strong>ints</strong></span>) INT: (
+    INT retval := <span style="color: #ff6600;">0</span>;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM LWB <span style="color: #008080;"><strong>ints</strong> </span>TO UPB <strong><span style="color: #008080;">ints</span> </strong>DO
+        retval +:= <span style="color: #ff6600;">1</span>
+    OD;
+    retval
+);
+
+PROC euler = ([] INT <span style="color: #008080;"><strong>ints</strong></span>) INT: (
+    INT retval := <span style="color: #ff6600;">0</span>;
+
+    INT len := size(<strong><span style="color: #008080;">ints</span></strong>);
+    IF len &gt; <span style="color: #ff6600;">0</span> THEN
+        INT pivot := <strong><span style="color: #3366ff;">ENTIER</span></strong>( len/<span style="color: #ff6600;">2</span> + <span style="color: #ff6600;">1</span> );
+
+        INT pivotval := <span style="color: #ff6600;">0</span>;
+        IF <span style="color: #008080;"><strong>ints</strong></span>[pivot] %* <span style="color: #ff6600;">3</span> = <span style="color: #ff6600;">0</span> OR <span style="color: #008080;"><strong>ints</strong></span>[pivot] %* <span style="color: #ff6600;">5</span> = <span style="color: #ff6600;">0</span> THEN
+            pivotval := <strong><span style="color: #008080;">ints</span></strong>[pivot]
+        FI;
+
+        retval := euler(<strong><span style="color: #008080;">ints</span></strong>[<span style="color: #ff6600;">1</span>:pivot<span style="color: #ff6600;">-1</span>]) + pivotval + euler(<span style="color: #008080;"><strong>ints</strong></span>[pivot+<span style="color: #ff6600;">1</span>:len])
+    FI;
+    retval
+);
+
+PROC euler1 = (INT <span style="color: #008080;"><strong>n</strong></span>) INT: euler(range(<span style="color: #008080;"><strong>n</strong></span>));
+print (euler1( <span style="color: #ff6600;">999</span>))</pre>
+</div>
+
+<p>
+It didn't take me that long to translate this algorithm - maybe a few hours. The runtime errors were not too bad for debugging. The program is disappointingly long, though. You can really see how control structure syntax has improved over the decades. Amusingly, Algol 68 has the only non-English function name I've ever encountered in a programming language. <em>ENTIER</em> (French for <em>whole</em>, highlighted above in blue), is usually called <em>FLOOR</em> in other languages.
+
+Since Algol 68 has pointers, we can relatively easily implement the <a title="functional" href="http://en.wikipedia.org/wiki/Functional_programming">Functional</a> <em><a title="map" href="http://en.wikipedia.org/wiki/Map_(higher-order_function)">map</a>, <a title="filter" href="http://en.wikipedia.org/wiki/Filter_(higher-order_function)">filter</a></em>, and <em><a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)">reduce</a></em>. Let's define these generic functions, using the keyword <em>PROC</em> to define a function parameter. Then, let's define some functions for <em>map</em>, <em>filter</em>, and <em>reduce</em> to apply. Finally, let's define some functions to apply everything.
+</p>
+
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #00ccff;"><em># Euler1 <span style="font-weight: bold;">in</span> Algol 68 #</em></span>
+
+PROC range = (INT size) [] INT: (
+    [<span style="color: #ff6600;">1</span>:size] INT ints;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM <span style="color: #ff6600;">1</span> TO size DO ints[<span style="color: #006699; font-weight: bold;">i</span>] := <span style="color: #006699; font-weight: bold;">i</span> OD;
+    ints
+);
+
+PROC size = ([] INT ints) INT: (
+    INT retval := <span style="color: #ff6600;">0</span>;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM LWB ints TO UPB ints DO
+        retval +:= <span style="color: #ff6600;">1</span>
+    OD;
+    retval
+);
+
+PROC map = ([] INT ints, PROC (INT) INT <span style="color: #006699; font-weight: bold;">f</span>) [] INT: (
+    [<span style="color: #ff6600;">1</span>:size(ints)] INT retval;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM LWB ints TO UPB ints DO
+        retval[<span style="color: #006699; font-weight: bold;">i</span>] := <span style="color: #006699; font-weight: bold;">f</span>(ints[<span style="color: #006699; font-weight: bold;">i</span>])
+    OD;
+    retval
+);
+
+PROC filter = ([] INT ints, PROC (INT) BOOL <span style="color: #006699; font-weight: bold;">f</span>) [] INT: (
+    INT size := <span style="color: #ff6600;">0</span>;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM LWB ints TO UPB ints DO
+        IF <span style="color: #006699; font-weight: bold;">f</span>(ints[<span style="color: #006699; font-weight: bold;">i</span>]) = TRUE THEN size +:= <span style="color: #ff6600;">1</span> FI
+    OD;
+
+    [<span style="color: #ff6600;">1</span>:size] INT retval;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM LWB ints TO UPB ints DO
+        IF <span style="color: #006699; font-weight: bold;">f</span>(ints[<span style="color: #006699; font-weight: bold;">i</span>]) = TRUE THEN
+            retval[size] := ints[<span style="color: #006699; font-weight: bold;">i</span>];
+            size -:= <span style="color: #ff6600;">1</span>
+        FI
+    OD;
+    retval
+);
+
+PROC reduce = ([] INT ints, PROC (INT, INT) INT <span style="color: #006699; font-weight: bold;">f</span>) INT: (
+    INT retval := <span style="color: #ff6600;">0</span>;
+    FOR <span style="color: #006699; font-weight: bold;">i</span> FROM LWB ints TO UPB ints DO
+        retval := <span style="color: #006699; font-weight: bold;">f</span>(retval, ints[<span style="color: #006699; font-weight: bold;">i</span>])
+    OD;
+    retval
+);
+
+PROC f_map    = (INT <span style="color: #006699; font-weight: bold;">n</span>) INT: <span style="color: #006699; font-weight: bold;">n</span>;
+PROC f_filter = (INT <span style="color: #006699; font-weight: bold;">n</span>) BOOL: IF <span style="color: #006699; font-weight: bold;">n</span> %* <span style="color: #ff6600;">3</span> = <span style="color: #ff6600;">0</span> OR <span style="color: #006699; font-weight: bold;">n</span> %* <span style="color: #ff6600;">5</span> = <span style="color: #ff6600;">0</span> THEN TRUE ELSE FALSE FI;
+PROC f_reduce = (INT <span style="color: #006699; font-weight: bold;">x</span>, <span style="color: #006699; font-weight: bold;">y</span>) INT: <span style="color: #006699; font-weight: bold;">x</span>+<span style="color: #006699; font-weight: bold;">y</span>;
+
+PROC mymap    = ([] INT ints) [] INT: map(ints, f_map);
+PROC myfilter = ([] INT ints) [] INT: filter(ints, f_filter);
+PROC myreduce = ([] INT ints) INT: reduce(ints, f_reduce);
+
+PROC euler1 = (INT size) INT: myreduce( myfilter( mymap( range(size))));
+
+print (euler1(<span style="color: #ff6600;">999</span>))</pre>
+</div>
+
+<p>
+This took me a few hours to write. I had some frustration with this - my compiler was very fussy about case, e.g. Also, I could not get my compiler to allow me to pass the integer array by reference, even though it should be possible. The documentation is not too bad for such an old language; I didn't have too much trouble finding what I needed with Google.
+
+Here's one more - an elegant algorithm based on an observation by little Carl Friedrich Gauss - <a href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a>. It operates in <a title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a>. Don't sweat it if this seems inscrutable; click the blog link above for an explanation.
+</p>
+
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #00ccff;"><em># Euler1 <span style="font-weight: bold;">in</span> Algol 68 #</em></span>
+
+PROC mysum = (INT <span style="color: #006699; font-weight: bold;">n</span>, <span style="color: #006699; font-weight: bold;">size</span>) REAL: (
+    (ENTIER(<span style="color: #006699; font-weight: bold;">size</span>/<span style="color: #006699; font-weight: bold;">n</span>)**2 + ENTIER(<span style="color: #006699; font-weight: bold;">size</span>/<span style="color: #006699; font-weight: bold;">n</span>)) * <span style="color: #006699; font-weight: bold;">n</span> / <span style="color: #ff6600;">2</span>
+);
+
+PROC euler1 = (INT <strong><span style="color: #008080;">size</span></strong>) INT: (
+    ROUND(mysum(<span style="color: #ff6600;">3</span>,<span style="color: #006699; font-weight: bold;">size</span>) + mysum(<span style="color: #ff6600;">5</span>,<span style="color: #006699; font-weight: bold;">size</span>) - mysum(<span style="color: #ff6600;">15</span>,<span style="color: #006699; font-weight: bold;">size</span>))
+);
+
+print (euler1(<span style="color: #ff6600;">999</span>))</pre>
+</div>
+
+<p>
+Algol 68 is available on Ubuntu as <em>algol68g</em>. It's imperative, so there is no compilation. Simply execute as follows:
+<div style="background: #111111; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%; background:black; border:0px;"><span style="color: #ffffff;">$</span> <span style="color: #ffffff;">a68g</span> <span style="color: #ffffff;">euler1.a68</span>
+    <span style="color: #ffffff;">+</span><span style="color: #0086f7; font-weight: bold;">233168</span>
+<span style="color: #ffffff;">$</span></pre>
+</div>
+</p>
+    
+  </body>
+</html>
