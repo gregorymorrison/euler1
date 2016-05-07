@@ -1,0 +1,122 @@
+<a title="Ceylon" href="http://ceylon-lang.org/">Ceylon</a> is a Java replacement introduced in 2011 by Red Hat and Gavin King, author of the ORM Hibernate. It's designed to It runs on both Java and JavaScript. It has static typing and strong typing.
+
+Here’s a standard iterative example of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> in Ceylon, which looks very much like Java. Note the keyword <em>variable</em> - objects in Ceylon are immutable by default unless declared <em>variable</em>:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Ceylon</span>
+
+Integer <span style="color: #cc00ff;">euler1</span><span style="color: #555555;">(</span>Integer size<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #9999ff;">variable</span> Integer retval <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">;</span>
+    <span style="color: #006699; font-weight: bold;">for</span> <span style="color: #555555;">(</span>i <span style="color: #006699; font-weight: bold;">in</span> <span style="color: #ff6600;">1</span><span style="color: #555555;">..</span><span style="color: #330099;">size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    	<span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>i<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    		retval <span style="color: #555555;">+=</span> i<span style="color: #555555;">;</span>
+        <span style="color: #555555;">}</span>
+    <span style="color: #555555;">}</span>
+    <span style="color: #006699; font-weight: bold;">return</span> retval<span style="color: #555555;">;</span>
+<span style="color: #555555;">}</span>
+
+print <span style="color: #555555;">(</span><span style="color: #cc3300;">"``euler1(999)``"</span><span style="color: #555555;">);</span></pre>
+</div>
+One of Ceylon's fundamental data structures is the collection, which implements the <a title="Iterable" href="http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/Iterable.type.html">Iterable</a> interface. This interface has a rich set of functions, including the <a title="Functional" href="http://en.wikipedia.org/wiki/Functional_programming">Functional</a> <a title="MapFilterFold" href="http://jwb.io/20121224-understanding-map-filter-and-fold.html">map/filter/fold</a>. These functions are built right into the language - nice! Ceylon also has built-in support for other Functional programming features, such as <a title="Immutability" href="http://campus.miles.no/2013/05/02/why-care-about-functional-programming-part-1-immutability/">immutability</a> (see <em>variable</em> above), <a title="FirstClassFunction" href="http://en.wikipedia.org/wiki/First-class_function">first-class functions</a>, <a title="AnonymousFunction" href="http://en.wikipedia.org/wiki/Anonymous_function">anonymous functions</a> (note the arguments passed to map and filter), and <a title="Currying" href="http://en.wikipedia.org/wiki/Currying">currying</a>. Here's Euler1 implemented with map/filter/fold:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Ceylon</span>
+
+Integer <span style="color: #cc00ff;">euler1</span><span style="color: #555555;">(</span>Integer size<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    Iterable<span style="color: #555555;">&lt;</span>Integer<span style="color: #555555;">&gt;</span> ints <span style="color: #555555;">=</span> <span style="color: #555555;">(</span><span style="color: #ff6600;">1</span><span style="color: #555555;">..</span><span style="color: #330099;">size</span><span style="color: #555555;">);</span>
+    <span style="color: #006699; font-weight: bold;">return</span> ints
+        <span style="color: #555555;">.</span><span style="color: #330099;">map</span><span style="color: #555555;">((</span>Integer i<span style="color: #555555;">)</span> <span style="color: #555555;">=&gt;</span> i<span style="color: #555555;">)</span>
+        <span style="color: #555555;">.</span><span style="color: #330099;">filter</span><span style="color: #555555;">((</span>Integer i<span style="color: #555555;">)</span> <span style="color: #555555;">=&gt;</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span><span style="color: #555555;">);</span>
+        <span style="color: #555555;">.</span><span style="color: #330099;">fold</span><span style="color: #555555;">(</span><span style="color: #ff6600;">0</span><span style="color: #555555;">,</span> plus<span style="color: #555555;">&lt;</span>Integer<span style="color: #555555;">&gt;);</span>
+<span style="color: #555555;">}</span>
+
+print <span style="color: #555555;">(</span><span style="color: #cc3300;">"``euler1(999)``"</span><span style="color: #555555;">);</span></pre>
+</div>
+I must admit that I had significant frustration with Ceylon's type system in the above example. Ceylon is very strict, and it took me a few hours to figure out what types I needed to declare to make the runtime happy.
+
+Ceylon has <a title="Comprehension" href="http://en.wikipedia.org/wiki/List_comprehension">comprehensions</a> - syntactic sugar for the imperative for-loop/if-then, or the functional map/filter. Very nice!
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Ceylon</span>
+
+Integer <span style="color: #cc00ff;">euler1</span><span style="color: #555555;">(</span>Integer size<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #555555;">[</span><span style="color: #006699; font-weight: bold;">for</span> <span style="color: #555555;">(</span>i <span style="color: #006699; font-weight: bold;">in</span> <span style="color: #ff6600;">1</span><span style="color: #555555;">..</span><span style="color: #330099;">size</span><span style="color: #555555;">)</span> <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>i<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> i<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span><span style="color: #555555;">)</span> i<span style="color: #555555;">].</span><span style="color: #330099;">fold</span><span style="color: #555555;">(</span><span style="color: #ff6600;">0</span><span style="color: #555555;">,</span> plus<span style="color: #555555;">&lt;</span>Integer<span style="color: #555555;">&gt;);</span>
+<span style="color: #555555;">}</span>
+
+print <span style="color: #555555;">(</span><span style="color: #cc3300;">"``euler1(999)``"</span><span style="color: #555555;">);</span></pre>
+</div>
+Next is a functional version that uses <a title="TailRecursion" href="http://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion</a> with an accumulator. One of the main points here is that the function <em>euler</em> is <a title="Determinism" href="http://en.wikipedia.org/wiki/Deterministic_algorithm">deterministic</a> – it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation – there are instead only functions which return values. The other main point is that this recursion uses tail call optimization – it’s written in such a way that an intelligent compiler can optimize its stack usage to be <a title="big o notation" href="http://en.wikipedia.org/wiki/Big_O_notation"><em>O(n)</em> instead of<em> O(n!)</em></a>. In English, this means that your program will probably not crash even for hugely recursive calls. Here we pass around a list of integers, and peel off the first one each iteration. Note here the use of  Iterable's methods <em>first,</em> <em>rest</em> and <em>nonempty</em>:
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Ceylon</span>
+
+Integer <span style="color: #cc00ff;">euler</span><span style="color: #555555;">(</span>Integer<span style="color: #555555;">[]</span> ints<span style="color: #555555;">,</span> Integer acc<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #006699; font-weight: bold;">nonempty</span> ints<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        Integer n <span style="color: #555555;">=</span> ints<span style="color: #555555;">.</span><span style="color: #330099;">first</span><span style="color: #555555;">%</span><span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> ints<span style="color: #555555;">.</span><span style="color: #330099;">first</span><span style="color: #555555;">%</span><span style="color: #ff6600;">5</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #006699; font-weight: bold;">then</span> ints<span style="color: #555555;">.</span><span style="color: #330099;">first</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">;</span>
+        <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #cc00ff;">euler</span><span style="color: #555555;">(</span>ints<span style="color: #555555;">.</span><span style="color: #330099;">rest</span><span style="color: #555555;">,</span> acc<span style="color: #555555;">+</span>n<span style="color: #555555;">);</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+        <span style="color: #006699; font-weight: bold;">return</span> acc<span style="color: #555555;">;</span>
+    <span style="color: #555555;">}</span>
+<span style="color: #555555;">}</span>
+
+Integer <span style="color: #cc00ff;">euler1</span><span style="color: #555555;">(</span>Integer size<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #cc00ff;">euler</span><span style="color: #555555;">(</span><span style="color: #ff6600;">1</span><span style="color: #555555;">..</span><span style="color: #330099;">size</span><span style="color: #555555;">,</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">);</span>
+<span style="color: #555555;">}</span>
+
+print <span style="color: #555555;">(</span><span style="color: #cc3300;">"``euler1(999)``"</span><span style="color: #555555;">);</span></pre>
+</div>
+Here’s another version using a <a title="Quicksort" href="http://en.wikipedia.org/wiki/Quicksort">Quicksort</a>-based algorithm. Here we recursively break the list up in half and then reassemble it. Instead of sorting each half, though, we’ll filter the pivot value, converting it to 0 if it’s not divisible. Here, <em>euler() </em>returns <em>euler()</em> calculated on the half of the list before the pivot element, <em>euler()</em> calculated on the half of the list after the pivot element, and the pivot element or 0, all added together.
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Ceylon</span>
+
+Integer <span style="color: #cc00ff;">euler</span><span style="color: #555555;">(</span>Integer<span style="color: #555555;">[]</span> ints<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>ints<span style="color: #555555;">.</span><span style="color: #330099;">empty</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span> <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">;</span> <span style="color: #555555;">}</span>
+
+    Integer pivot <span style="color: #555555;">=</span> ints<span style="color: #555555;">.</span><span style="color: #330099;">size</span> <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span><span style="color: #555555;">;</span>
+
+    Integer pivotval<span style="color: #555555;">;</span>
+    Integer<span style="color: #555555;">?</span> _pivotval <span style="color: #555555;">=</span> ints<span style="color: #555555;">[</span>pivot<span style="color: #555555;">];</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #006699; font-weight: bold;">exists</span> _pivotval<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>_pivotval<span style="color: #555555;">%</span><span style="color: #ff6600;">3</span> <span style="color: #555555;">==</span> <span style="color: #ff6600;">0</span> <span style="color: #555555;">||</span> _pivotval<span style="color: #555555;">%</span><span style="color: #ff6600;">5</span><span style="color: #555555;">==</span><span style="color: #ff6600;">0</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+            pivotval <span style="color: #555555;">=</span> _pivotval<span style="color: #555555;">;</span>
+        <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+            pivotval <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">;</span>
+        <span style="color: #555555;">}</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+        pivotval <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">;</span>
+    <span style="color: #555555;">}</span>
+
+    Integer pre<span style="color: #555555;">;</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span><span style="color: #ff6600;">0</span> <span style="color: #555555;">&lt;</span> pivot<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        pre <span style="color: #555555;">=</span> euler<span style="color: #555555;">(</span> ints<span style="color: #555555;">[</span><span style="color: #ff6600;">0</span><span style="color: #555555;">..</span><span style="color: #330099;">pivot</span><span style="color: #555555;">-</span><span style="color: #ff6600;">1</span><span style="color: #555555;">]</span> <span style="color: #555555;">);</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+        pre <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">;</span>
+    <span style="color: #555555;">}</span>
+
+    Integer post<span style="color: #555555;">;</span>
+    <span style="color: #006699; font-weight: bold;">if</span> <span style="color: #555555;">(</span>pivot<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span> <span style="color: #555555;">&lt;</span> ints<span style="color: #555555;">.</span><span style="color: #330099;">size</span><span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+        post <span style="color: #555555;">=</span> euler<span style="color: #555555;">(</span> ints<span style="color: #555555;">[</span>pivot<span style="color: #555555;">+</span><span style="color: #ff6600;">1</span><span style="color: #555555;">..</span><span style="color: #330099;">ints</span><span style="color: #555555;">.</span><span style="color: #330099;">size</span><span style="color: #555555;">-</span><span style="color: #ff6600;">1</span><span style="color: #555555;">]</span> <span style="color: #555555;">);</span>
+    <span style="color: #555555;">}</span> <span style="color: #006699; font-weight: bold;">else</span> <span style="color: #555555;">{</span>
+        post <span style="color: #555555;">=</span> <span style="color: #ff6600;">0</span><span style="color: #555555;">;</span>
+    <span style="color: #555555;">}</span>
+
+    <span style="color: #006699; font-weight: bold;">return</span> pre <span style="color: #555555;">+</span> pivotval <span style="color: #555555;">+</span> post<span style="color: #555555;">;</span>
+<span style="color: #555555;">}</span>
+
+Integer <span style="color: #cc00ff;">euler1</span> <span style="color: #555555;">(</span>Integer size<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #cc00ff;">euler</span><span style="color: #555555;">(</span><span style="color: #ff6600;">1</span><span style="color: #555555;">..</span><span style="color: #330099;">size</span><span style="color: #555555;">);</span>
+<span style="color: #555555;">}</span>
+
+print <span style="color: #555555;">(</span><span style="color: #cc3300;">"``euler1(999)``"</span><span style="color: #555555;">);</span></pre>
+</div>
+<span style="line-height: 1.5em;">Here’s one more – an elegant algorithm based on an observation by little Carl Friedrich Gauss – </span><a style="line-height: 1.5em;" href="http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx">http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx</a><span style="line-height: 1.5em;">. It operates in </span><a style="line-height: 1.5em;" title="Time complexity" href="http://en.wikipedia.org/wiki/Time_complexity">O(1) constant time</a><span style="line-height: 1.5em;">. Don’t sweat it if this seems inscrutable; click the blog link above for an explanation.</span>
+<div style="background: #f0f3f3; overflow: auto; width: auto; margin-bottom: 20px; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #0099ff; font-style: italic;">// Euler1 in Ceylon</span>
+
+Integer <span style="color: #cc00ff;">mysum</span> <span style="color: #555555;">(</span>Integer n<span style="color: #555555;">,</span> Integer size<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+    <span style="color: #006699; font-weight: bold;">return</span> <span style="color: #555555;">((</span>size<span style="color: #555555;">/</span>n<span style="color: #555555;">)^</span><span style="color: #ff6600;">2</span> <span style="color: #555555;">+</span> size<span style="color: #555555;">/</span>n<span style="color: #555555;">)</span> <span style="color: #555555;">*</span> n <span style="color: #555555;">/</span> <span style="color: #ff6600;">2</span><span style="color: #555555;">;</span>
+<span style="color: #555555;">}</span>
+
+Integer <span style="color: #cc00ff;">euler1</span><span style="color: #555555;">(</span>Integer size<span style="color: #555555;">)</span> <span style="color: #555555;">{</span>
+	<span style="color: #006699; font-weight: bold;">return</span> <span style="color: #cc00ff;">mysum</span><span style="color: #555555;">(</span><span style="color: #ff6600;">3</span><span style="color: #555555;">,</span>size<span style="color: #555555;">)</span> <span style="color: #555555;">+</span> mysum<span style="color: #555555;">(</span><span style="color: #ff6600;">5</span><span style="color: #555555;">,</span>size<span style="color: #555555;">)</span> <span style="color: #555555;">-</span> mysum<span style="color: #555555;">(</span><span style="color: #ff6600;">15</span><span style="color: #555555;">,</span>size<span style="color: #555555;">);</span>
+<span style="color: #555555;">}</span>
+
+print <span style="color: #555555;">(</span><span style="color: #cc3300;">"``euler1(999)``"</span><span style="color: #555555;">);</span></pre>
+</div>
+Overall, Ceylon feels like a very well-designed language, with excellent documentation. If you'd like to try it out, they have an online editor/interpreter available at <a title="TryCeylon" href="http://try.ceylon-lang.org/">http://try.ceylon-lang.org/</a>.
