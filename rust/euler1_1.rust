@@ -1,1 +1,9 @@
-sdfgsdfg
+fn euler1(n: i32) -> i32 {
+    (1..n)
+        .filter(|n| n%3 == 0 || n%5 == 0)
+        .fold(0, |sum, x| sum + x)
+}
+
+fn main() {
+    println!("{}", euler1(1000));
+}
