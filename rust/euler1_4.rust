@@ -1,0 +1,15 @@
+// Euler1 in Rust
+
+fn euler1(n: i32, acc: i32) -> i32 {
+    let x = n;
+    match x {
+        x if x == 1     => acc,
+        x if x % 3 == 0 => euler1(n-1, acc+n),
+        x if x % 5 == 0 => euler1(n-1, acc+n),
+        _               => euler1(n-1, acc)
+    }
+}
+
+fn main() {
+    println!("{}", euler1(999, 0));
+}
