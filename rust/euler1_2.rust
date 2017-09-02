@@ -1,9 +1,13 @@
 // Euler1 in Rust
 
+fn is_euler1(n: i32) -> bool {
+    n%3 == 0 || n%5 == 0
+}
+
 fn euler1(n: i32) -> i32 {
     (1..n)
         .map(|n| n)
-        .filter(|n| n%3 == 0 || n%5 == 0)
+        .filter(|&n| is_euler1(n))
         .fold(0, |sum, x| sum + x)
 }
 
