@@ -1,3 +1,4 @@
+#!/usr/bin/clisp
 ; Euler1 in lisp
 
 (defun mySum (n size)
