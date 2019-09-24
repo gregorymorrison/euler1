@@ -1,3 +1,7 @@
+#!/usr/bin/clisp
+; Euler1 in lisp 
+
+
 (defgeneric add (a b))
 
  (defmethod add ((a number) (b number))
