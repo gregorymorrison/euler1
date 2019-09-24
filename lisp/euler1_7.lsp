@@ -1,3 +1,4 @@
+#!/usr/bin/clisp
 ; Euler1 in lisp 
 
 (defmacro lcomp (expression for var in list conditional conditional-test)
