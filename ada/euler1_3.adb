@@ -14,11 +14,6 @@ procedure Euler1_3 is
 	end if;
     end Euler;
 
-    function Euler1(size : in Integer) return Integer is
-    begin
-	return Euler(n => size);
-    end Euler1;
-
 begin
-    Ada.Integer_Text_IO.Put (Integer( Euler1(999) ));
+    Ada.Integer_Text_IO.Put (Integer( Euler(n => 999) ));
 end Euler1_3;
