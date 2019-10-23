@@ -1,0 +1,64 @@
+V "GNAT Lib v7"
+M P W=b
+P SS ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U euler1_4%b		euler1_4.adb		39470273 NE OO SU
+W ada%s			ada.ads			ada.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+D ada.ads		20170106103348 76789da1 ada%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-inteio.ads		20070406091342 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20141120112812 119b8fb3 ada.streams%s
+D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
+D a-textio.ads		20140717063745 386df5d4 ada.text_io%s
+D a-tiinio.ads		20140717063513 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20170106103348 31484697 ada.unchecked_conversion%s
+D euler1_4.adb		20191022233933 cf0c8bd7 euler1_4%b
+D interfac.ads		20160502101001 5ab55268 interfaces%s
+D i-cstrea.ads		20140801100435 e53d8b8e interfaces.c_streams%s
+D system.ads		20170510173650 4635ec04 system%s
+D s-crtl.ads		20141120112812 0ebbdb71 system.crtl%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-ficobl.ads		20140718105747 078245e4 system.file_control_block%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-secsta.ads		20170112134946 9751b57e system.secondary_stack%s
+D s-soflin.ads		20151020124036 14e1eb6c system.soft_links%s
+D s-stache.ads		20140225151139 a37c21ec system.stack_checking%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20160502101423 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20140718092328 1b7d22d2 system.wch_con%s
+X 1 ada.ads
+16K9*Ada 20e8 10|2r6 2r31
+X 3 a-inteio.ads
+18K13*Integer_Text_IO[8|46] 10|2w10 2r35
+X 8 a-tiinio.ads
+66U14*Put 10|53s5[3|18]
+X 10 euler1_4.adb
+4U11*Euler1_4 4b11 54l5 54t13
+5A10 Integers(integer)<integer> 7r48 8r16 16r30
+7V14 myRange{5A10} 7b14 7>22 14t8 49s23
+7i22 size{integer} 8r28 10r21
+8a9 ints{5A10} 11m13 13r16
+10i13 i{integer} 11r18 11r24
+16V14 Euler{integer} 16b14 16>20 37s20 41s21 45l9 45t14 49s16
+16a20 ints{5A10} 22r12 26r18 26r24 26r34 26r52 31r21 36r12 37r27 37r32 40r20
+. 41r28 41r42
+17i9 pivot{integer} 26m9 27r12 31r26 36r25 37r44 40r12 41r33
+18i9 pivotval{integer} 31m9 32r12 32r35 33m13 44r22
+19i9 pre{integer} 37m13 44r16
+20i9 post{integer} 41m13 44r33
+47V14 Euler1{integer} 47b14 47>21 50l9 50t15 53s19
+47i21 size{integer} 49r31
+
