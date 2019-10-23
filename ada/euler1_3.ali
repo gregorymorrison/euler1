@@ -7,7 +7,7 @@ RV NO_DIRECT_BOOLEAN_OPERATORS
 RV NO_RECURSION
 RV SPARK_05
 
-U euler1_3%b		euler1_3.adb		f56bb142 NE OO SU
+U euler1_3%b		euler1_3.adb		1561d1fd NE OO SU
 W ada%s			ada.ads			ada.ali
 W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
 
@@ -20,7 +20,7 @@ D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
 D a-textio.ads		20140717063745 386df5d4 ada.text_io%s
 D a-tiinio.ads		20140717063513 aa04e5d6 ada.text_io.integer_io%s
 D a-unccon.ads		20170106103348 31484697 ada.unchecked_conversion%s
-D euler1_3.adb		20191020205431 032038e6 euler1_3%b
+D euler1_3.adb		20191023004705 e32a5859 euler1_3%b
 D interfac.ads		20160502101001 5ab55268 interfaces%s
 D i-cstrea.ads		20140801100435 e53d8b8e interfaces.c_streams%s
 D system.ads		20170510173650 4635ec04 system%s
@@ -44,8 +44,8 @@ X 8 a-tiinio.ads
 X 10 euler1_3.adb
 4U11*Euler1_3 4b11 24l5 24t13
 6V14 Euler{integer} 6b14 6>20 6>36 11s20 13s20 15l9 15t14 19s16
-6i20 n{integer} 8r12 10r15 10r30 11r26 11r35 13r26
+6i20 n{integer} 8r12 10r15 10r30 11r26 11r35 13r26 19r22
 6i36 acc{integer} 9r20 11r31 13r31
 17V14 Euler1{integer} 17b14 17>21 20l9 20t15 23s39
-17i21 size{integer} 19r22
+17i21 size{integer} 19r27
 

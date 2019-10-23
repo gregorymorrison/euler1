@@ -3,7 +3,7 @@ with Ada.Integer_Text_IO;
 
 procedure Euler1_3 is
 
-    function Euler(n : in Integer; acc : in Integer) return Integer is
+    function Euler(n : in Integer; acc : in Integer := 0) return Integer is
     begin
         if n = 0 then
 	    return acc;
@@ -16,7 +16,7 @@ procedure Euler1_3 is
 
     function Euler1(size : in Integer) return Integer is
     begin
-	return Euler(size, 0);
+	return Euler(n => size);
     end Euler1;
 
 begin
