@@ -1,28 +1,28 @@
 # Euler1 in Julia
 
-function euler()
+function euler(c::Channel)
     i = 0
     while true
         if i%3 ==0 || i%5 == 0
-             produce(i) 
+             put!(c, i) 
         end
         i += 1
     end
 end
 
 function euler1(n)
-    task = Task(euler)
+    task = Channel(euler)
 
     result = 0
     while true
-        i = consume(task)
+        i = take!(task)
         if i >= n
             break
         end
         result += i
     end
 
-    return result
+    result
 end
 
-println (euler1(1000))
+println("euler1 = $euler1(1000))")

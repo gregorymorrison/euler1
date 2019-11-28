@@ -7,7 +7,7 @@ function euler1(n)
 			result += i 
 		end
 	end
-	return result
+	result
 end
 
-print ( euler1(999), "\n" )
+println( euler1(999) )

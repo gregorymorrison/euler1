@@ -14,4 +14,4 @@ function Euler1(n)
     euler(n, 0)
 end
 
-print ( Euler1(860000), "\n" )
+println("euler1 = $(Euler1(999))")
