@@ -8,13 +8,14 @@ euler1(){
 
     else
         #get the index position of the list's middle element
-        pivot=$((($#-1)/2+1))
-
+        pivot=$((($#-1) / 2 + 1))
+        pre=`euler1 ${@:1:(($pivot - 1))}`
+        post=`euler1 ${@:(($pivot + 1))}`
+        i=0
         if [ $[${!pivot} % 3] = 0 ] || [ $[${!pivot} % 5] = 0 ]; then
-	        echo $(( ${!pivot} + `euler1 ${@:1:(($pivot-1))}` + `euler1 ${@:(($pivot+1))}` ))
-		else
-	        echo $(( 0 + `euler1 ${@:1:(($pivot-1))}` + `euler1 ${@:(($pivot+1))}` ))
-		fi
+            i=${!pivot}
+        fi
+        echo $(( $pre + $i + $post ))
     fi
 }
 
