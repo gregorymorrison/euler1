@@ -1,0 +1,27 @@
+#!/usr/bin/bc -q
+/* Euler1 in bc */
+
+define range(size, start, end) {
+	auto ints, i;
+	for (i = 1; i <= size; i++) {
+		if (i >= start && i <= end) {
+			ints[i] = i;
+		} else {
+			ints[i] = 0;
+		}
+	}
+	return ints;
+}
+
+define euler(ints) {
+	return ints[15];
+}
+
+define euler1(size) {
+	auto ints;
+	ints = range(size, 1, size);
+	return euler(ints);
+}
+
+print "Euler1 = ", euler1(1000), "\n";
+quit

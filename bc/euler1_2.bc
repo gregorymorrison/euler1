@@ -2,12 +2,12 @@
 /* Euler1 in bc */
 
 define my_sum(n, size) {
-    return (n * (((size/n)^2 + (size/n)) / 2))
+    return ((size/n)^2 + (size/n)) * n / 2;
 }
 
 define euler1(size) {
-    return (my_sum(3,size) + my_sum(5,size) - my_sum(15,size))
+    return my_sum(3,size) + my_sum(5,size) - my_sum(15,size);
 }
 
-print euler1(999), "\n"
+print "euler1 = ", euler1(999), "\n";
 quit

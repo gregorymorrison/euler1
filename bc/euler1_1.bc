@@ -2,7 +2,7 @@
 /* Euler1 in bc */
 
 define euler(n, acc) {
-    if (n == 1) return acc
+    if (n == 1) return acc;
 
     if (n % 3 == 0 || n % 5 == 0) {
         return euler(n-1, acc+n);
@@ -11,7 +11,7 @@ define euler(n, acc) {
     }
 }
 
-define euler1(size) { return (euler(size,0)); }
+define euler1(size) { return euler(size,0); }
 
-print euler1(999), "\n"
+print "euler1 = ", euler1(999), "\n"
 quit

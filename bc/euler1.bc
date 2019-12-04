@@ -8,8 +8,8 @@ define euler(size) {
     for (i = 1; i < size; i++) {
         if (i % 3 == 0 || i % 5 == 0) { retval += i }
     }
-    return (retval)
+    return retval;l
 }
 
-print euler(1000), "\n"
+print "euler1 = ", euler(1000), "\n"
 quit
