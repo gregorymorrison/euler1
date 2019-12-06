@@ -5,7 +5,7 @@
 int euler(int n) {
 	int retval = 0;
 	for (int i=0; i<n; i++) {
-		if ((i % 3 == 0) || (i % 5 == 0)) {
+		if (i % 3 == 0 || i % 5 == 0) {
 			retval += i;
 		}
 	}
@@ -13,5 +13,5 @@ int euler(int n) {
 }
 
 main() {
-	printf("%i\n", euler(1000));
+	printf("euler1 = %i\n", euler(1000));
 }
