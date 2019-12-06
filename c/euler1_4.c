@@ -1,6 +1,7 @@
 // Euler1 in C
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 int* range(int start, int end) {
 	int *ints = (int*)malloc(sizeof(int) * (end-start));
@@ -10,18 +11,18 @@ int* range(int start, int end) {
 	return ints;
 }
 
-int* map(int(*fun)(int), int* ints, int size) {
+int* map(int(*func)(int), int* ints, int size) {
 	for (int i = 0; i < size; i++) {
-		ints[i] = fun(ints[i]);
+		ints[i] = func(ints[i]);
 	}
 	return ints;
 }
 
-int* filter(bool(*fun)(int), int* ints, int* size) {
+int* filter(bool(*func)(int), int* ints, int* size) {
 	int* newInts = (int*)malloc(sizeof(int) * *size);
 	int newSize = 0;
 	for (int i = 0; i < *size; i++) {
-		if (fun(ints[i])) {
+		if (func(ints[i])) {
 			newInts[newSize] = ints[i];
 			newSize += 1;
 		}
@@ -33,10 +34,10 @@ int* filter(bool(*fun)(int), int* ints, int* size) {
 	return ints;
 }
 
-int reduce(int(*fun)(int, int), int *ints, int size) {
+int reduce(int(*func)(int, int), int *ints, int size) {
 	int result = 0;
 	for (int i = 0; i < size; i++) {
-		result = fun(ints[i], result);
+		result = func(ints[i], result);
 	}
 	return result;
 }
@@ -48,10 +49,7 @@ int myMap(int i) {
 int (*map_ptr)(int) = &myMap;
 
 bool myFilter(int i) {
-	if (i % 3 == 0 || i % 5 == 0) {
-		return true;
-	}
-	return false;
+	return i % 3 == 0 || i % 5 == 0;
 }
 bool (*flt_ptr)(int) = &myFilter;
 
