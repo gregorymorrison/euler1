@@ -1,27 +1,48 @@
 #!/usr/bin/bc -q
 /* Euler1 in bc */
 
-define range(size, start, end) {
+define range(start, end) {
 	auto ints, i;
-	for (i = 1; i <= size; i++) {
-		if (i >= start && i <= end) {
-			ints[i] = i;
-		} else {
-			ints[i] = 0;
-		}
+	for (i = start; i < end; i++) {
+		ints[i-start] = i;
 	}
 	return ints;
 }
 
-define euler(ints) {
-	return ints[15];
+define euler(ints, size) {
+	auto pivot, pivotval, preints, presize, pre, postints, postsize, post;
+	if (size == 0) {
+		return 0;
+	}
+
+	pivot = size / 2;
+	pivotval = 0;
+	if (ints[pivot] % 3 == 0 || ints[pivot] % 5 == 0) {
+		pivotval = ints[pivot];
+	}
+
+    pre = 0;
+	if (ints[pivot]-ints[0] > 0) {
+        preints = range(ints[0], ints[pivot]);
+        presize = ints[pivot] - ints[0];
+        pre = euler(preints, presize);
+    }
+
+    post = 0;
+    if (ints[size-1] - ints[pivot] > 0) {
+        postints = range(ints[pivot]+1, ints[size-1]+1);
+        postsize = (ints[size-1]+1) - (ints[pivot]+1);
+        post = euler(postints, postsize);
+    }
+
+	return pre + pivotval + post;
 }
 
 define euler1(size) {
 	auto ints;
-	ints = range(size, 1, size);
-	return euler(ints);
+	ints = range(0, size);
+	return euler(ints, size);
 }
 
 print "Euler1 = ", euler1(1000), "\n";
-quit
+quit;
