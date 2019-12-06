@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int *range(int start, int end) {
+int* range(int start, int end) {
 	int *ints = (int*)malloc(sizeof(int) * (end-start));
 	for (int i = start; i < end; i++) {
 		ints[i-start] = i;
@@ -10,19 +10,26 @@ int *range(int start, int end) {
 	return ints;
 }
 
-int *map(int(*fun)(int), int *ints, int size) {
+int* map(int(*fun)(int), int* ints, int size) {
 	for (int i = 0; i < size; i++) {
 		ints[i] = fun(ints[i]);
 	}
 	return ints;
 }
 
-int *filter(bool(*fun)(int), int *ints, int size) {
-	for (int i = 0; i < size; i++) {
-		if (!fun(ints[i])) {
-			ints[i] = 0;
+int* filter(bool(*fun)(int), int* ints, int* size) {
+	int* newInts = (int*)malloc(sizeof(int) * *size);
+	int newSize = 0;
+	for (int i = 0; i < *size; i++) {
+		if (fun(ints[i])) {
+			newInts[newSize] = ints[i];
+			newSize += 1;
 		}
 	}
+	void* new_ptr = realloc(newInts, sizeof(int) * newSize);
+	free(ints);
+	ints = newInts;
+	*size = newSize;
 	return ints;
 }
 
@@ -55,10 +62,10 @@ int (*rdc_ptr)(int, int) = &myReduce;
 
 
 int euler1(int size) {
-	int *ints = range(0, size);
+	int* ints = range(0, size);
 
 	ints = map((*map_ptr), ints, size);
-	ints = filter((*flt_ptr), ints, size);
+	ints = filter((*flt_ptr), ints, &size);
 	int sum = reduce((*rdc_ptr), ints, size);
 
 	free(ints);
