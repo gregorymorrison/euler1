@@ -5,7 +5,7 @@
 #include<math.h>
 
 int *slice(int start, int end) {
-	int *ints = malloc(sizeof(int) * end-start);
+	int *ints = (int*)malloc(sizeof(int) * (end-start));
 	for (int i = start; i < end; i++) {
 		ints[i-start] = i;
 	}
