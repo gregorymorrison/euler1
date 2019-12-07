@@ -12,18 +12,18 @@ euler1(){
 
         #calculate a value for the middle element
         thisVal=${!pivot}
-        if [ $[$thisVal%3] -gt 0 ] && [ $[$thisVal%5] -gt 0 ]; then
+        if [ $((thisVal%3)) -gt 0 ] && [ $((thisVal%5)) -gt 0 ]; then
             thisVal=0
         fi
 
         #recursively process the half of the list below the middle element
-        pre=`euler1 ${@:1:(($pivot-1))}`
+        pre=$( euler1 "${@:1:pivot-1}" )
         #recursively process the half of the list above the middle element
-        post=`euler1 ${@:(($pivot+1))}`
+        post=$( euler1 "${@:pivot+1}" )
         
         #return thisVal + the results from the first and last halves
-        echo $(( $thisVal + $pre + $post ))
+        echo $(( thisVal + pre + post ))
     fi
 }
 
-echo "euler1 = $( euler1 `seq 1 999` )"
+echo "euler1 = $( euler1 $(seq 1 999) )"

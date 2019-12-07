@@ -9,14 +9,14 @@ euler1(){
     else
         #get the index position of the list's middle element
         pivot=$((($#-1) / 2 + 1))
-        pre=`euler1 ${@:1:(($pivot - 1))}`
-        post=`euler1 ${@:(($pivot + 1))}`
+		pre=$(  euler1 "${@:1:(($pivot - 1))}" )
+		post=$( euler1 "${@:(($pivot + 1))}" )
         i=0
-        if [ $[${!pivot} % 3] = 0 ] || [ $[${!pivot} % 5] = 0 ]; then
+		if [ $((${!pivot} % 3)) = 0 ] || [ $((${!pivot} % 5)) = 0 ]; then
             i=${!pivot}
         fi
-        echo $(( $pre + $i + $post ))
+        echo $(( pre + i + post ))
     fi
 }
 
-echo "euler1 = $( euler1 `seq 1 999` )"
+echo "euler1 = $( euler1 $(seq 1 999) )"
