@@ -13,4 +13,4 @@ euler1() {
 	echo $retval
 }
 
-echo $(euler1 999)
+echo "euler1 = $(euler1 999)"

@@ -26,4 +26,4 @@ euler1(){
     fi
 }
 
-echo $( euler1 `seq 1 999` )
+echo "euler1 = $( euler1 `seq 1 999` )"
