@@ -15,7 +15,7 @@ euler xs =
         then 0 `debug` ("returning 0")
         else do
             let pivot = (length xs) `div` 2
-            let pre  = euler (slice xs 0 pivot)
+            let pre  = euler [(head xs)..pivot]
             let post = euler (slice xs (pivot+1) (length xs))
             let pivotval = xs !! pivot
             if pivotval `mod` 3 == 0 || pivotval `mod` 5 == 0
