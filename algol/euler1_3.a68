@@ -59,4 +59,4 @@ PROC myreduce = ([] INT ints) INT: reduce(f_reduce, ints);
 
 PROC euler1 = (INT size) INT: myreduce( myfilter( mymap( range(size))));
 
-print ("euler1 = " + TOSTRING euler1(999))
+print (("euler1 = ", TOSTRING euler1(999), newline))

@@ -10,4 +10,4 @@ PROC euler1 = (INT size) INT: (
     ROUND(mysum(3,size) + mysum(5,size) - mysum(15,size))
 );
 
-print ("euler1 = " + TOSTRING euler1(999))
+print (("euler1 = ", TOSTRING euler1(999), newline))

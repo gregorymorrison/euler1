@@ -1,5 +1,7 @@
 # Euler1 in Algol 68 #
 
+OP TOSTRING = ( INT n )STRING: whole( n, 0 );
+
 PROC euler1 = (INT n) INT: (
     INT retval := 0;
 
@@ -11,4 +13,4 @@ PROC euler1 = (INT n) INT: (
     retval
 );
 
-print (euler1(1000))
+print (("euler1 = ", TOSTRING euler1(1000), newline)) 

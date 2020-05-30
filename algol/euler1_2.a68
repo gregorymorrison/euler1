@@ -37,4 +37,4 @@ PROC euler = ([] INT ints) INT: (
 
 PROC euler1 = (INT n) INT: euler(range(n));
 
-print ("euler1 = " + TOSTRING euler1(999))
+print (("euler1 = ", TOSTRING euler1(999), newline))
