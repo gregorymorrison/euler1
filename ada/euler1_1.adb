@@ -1,4 +1,5 @@
 -- Euler1 in Ada
+with Ada.Text_IO;
 with Ada.Integer_Text_IO;
 
 procedure Euler1_1 is
@@ -16,5 +17,7 @@ procedure Euler1_1 is
     end Euler;
 
 begin
-    Ada.Integer_Text_IO.Put (Integer( Euler(1000) ));
+    Ada.Text_IO.Put ("Euler1 = ");
+    Ada.Integer_Text_IO.Put (Integer( Euler(1000) ), 6);
 end Euler1_1;
+
