@@ -1,3 +1,5 @@
+// Euler1 in C
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -15,24 +17,24 @@ int _euler(int n) {
 }
 
 int euler(int* ints, int size, int acc) {
-	if (size == 0) {
-		return acc;
-	}
+    if (size == 0) {
+        return acc;
+    }
 
-	acc += _euler(ints[size-1]);
-	void* new_ptr = realloc(ints, sizeof(int) * (size-1));
-	euler(ints, size-1, acc);
+    acc += _euler(ints[size-1]);
+    void* new_ptr = realloc(ints, sizeof(int) * (size-1));
+    return euler(ints, size-1, acc);
 }
 
 int euler1(int size) {
-	int* ints = range(0, size);
-	int acc = 0;
-	int sum = euler(ints, size, acc);
-	free(ints);
-	return sum;
+    int* ints = range(0, size);
+    int acc = 0;
+    int sum = euler(ints, size, acc);
+    // free(ints);
+    return sum;
 }
 
 int main() {
-    printf("euler1 = %i\n", euler1(1000));
+    printf("Euler1 = %i\n", euler1(1000));
     return 0;
 }

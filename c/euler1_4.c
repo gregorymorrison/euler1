@@ -42,35 +42,30 @@ int reduce(int(*func)(int, int), int *ints, int size) {
 	return result;
 }
 
-
 int myMap(int i) {
 	return i;
 }
-int (*map_ptr)(int) = &myMap;
 
 bool myFilter(int i) {
 	return i % 3 == 0 || i % 5 == 0;
 }
-bool (*flt_ptr)(int) = &myFilter;
 
 int myReduce(int i, int j) {
 	return i + j;
 }
-int (*rdc_ptr)(int, int) = &myReduce;
-
 
 int euler1(int size) {
 	int* ints = range(0, size);
 
-	ints = map((*map_ptr), ints, size);
-	ints = filter((*flt_ptr), ints, &size);
-	int sum = reduce((*rdc_ptr), ints, size);
+	ints = map(&myMap, ints, size);
+	ints = filter(&myFilter, ints, &size);
+	int sum = reduce(&myReduce, ints, size);
 
 	free(ints);
 	return sum;
 }
 
 int main() {
-	printf("euler1 = %i\n", euler1(1000));
+	printf("Euler1 = %i\n", euler1(1000));
 	return 0;
 }
