@@ -12,13 +12,13 @@ int euler(R)(R ints, int acc) {
     }
 
     acc += _euler(ints.front());
-    return euler(ints.drop(1), acc);
+	ints = ints.drop(1);
+    return euler(ints, acc);
 }
 
 int euler1(int size) {
     auto ints = iota(0, size);
-    int sum = euler(ints, 0);
-    return sum;
+    return euler(ints, 0);
 }
 
 int main() {
