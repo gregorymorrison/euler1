@@ -3,11 +3,21 @@
 import std.stdio, std.range;
 import std.algorithm.iteration : map, filter, fold;
 
+int myMap(int i) {
+   return i;
+}
+bool myFilter(int i) {
+	return i % 3 == 0 || i % 5 == 0;
+}
+int myFold(int i, int j) {
+	return i + j;
+}
+
 int euler1(int size) {
     return iota(0, size)
-        .map!(i => i)
-        .filter!(i => i % 3 == 0 || i % 5 == 0)
-        .fold!((a, b) => a + b);
+        .map!myMap
+        .filter!myFilter
+        .fold!myFold;
 }
 
 int main() {
