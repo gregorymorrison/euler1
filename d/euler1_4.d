@@ -1,4 +1,4 @@
-// Euler1 in C
+// Euler1 in D
 
 import std.stdio, std.range;
 import std.algorithm.iteration : map, filter, fold;

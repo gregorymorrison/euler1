@@ -1,4 +1,4 @@
-// Euler1 in C
+// Euler1 in D
 
 import std.stdio : writeln;
 import std.range;
