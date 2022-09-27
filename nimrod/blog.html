@@ -1,0 +1,23 @@
+Nimrod
+
+```ocaml
+# Euler1 in Nimrod
+
+proc euler1(size: Int): Int =
+    var retval = 0
+    for i in 1..size:
+        if i mod 3 == 0 or i mod 5 == 0:
+          retval += i
+    return retval
+
+echo euler1(999)
+```
+
+http://www.compileonline.com/compile_nimrod_online.php
+
+```bash
+$ nimrod --hints:off c euler1.nim 2>&1
+$ ./euler1
+233168
+$
+```

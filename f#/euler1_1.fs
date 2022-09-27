@@ -1,9 +1,14 @@
 (* Euler1 in F# *)
 
-let euler x =
-    let rec aux i n =
-        if i = 0 then n else
-            aux (i-1)  (if i % 3 = 0 || i % 5 = 0 then n + i else n)
-    in aux x 0
+let rec range i j = i :: if i=j then [] else (range (i+1) j);;
 
-printfn "%i" (euler 999)
+let myTest = fun x -> x % 3 = 0 || x % 5 = 0;;
+
+let sum = List.fold (+) 0;;
+
+let euler n = range 0 n |> List.filter myTest |> sum;;
+
+[<EntryPoint>]
+let main argv =
+    printfn "Euler1 = %d" (euler 999)
+    0

@@ -12,5 +12,5 @@ fn euler1(n: i32) -> i32 {
 }
 
 fn main() {
-    println!("{}", euler1(1000));
+    println!("Euler1 = {}", euler1(1000));
 }

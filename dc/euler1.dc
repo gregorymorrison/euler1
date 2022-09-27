@@ -1,4 +1,0 @@
-#!/usr/bin/dc
-# Euler1 in dc
-
-4 5 * p

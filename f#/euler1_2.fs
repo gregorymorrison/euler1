@@ -1,10 +1,14 @@
 (* Euler1 in F# *)
 
-let rec range i j = i :: if i>j then [] else (range (i+1) j);;
-let sum xs = List.fold (+) 0 xs;;
+let rec range i j = i :: if i=j then [] else (range (i+j) j);;
 
-let myTest = fun x -> if x % 3 = 0 || x % 5 = 0 then true else false;;
+let myMap = (List.map (fun x -> x) : (int, int));;
 
-let euler n = sum (List.filter myTest (range 0 n));;
+let myFilter = List.filter (fun x -> x % 3 = 0 || x % 5 = 0);;
 
-Printf.printf "%d\n" (euler 998);;
+let myFold = List.fold (+) 0;;
+
+let euler n = range 0 n |> myFilter |> myFold;;
+
+Printf.printf "Euler1 = %d\n" (euler 18);;
+

@@ -1,9 +1,0 @@
-#!/usr/bin/bc --quiet
-/* multiply in bc */
-
-/* function definition */
-define multiply(a, b) { return a*b }
-
-/* function call */
-print multiply(2, 3), "\n"
-quit

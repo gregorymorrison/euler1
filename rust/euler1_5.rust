@@ -1,0 +1,14 @@
+// Euler1 in Rust
+
+fn my_ints(i: i32, step: usize, n: i32) -> i32 {
+    (i..n).step_by(step)
+        .fold(0, |sum, x| sum + x)
+}
+
+fn euler1(n: i32) -> i32 {
+    my_ints(0,3,n) + my_ints(5,15,n) + my_ints(10,15,n)
+}
+
+fn main() {
+    println!("Euler1 = {}", euler1(1000));
+}

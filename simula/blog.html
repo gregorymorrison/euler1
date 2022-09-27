@@ -1,0 +1,34 @@
+[Simula](http://en.wikipedia.org/wiki/Simula)
+
+```pascal
+comment Euler1 in Simula;
+begin
+
+    integer procedure euler1 (n); integer n;
+    begin
+        integer i;
+        integer result;
+
+        result := 0;
+        for i := 1 step 1 until n-1 do 
+        begin
+            if mod(i,3) = 0 or mod(i,5) = 0 then result := result + i;
+        end;
+        euler1 := result;
+    end euler1;
+
+    integer result;
+    result := euler1(1000);
+    OutInt(result, 10);
+    OutImage;
+end;
+```
+
+http://www.compileonline.com/compile_simula_online.php
+
+```bash
+$ cim euler1.sim -t 2>&1
+$ euler1
+233168
+$
+```

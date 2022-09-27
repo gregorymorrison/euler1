@@ -1,0 +1,35 @@
+Oz
+
+```haskell
+% Euler1 in Oz
+
+functor
+import
+    Application
+    System
+
+define
+    fun {Euler1 N Acc}
+        if N == 0 then Acc
+        elseif N mod 3 == 0 then {Euler1 N-1 Acc+N}
+        elseif N mod 5 == 0 then {Euler1 N-1 Acc+N}
+        else {Euler1 N-1 Acc}
+        end
+    end
+
+    {System.showInfo {Euler1 999 0}}
+
+    {Application.exit 0}
+end
+```
+
+http://www.compileonline.com/compile_mozart-oz_online.php
+
+apt-get install mozart
+
+```bash
+$ ozc -c euler1.oz -o euler1.oza 2>&1
+$ ozengine euler1.oza
+233168
+$
+```

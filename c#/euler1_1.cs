@@ -15,7 +15,7 @@ class Euler1 {
             if (i%3==0 || i%5==0) {
                 result += i;
             }
-       }
+        }
     }
 
     public int getResult() {
