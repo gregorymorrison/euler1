@@ -1,4 +1,4 @@
-#!/usr/bin/sq
+#!/usr/bin/squirrel
 // Euler1 in Squirrel
 
 function Euler1(size) {

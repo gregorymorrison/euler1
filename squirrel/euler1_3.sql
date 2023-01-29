@@ -1,4 +1,4 @@
-#!/usr/bin/sq
+#!/usr/bin/squirrel
 // Euler1 in Squirrel
 
 // a class with a constructor
