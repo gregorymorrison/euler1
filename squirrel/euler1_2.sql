@@ -14,11 +14,11 @@ function genInts (i, acc=[]) {
 function Euler1(size) {
 	local ints = genInts(size)
 
-	local mapped = ::map(ints, function(val) {return val} )
-
-	local filtered = mapped.filter( function(idx,val) {if (val%3==0 || val%5==0) return true else return false} )
+	local mapped = ints.map( function(val) {return val} )
+	local filtered = mapped.filter( function(idx,val) {return val%3==0 || val%5==0} )
 	local reduced = filtered.reduce( function(x,y) {return x+y} )
+
 	return reduced;
 }
 
-print ( Euler1(10) + "\n" );
+print ( "Euler1 = " + Euler1(999) + "\n" );

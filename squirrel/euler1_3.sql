@@ -20,4 +20,4 @@ function Euler1::solve() {
 
 local euler = Euler1(1000)
 euler.solve()
-print ( euler.result + "\n" )
+print ( "Euler1 = " + euler.result + "\n" )

@@ -27,4 +27,4 @@ function Euler1(size) {
     return euler( genInts(size) );
 }
 
-print ( Euler1(999) + "\n" );
+print ( "Euler1 = " + Euler1(999) + "\n" );

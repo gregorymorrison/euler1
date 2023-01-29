@@ -4,11 +4,11 @@
 function euler(n, acc)
 	if n == 1 then
 		return acc
-	end
-	if n%3 == 0 or n%5 == 0 then
+  elseif n%3 == 0 or n%5 == 0 then
 		return euler(n-1, acc+n)
-	end
-	return euler(n-1, acc)
+  else
+	  return euler(n-1, acc)
+  end
 end
 
 function euler1(n)

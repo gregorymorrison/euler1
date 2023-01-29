@@ -10,4 +10,4 @@ function Euler1(size) {
 	return retval
 }
 
-print( Euler1(1000) + "\n" );
+print( "Euler1 = " + Euler1(1000) + "\n" );

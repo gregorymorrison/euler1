@@ -1,24 +1,68 @@
-<a href="http://www.lua.org/">Lua</a>, introduced in 1993, is renowned for its accessibility and simplicity; it's used primarily as an embedded scripting language. It's supposed to be highly optimized for speed.
+[Lua](http://www.lua.org/), introduced in 1993, is renowned for its accessibility and simplicity; it's used primarily as an embedded scripting language. It's supposed to be highly optimized for speed.
 
-My version of <a title="Euler1" href="http://projecteuler.net/problem=1">Euler1</a> here is straight out of the imperative school - it looks just like <a title="JavaScript" href="http://gdm9000.wordpress.com/2011/10/15/javascript/">JavaScript</a>, <a title="Java" href="http://gdm9000.wordpress.com/2011/10/27/305/">Java</a>, <a title="VBScript" href="http://en.wikipedia.org/wiki/VBScript">VBScript</a>... It's so familiar that it literally took me only 15 minutes to bang this out with no prior knowledge of this language. It's actually disappointingly verbose for what it is, but I can't complain about the development time:
-<div style="background:white;overflow:auto;width:auto;color:black;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-<pre style="line-height:125%;margin:0;"><span style="color:#009999;">#!/usr/bin/lua</span>
-<span style="color:#0099ff;font-style:italic;">-- Euler1 in Lua</span>
+My version of [Euler1](http://projecteuler.net/problem=1) here is straight out of the imperative school - it looks just like [JavaScript](http://gdm9000.wordpress.com/2011/10/15/javascript/), [Java](http://gdm9000.wordpress.com/2011/10/27/305/), [VBScript](http://en.wikipedia.org/wiki/VBScript)... It's so familiar that it literally took me only 15 minutes to bang this out with no prior knowledge of this language. It's actually disappointingly verbose for what it is, but I can't complain about the development time:
 
-<span style="color:#006699;font-weight:bold;">function</span> <span style="color:#cc00ff;">euler</span>(n)
-    <span style="color:#006699;font-weight:bold;">local</span> retval <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>
-    <span style="color:#006699;font-weight:bold;">for</span> i <span style="color:#555555;">=</span> <span style="color:#ff6600;">0</span>, n <span style="color:#006699;font-weight:bold;">do</span>
-        <span style="color:#006699;font-weight:bold;">if</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">3</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#000000;font-weight:bold;">or</span> i <span style="color:#555555;">%</span> <span style="color:#ff6600;">5</span> <span style="color:#555555;">==</span> <span style="color:#ff6600;">0</span> <span style="color:#006699;font-weight:bold;">then</span>
-            retval <span style="color:#555555;">= </span><span class="Apple-style-span" style="line-height:18px;">retval + </span>i</pre>
-<pre style="line-height:125%;margin:0;">        <span style="color:#006699;font-weight:bold;">end</span>
-    <span style="color:#006699;font-weight:bold;">end</span>
-    <span style="color:#006699;font-weight:bold;">return</span> retval
-<span style="color:#006699;font-weight:bold;">end</span>
+```lua
+#!/usr/bin/lua5.3
+-- Euler1 in Lua
 
-<span style="color:#336666;">print</span> (euler(<span style="color:#ff6600;">999</span>))</pre>
-</div>
-I look forward to investigating this language further. To install on Fedora, <em>yum install lua</em>. Then to execute, simply call your script:
-<div style="background:black;overflow:auto;width:auto;color:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-<pre style="line-height:125%;margin:0;"><span style="color:#ffffff;">$</span> <span style="color:#ffffff;">./euler1.lua</span>
-<span style="color:#0086f7;font-weight:bold;">233168</span></pre>
-</div>
+function euler(n)
+    local retval = 0
+    for i = 0, n do
+        if i % 3 == 0 or i % 5 == 0 then
+            retval = retval + i
+        end
+    end
+    return retval
+end
+
+print (string.format("Euler1 = %d", euler1(999)))
+```
+
+Here's a functional version that uses [tail recursion](http://stackoverflow.com/questions/33923/what-is-tail-recursion) with an accumulator. One of the main points here is that the function _euler()_ is [deterministic](http://en.wikipedia.org/wiki/Deterministic_algorithm) - it will always return the same output for a given input. This is accomplished in part by the absence of any variable manipulation - there are instead only functions which return values. The other main point is that this recursion uses [tail call optimization](https://stackoverflow.com/questions/310974/what-is-tail-call-optimization) - it's written in such a way that an intelligent compiler can optimize its stack usage to be [_O(n) instead of O(n!)_](http://en.wikipedia.org/wiki/Big_O_notation). In English, this means that your program will probably not crash even for hugely recursive calls.
+
+```lua
+#!/usr/bin/lua5.3
+-- Euler1 in Lua
+
+function euler(n, acc)
+    if n == 1 then
+        return acc
+    end
+    if n%3 == 0 || n%5 == 0
+        return euler(n-1, acc+n)
+    end
+    return euler(n-1, acc)
+end
+
+function euler1(n)
+    return euler(n, 0)
+end
+
+print (string.format("Euler1 = %d", euler1(999)))
+```
+
+Here¿s [one more](http://blog.smoothfriction.nl/archive/2011/01/23/powershell-fun-project-euler-1-gauss-being-smart.aspx) ¿ an elegant algorithm based on an observation by little Carl Friedrich Gauss. It operates in [O(1) constant time](http://en.wikipedia.org/wiki/Time_complexity). Don¿t sweat it if this seems inscrutable; click the blog link above for an explanation.
+
+```lua
+#!/usr/bin/lua5.3
+-- Euler1 in Lua
+
+function euler(n, size)
+	return (math.floor(size/n)^2 + math.floor(size/n)) * n / 2 
+end
+
+function euler1(n)
+	return euler(3, n) + euler(5, n) - euler(15, n)
+end
+
+print (string.format("Euler1 = %d", euler1(999)))
+```
+
+I look forward to investigating this language further. To install on Ubuntu, _apt-get install lua5.3_. Then to execute:
+
+```bash
+$ chmod +x euler1.lea
+$ ./euler1.lua
+233168
+```
