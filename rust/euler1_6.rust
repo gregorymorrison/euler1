@@ -1,38 +1,41 @@
 // Euler1 in Rust
 
-fn euler(ints: &[i32]) {
+// calculate a value for the pivot element
+fn my_val(n: i32) -> i32 {
+    if n % 3 == 0 || n % 5 == 0 {
+        return n;
+    }
+    return 0;
+}
+
+fn euler(ints: Vec<i32>) -> i32 {
     // if the list is empty, return 0
-    if ($l -eq $null) {
-        return 0
+    if ints.len() == 0 {
+        return 0;
 
     } else {
-        $pivot = [Math]::Floor($l.length/2)
-
-        // calculate a value for the pivot element
-        $i = 0
-        if ($l[$pivot]%3 -eq 0 -or $l[$pivot]%5 -eq 0) {
-            $i = $l[$pivot]
-        }
+        let pivot = ints.len() / 2;
 
         // recursively process the half of the list below the middle element
-        $pre = 0
-        if (0 -le $pivot-1) {
-            $pre = euler $l[0..($pivot-1)]
+        let mut pre = 0;
+        if 0 < pivot {
+            pre = euler ( (ints[0..(pivot)]).to_vec() );
         }
 
         // recursively process the half of the list above the middle element
-        $post = 0
-        if ($pivot+1 -le $l.length-1) {
-            $post = euler $l[($pivot+1)..($l.length-1)]
+        let mut post = 0;
+        if pivot+1 <= ints.len()-1 {
+            post = euler ( (ints[(pivot+1)..(ints.len())]).to_vec() );
         }
 
         // return thisVal + the results from the first and last halves
-        ($pre + $i + $post)
+        return pre + my_val( ints[pivot] ) + post;
     }
 }
 
-fn euler1(size: i32) {
-    euler (1..size)
+fn euler1(size: i32) -> i32 {
+    let ints: Vec<i32> = (1..size).collect();
+    return euler (ints);
 }
 
 fn main() {

@@ -5,4 +5,4 @@ def euler1(x)
 	(0...x).select{|i| i if i%3==0 or i%5==0}.inject{|mySum,j| mySum+j}
 end
 
-puts euler1(1000)
+puts "Euler1 = #{euler1(1000)}"
