@@ -6,15 +6,23 @@ class Euler1 {
         int size;
         int result;
 
-    public:
-        Euler1(int _size) {
-            size = _size;
-            result = 0;
+        bool isMultipleOfThree(int n) {
+            return n % 3 == 0;
         }
 
-        int solve() {
-            for (int i=0; i<size; i++) {
-                if (i%3==0 || i%5==0) {
+        bool isMultipleOfFive(int n) {
+            return n % 5 == 0;
+        }
+
+    public:
+        Euler1(int size) {
+            this->size = size;
+            this->result = 0;
+        }
+
+        void solve() {
+            for (int i = 0; i < size; i++) {
+                if (isMultipleOfThree(i) || isMultipleOfFive(i)) {
                     result += i;
                 }
             }
@@ -30,6 +38,6 @@ int main () {
 
     euler1.solve();
 
-    std::cout << euler1.getResult();
+    std::cout << "Euler1 = " << euler1.getResult();
     return 0;
 }
