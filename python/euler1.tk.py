@@ -1,5 +1,7 @@
-from Tkinter import *
+#!/usr/bin/env python
 # Euler1 in Python/Tk
+
+from Tkinter import *
 
 def euler1(x):
     return sum(i for i in range(x) if i%3==0 or i%5==0)

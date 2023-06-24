@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# Euler1 in Python
+
 def Euler2(size):
 	a, b, retval = 0, 1, 0
 	while b < size:

@@ -1,4 +1,5 @@
 #! /usr/bin/python
+# Euler1 in Python
 
 def Euler2(size):
 	a, b, retval = 0, 1, 0
