@@ -3,10 +3,7 @@
 fn euler1(n: i32) -> i32 {
     let mut retval: i32 = 0;
 
-    for i in 0.. {
-        if i >= n {
-            break;
-        }
+    for i in 1..=n {
         if i % 3 == 0 || i % 5 == 0 {
             retval += i;
         }
@@ -15,5 +12,5 @@ fn euler1(n: i32) -> i32 {
 }
 
 fn main() {
-    println!("Euler1 = {}", euler1(1000));
+    println!("Euler1 = {}", euler1(999));
 }

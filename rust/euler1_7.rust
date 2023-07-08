@@ -1,0 +1,26 @@
+// Euler1 in Rust
+
+struct Euler1 {
+    size: i32,
+    result: i32,
+}
+
+impl Euler1 {
+    fn solve(&mut self) {
+        for i in 1..=self.size {
+            if i % 3 == 0 || i % 5 == 0 {
+                self.result += i;
+            }
+        }
+    }
+}
+
+fn euler1(n: i32) -> i32 {
+    let mut euler = Euler1 {size : n, result : 0};
+    euler.solve();
+    euler.result
+}
+
+fn main() {
+    println!("Euler1 = {}", euler1(999));
+}

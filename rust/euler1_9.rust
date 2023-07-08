@@ -1,0 +1,13 @@
+// Euler1 in Rust
+
+fn my_sum(n: i32, size: i32) -> i32 {
+    (((size/n) * (size/n)) + (size/n)) * n / 2
+}
+
+fn euler1(size: i32) -> i32 {
+    my_sum(3, size) + my_sum(5, size) - my_sum(15, size)
+}
+
+fn main() {
+    println!("Euler1 = {}", euler1(999));
+}
